@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using ShiroGe.Scripts;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -65,7 +66,16 @@ namespace ShiroGe.CharacterController
         private float _stepOffset;
 
         private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
+        LayerMask _layerMask;
+        
+        
+        
+        GameObject _target;
+        
+        [SerializeField, InspectorName("Дальность взаимодействия")]
+        private float interactionDistance = 3f;
         #endregion
+
         
         #region Startup
         private void Awake()
@@ -76,6 +86,10 @@ namespace ShiroGe.CharacterController
             _antiBumpSpeed = sprintMaxSpeed;
             _stepOffset = _characterController.stepOffset;
         }
+        private void Start()
+        {
+            _layerMask = LayerMask.GetMask("Interactable");
+        }
         #endregion
         
         #region Update Logic
@@ -84,6 +98,7 @@ namespace ShiroGe.CharacterController
             UpdateMovementState();
             HandleVerticalMovement();
             HandleLateralMovement();
+            PointerScan();
         }
 
         private void UpdateMovementState()
@@ -185,6 +200,29 @@ namespace ShiroGe.CharacterController
             
             return velocity;
         }
+        
+        //TODO: Needs Refactor
+        private void PointerScan()
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
+                    interactionDistance, _layerMask))
+            {
+                _target = hit.collider.gameObject;
+                _target?.GetComponent<Interactable>().ShowHint();
+                GuiManager.Instance.HighlightPointer();
+            }
+            else
+            {
+                _target?.GetComponent<Interactable>().HideHint();
+                _target = null;
+                GuiManager.Instance.ResetPointer();
+            }
+
+            if (_playerInputContoller.InteractInput)
+                _target?.GetComponent<Interactable>().Interact();
+        }
+
         #endregion
 
         #region Lateupdate Logic
