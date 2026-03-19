@@ -1,4 +1,7 @@
-﻿namespace ShiroGe.Scripts
+﻿using System;
+using UnityEngine;
+
+namespace ShiroGe.Scripts
 {
     public interface Interactable
     {

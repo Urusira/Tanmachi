@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ShiroGe.CharacterController;
 using ShiroGe.Scripts.LLM.Data.Repository;
 using TMPro;
 using Unity.Cinemachine;
@@ -14,11 +15,12 @@ public class DialogManager : MonoBehaviour
     [SerializeField] private GameObject dialogCanvas;
     [SerializeField] private GameObject responseFieldObj;
     [SerializeField] private GameObject thinksFieldObj;
-    [SerializeField] private GameObject cinemachineCameraObj;
+    [SerializeField] private GameObject playerObj;
+    //[SerializeField] private GameObject cinemachineCameraObj;
 
     private TextMeshProUGUI responseField;
     private TMP_InputField thinksField;
-    //private CinemachinePanTilt cameraController;
+    private PlayerState _playerState;
     
     public string currTalkativeNpcId { get; private set; }
 
@@ -34,36 +36,39 @@ public class DialogManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         responseField = responseFieldObj.GetComponent<TextMeshProUGUI>();
         thinksField = thinksFieldObj.GetComponent<TMP_InputField>();
-        //cameraController = cinemachineCameraObj.GetComponent<CinemachinePanTilt>();
+        _playerState = playerObj.GetComponent<PlayerState>();
+        
         HideDialogUI();
     }
 
 
     public void StartDialog(string npcName, string npcId)
     {
+        currTalkativeNpcId = npcId;
+        
+        responseField.text = $"{npcName}\n\n" + string.Join("\n", NpcDialogRepository.Instance.GetNpcHistoryUI(currTalkativeNpcId));
+        
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         
-        currTalkativeNpcId = npcId;
         
-        var npcHistory = NpcDialogRepository.Instance.GetNpcHistoryUI(currTalkativeNpcId);
-        responseField.text = $"{npcName}\n\n" + string.Join("\n", npcHistory);
+
+        _playerState.InDialogChange();
+        
         ShowDialogUI();
-        /*cameraController.PanAxis.Wrap = false;
-        cameraController.PanAxis.Range = new Vector2(cameraController.PanAxis.Value - 10, cameraController.PanAxis.Value + 10);
-        cameraController.TiltAxis.Range = new Vector2(cameraController.TiltAxis.Value - 5, cameraController.TiltAxis.Value + 5);*/
     }
 
     public void CloseDialog()
     {
         responseField.text = "";
         thinksField.text = "";
-        HideDialogUI();
+        
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        /*cameraController.PanAxis.Wrap = true;
-        cameraController.PanAxis.Range = new Vector2(-180, 180);
-        cameraController.TiltAxis.Range = new Vector2(-70, 70);*/
+        
+        _playerState.InDialogChange();
+        
+        HideDialogUI();
     }
 
     public void Send()
@@ -73,7 +78,6 @@ public class DialogManager : MonoBehaviour
         
         responseField.text += $"\tИгрок: {message}\n\n";
         
-        // Передаём в LlmCore ЭТУ историю НПС
         LlmCore.Instance.OnUserMessageSent(message);
     }
 

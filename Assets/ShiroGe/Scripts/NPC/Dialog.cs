@@ -1,8 +1,8 @@
 ﻿using System;
-using ShiroGe.Scripts;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-namespace ShiroGe.Player.NPC
+namespace ShiroGe.Scripts.NPC
 {
     public class Dialog : MonoBehaviour, Interactable
     {

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Numerics;
-using ShiroGe.Scripts;
-using Unity.Cinemachine;
+﻿using ShiroGe.Scripts;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -51,6 +48,9 @@ namespace ShiroGe.CharacterController
         public bool slowedStrafe = false;
         public bool superJumps = false;
         
+        [Header("Interactions")]
+        public float interactionDistance = 3f;
+        
         private PlayerInputController _playerInputContoller;
         private PlayerState _playerState;
         
@@ -62,8 +62,9 @@ namespace ShiroGe.CharacterController
         
         private float _rotatingToTargetTimer = 0f;
         private float _verticalVelocity = 0f;
-        private float _antiBumpSpeed;
         private float _stepOffset;
+        private float _antiBumpSpeed;
+
 
         private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
         LayerMask _layerMask;
@@ -72,8 +73,6 @@ namespace ShiroGe.CharacterController
         
         GameObject _target;
         
-        [SerializeField, InspectorName("Дальность взаимодействия")]
-        private float interactionDistance = 3f;
         #endregion
 
         
@@ -89,6 +88,9 @@ namespace ShiroGe.CharacterController
         private void Start()
         {
             _layerMask = LayerMask.GetMask("Interactable");
+            
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
         #endregion
         
@@ -103,6 +105,7 @@ namespace ShiroGe.CharacterController
 
         private void UpdateMovementState()
         {
+            
             _lastMovementState = _playerState.CurrentPlayerMovementState;
             
             bool canRun = CanRun();
@@ -115,7 +118,8 @@ namespace ShiroGe.CharacterController
             PlayerMovementState lateralState =  isWalking ? PlayerMovementState.Walking : 
                                                 isSprinting ? PlayerMovementState.Sprinting :
                                                 isMovingLaterally || isMovementInput ? PlayerMovementState.Running : PlayerMovementState.Idling;
-            _playerState.SetPlayerMovementState(lateralState);
+            
+            _playerState.SetPlayerMovementState(!_playerState._inDialogState ? lateralState : PlayerMovementState.Idling);
 
             if ((!isGrounded || (_jumpedLastFrame && !superJumps)) && _characterController.velocity.y > 0)
             {
@@ -127,6 +131,7 @@ namespace ShiroGe.CharacterController
             {
                 _playerState.SetPlayerMovementState(PlayerMovementState.Falling);
                 _jumpedLastFrame = false;
+                
                 _characterController.stepOffset = 0f;
             }
             else
@@ -141,11 +146,11 @@ namespace ShiroGe.CharacterController
 
             _verticalVelocity -= gravity * Time.deltaTime;
             
-            if (isGrounded && _verticalVelocity < 0f)
+            if (isGrounded && _verticalVelocity < 0)
                 _verticalVelocity = -_antiBumpSpeed;
             
 
-            if (_playerInputContoller.JumpPressed && isGrounded)
+            if (_playerInputContoller.JumpPressed && isGrounded  && !_playerState._inDialogState)
             {
                 _verticalVelocity += Mathf.Sqrt(jumpSpeed * 3 * gravity);
                 _jumpedLastFrame = true;
@@ -172,8 +177,8 @@ namespace ShiroGe.CharacterController
             
             Vector3 cameraForwardXZ = new Vector3(_playerCamera.transform.forward.x, 0, _playerCamera.transform.forward.z).normalized;
             Vector3 cameraRightXZ = new Vector3(_playerCamera.transform.right.x, 0, _playerCamera.transform.right.z).normalized;
-            Vector3 moveDirection = cameraRightXZ * _playerInputContoller.MovementInput.x +
-                                    cameraForwardXZ * _playerInputContoller.MovementInput.y;
+            Vector3 moveDirection = cameraRightXZ * (!_playerState._inDialogState ? _playerInputContoller.MovementInput.x : 0f) +
+                                    cameraForwardXZ * (!_playerState._inDialogState ? _playerInputContoller.MovementInput.y : 0f);
             
             Vector3 movementDelta = moveDirection * lateralAcceleration * Time.deltaTime;
             Vector3 newVelocity = _characterController.velocity + movementDelta;
@@ -205,7 +210,7 @@ namespace ShiroGe.CharacterController
         private void PointerScan()
         {
             RaycastHit hit;
-            if (Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
+            if (!_playerState._inDialogState && Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
                     interactionDistance, _layerMask))
             {
                 _target = hit.collider.gameObject;
@@ -219,8 +224,10 @@ namespace ShiroGe.CharacterController
                 GuiManager.Instance.ResetPointer();
             }
 
-            if (_playerInputContoller.InteractInput)
+            if (!_playerState._inDialogState && _playerInputContoller.InteractInput)
+            {
                 _target?.GetComponent<Interactable>().Interact();
+            }
         }
 
         #endregion
@@ -228,7 +235,10 @@ namespace ShiroGe.CharacterController
         #region Lateupdate Logic
         private void LateUpdate()
         {
-            UpdateCameraRotation();
+            if (!_playerState._inDialogState)
+            {
+                UpdateCameraRotation();
+            }
         }
 
         private void UpdateCameraRotation()
@@ -283,7 +293,7 @@ namespace ShiroGe.CharacterController
         #region State Checks
         private bool IsMovingLaterally()
         {
-            Vector3 laterallyVelocity = new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z);
+            Vector3 laterallyVelocity =  !_playerState._inDialogState ? new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z) : Vector3.zero;
             
             return laterallyVelocity.magnitude > movingThreesold;
         }
@@ -294,16 +304,16 @@ namespace ShiroGe.CharacterController
         }
 
         private bool IsGroundedWhileGrounded()
-        {
+        {/*
             Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, _groundLayers);
             float angle = Vector3.Angle(normal, Vector3.up);
-            bool validAngle = angle <= _characterController.slopeLimit;
+            bool validAngle = angle <= _characterController.slopeLimit;*/
             
             Vector3 spherePosition = new Vector3(transform.position.x,
                 transform.position.y - _characterController.radius, transform.position.z);
             bool grounded = Physics.CheckSphere(spherePosition, _characterController.radius, _groundLayers, QueryTriggerInteraction.Ignore);
 
-            return grounded & validAngle;
+            return grounded /*& validAngle*/; // TODO: Закоменченно для демки. Скатывание при заходе шагом на наклонку, ломает подъём по лестнице
         }
 
         private bool IsGroundedWhileAirborne()

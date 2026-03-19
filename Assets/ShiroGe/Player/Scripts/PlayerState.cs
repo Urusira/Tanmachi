@@ -6,6 +6,8 @@ namespace ShiroGe.CharacterController
     {
         [field: SerializeField]
         public PlayerMovementState CurrentPlayerMovementState { get; private set; } = PlayerMovementState.Idling;
+        
+        public bool _inDialogState { get; private set; } = false;
 
         public void SetPlayerMovementState(PlayerMovementState newState)
         {
@@ -24,6 +26,12 @@ namespace ShiroGe.CharacterController
                    movementState == PlayerMovementState.Running ||
                    movementState == PlayerMovementState.Sprinting ||
                    movementState == PlayerMovementState.Strafing;
+        }
+
+        public bool InDialogChange()
+        {
+            _inDialogState = !_inDialogState;
+            return _inDialogState;
         }
     }
 }

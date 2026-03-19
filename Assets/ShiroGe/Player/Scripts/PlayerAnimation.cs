@@ -48,6 +48,7 @@ namespace ShiroGe.CharacterController
 
             Vector2 inputTarget =   isSprinting ? _inputController.MovementInput * 1.5f :
                                     isRunning ? _inputController.MovementInput * 1f : _inputController.MovementInput * 0.5f;
+            inputTarget = !_playerState._inDialogState ? inputTarget : Vector2.zero;
             
             _currentBlendInput = Vector3.Lerp(_currentBlendInput, inputTarget, locomotionBlendSpeed * Time.deltaTime);
             

@@ -10,10 +10,10 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private GameObject pointerObj;
 
     [Header("Settings")]
-    [SerializeField] private Vector2 stdPointerSize = new Vector2(3f, 3f);
-    [SerializeField] private Vector2 highlightPointerSize = new Vector2(4f, 4f);
-    [SerializeField] private Color stdPointerColor = new Color(1f, 1f, 1f, 0.5f);
-    [SerializeField] private Color highlightPointerColor = new Color(1f, 1f, 1f, 1f);
+    [SerializeField] private Vector2 stdPointerSize;
+    [SerializeField] private Vector2 highlightPointerSize;
+    [SerializeField] private Color stdPointerColor;
+    [SerializeField] private Color highlightPointerColor = new Color(1f, 1f, 1f, 0.8f);
 
     private Image _pointer;
 
@@ -24,6 +24,10 @@ public class GuiManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        
+        stdPointerColor = pointerObj.GetComponent<Image>().color;
+        stdPointerSize = pointerObj.GetComponent<RectTransform>().sizeDelta;
+        highlightPointerSize = stdPointerSize * 1.2f;
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
