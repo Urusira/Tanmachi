@@ -6,12 +6,24 @@ namespace ShiroGe.CharacterController
     {
         [field: SerializeField]
         public PlayerMovementState CurrentPlayerMovementState { get; private set; } = PlayerMovementState.Idling;
+        [field: SerializeField]
+        public PlayerActionsState CurrentPlayerActionsState { get; private set; } = PlayerActionsState.Default;
         
         public bool _inDialogState { get; private set; } = false;
 
         public void SetPlayerMovementState(PlayerMovementState newState)
         {
             CurrentPlayerMovementState = newState;
+        }
+
+        public void SetPlayerActionsState(PlayerActionsState newState)
+        {
+            CurrentPlayerActionsState = newState;
+        }
+
+        public void SetPlayerActionStateDefault()
+        {
+            CurrentPlayerActionsState = PlayerActionsState.Default;
         }
 
         public bool InGroundState()

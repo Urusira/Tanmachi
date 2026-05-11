@@ -1,4 +1,5 @@
-﻿using ShiroGe.Scripts;
+﻿using System;
+using ShiroGe.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
@@ -27,7 +28,9 @@ namespace ShiroGe.CharacterController
         public float inAirAccel = 20f;
         public float jumpSpeed = 1.0f;
         public float drag = 20f;
+        public float inAirDrag = 4f;
         public float movingThreesold = 0.01f;
+        public float fallingMaxSpeed = 50f;
         
         [Header("Camera")]
         public float cameraSensitivityH = .1f;
@@ -52,6 +55,7 @@ namespace ShiroGe.CharacterController
         public float interactionDistance = 3f;
         
         private PlayerInputController _playerInputContoller;
+        private PlayerActionsController _playerActionsContoller;
         private PlayerState _playerState;
         
         private Vector2 _cameraRotation = Vector2.zero;
@@ -59,6 +63,7 @@ namespace ShiroGe.CharacterController
 
         private bool _isRotatingClockwise = false;
         private bool _jumpedLastFrame = false;
+        private bool _interactLastFrame = false;
         
         private float _rotatingToTargetTimer = 0f;
         private float _verticalVelocity = 0f;
@@ -80,6 +85,7 @@ namespace ShiroGe.CharacterController
         private void Awake()
         {
             _playerInputContoller = GetComponent<PlayerInputController>();
+            _playerActionsContoller = GetComponent<PlayerActionsController>();
             _playerState = GetComponent<PlayerState>();
 
             _antiBumpSpeed = sprintMaxSpeed;
@@ -105,7 +111,6 @@ namespace ShiroGe.CharacterController
 
         private void UpdateMovementState()
         {
-            
             _lastMovementState = _playerState.CurrentPlayerMovementState;
             
             bool canRun = CanRun();
@@ -160,6 +165,11 @@ namespace ShiroGe.CharacterController
             {
                 _verticalVelocity += _antiBumpSpeed;
             }
+
+            if (Math.Abs(_verticalVelocity) > Math.Abs(fallingMaxSpeed))
+            {
+                _verticalVelocity = -1f * Math.Abs(fallingMaxSpeed);
+            }
         }
 
         private void HandleLateralMovement()
@@ -182,9 +192,10 @@ namespace ShiroGe.CharacterController
             
             Vector3 movementDelta = moveDirection * lateralAcceleration * Time.deltaTime;
             Vector3 newVelocity = _characterController.velocity + movementDelta;
-            
-            Vector3 curDrag = newVelocity.normalized * drag *  Time.deltaTime;
-            newVelocity = (newVelocity.magnitude > drag * Time.deltaTime) ? newVelocity - curDrag : Vector3.zero;
+
+            float currentDragMagnitude = isGrounded ? drag : inAirDrag;
+            Vector3 curDrag = newVelocity.normalized * currentDragMagnitude *  Time.deltaTime;
+            newVelocity = (newVelocity.magnitude > currentDragMagnitude * Time.deltaTime) ? newVelocity - curDrag : Vector3.zero;
             newVelocity = Vector3.ClampMagnitude(new Vector3(newVelocity.x, 0f, newVelocity.z), clampLateralMagnitude);
             newVelocity.y += _verticalVelocity;
             newVelocity = !isGrounded ? HandleSteepWalls(newVelocity) : newVelocity;
@@ -209,24 +220,39 @@ namespace ShiroGe.CharacterController
         //TODO: Needs Refactor
         private void PointerScan()
         {
+            Debug.unityLogger.Log(_interactLastFrame);
+            if (_interactLastFrame && !_playerActionsContoller.InteractInput)
+            {
+                _interactLastFrame = false;
+            }
+            
             RaycastHit hit;
             if (!_playerState._inDialogState && Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
                     interactionDistance, _layerMask))
             {
+                if(_target != null && !_target.Equals(hit.collider.gameObject))
+                    _target.GetComponent<Interactable>().HideHint();
+                
                 _target = hit.collider.gameObject;
                 _target?.GetComponent<Interactable>().ShowHint();
                 GuiManager.Instance.HighlightPointer();
             }
-            else
+            else if (_target != null)
             {
                 _target?.GetComponent<Interactable>().HideHint();
                 _target = null;
                 GuiManager.Instance.ResetPointer();
             }
-
-            if (!_playerState._inDialogState && _playerInputContoller.InteractInput)
+            
+            if (_target != null && !_playerState._inDialogState && !_interactLastFrame && _playerActionsContoller.InteractInput)
             {
-                _target?.GetComponent<Interactable>().Interact();
+                _interactLastFrame = true;
+                PlayerActionsState typeAction = _target.GetComponent<Interactable>().Interact();
+                _playerState.SetPlayerActionsState(typeAction);
+                if (typeAction == PlayerActionsState.Default)
+                {
+                    _playerActionsContoller.SetInteractPressedFalse();
+                }
             }
         }
 

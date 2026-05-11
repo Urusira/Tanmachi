@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 namespace ShiroGe.CharacterController
 {
     [DefaultExecutionOrder(-2)]
-    public class PlayerInputController : MonoBehaviour, PlayerControls.IPlayerActions
+    public class PlayerInputController : MonoBehaviour, PlayerControls.IPlayerMovementActions
     {
         [SerializeField] private bool holdToSprint = false;
         public PlayerControls PlayerControls { get; private set; }
@@ -13,8 +13,6 @@ namespace ShiroGe.CharacterController
         public Vector2 LookInput { get; private set; }
         
         public bool JumpPressed { get; private set; }
-        public bool AttackInput { get; private set; }
-        public bool InteractInput { get; private set; }
         public bool SprintToggledOn { get; private set; }
         public bool WalkToggledOn { get; private set; }
 
@@ -23,14 +21,14 @@ namespace ShiroGe.CharacterController
             PlayerControls = new PlayerControls();
             PlayerControls.Enable();
             
-            PlayerControls.Player.Enable();
-            PlayerControls.Player.SetCallbacks(this);
+            PlayerControls.PlayerMovement.Enable();
+            PlayerControls.PlayerMovement.SetCallbacks(this);
         }
 
         private void OnDisable()
         {
-            PlayerControls.Player.Disable();
-            PlayerControls.Player.RemoveCallbacks(this);
+            PlayerControls.PlayerMovement.Disable();
+            PlayerControls.PlayerMovement.RemoveCallbacks(this);
         }
 
         private void LateUpdate()
@@ -46,16 +44,6 @@ namespace ShiroGe.CharacterController
         public void OnLook(InputAction.CallbackContext context)
         {
             LookInput = context.ReadValue<Vector2>();
-        }
-
-        public void OnAttack(InputAction.CallbackContext context)
-        {
-            AttackInput = context.performed;
-        }
-
-        public void OnInteract(InputAction.CallbackContext context)
-        {
-            InteractInput = context.performed;
         }
 
         public void OnJump(InputAction.CallbackContext context)

@@ -1,26 +1,19 @@
 ﻿using System;
+using ShiroGe.CharacterController;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace ShiroGe.Scripts.NPC
 {
-    public class Dialog : MonoBehaviour, Interactable
+    public class Dialog : Interactable
     {
         [SerializeField] private new string name = String.Empty;
-       
-        public void Interact()
+
+        public override PlayerActionsState Interact()
         {
             DialogManager.Instance.StartDialog(name, GetInstanceID().ToString());
-        }
-    
-        public void ShowHint()
-        {
-        
-        }
 
-        public void HideHint()
-        {
-        
+            return PlayerActionsState.Default;
         }
     }
 }
