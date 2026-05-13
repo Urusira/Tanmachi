@@ -8,8 +8,14 @@ namespace ShiroGe.Scripts.Objects
     {
         public override PlayerActionsState Interact()
         {
-            Destroy(gameObject);
-            
+            try
+            {
+                GetComponentInParent<AssignDestoryer>().Destroyer();
+            }
+            catch (NullReferenceException _){
+                Destroy(gameObject);
+            }
+
             return PlayerActionsState.PickingUp;
         }
     }
