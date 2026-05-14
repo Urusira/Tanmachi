@@ -1,3 +1,5 @@
+using System;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,14 +10,17 @@ public class GuiManager : MonoBehaviour
 
     [SerializeField] private GameObject guiCanvas;
     [SerializeField] private GameObject pointerObj;
+    [SerializeField] private GameObject hintTextObj;
 
     [Header("Settings")]
     [SerializeField] private Vector2 stdPointerSize;
     [SerializeField] private Vector2 highlightPointerSize;
     [SerializeField] private Color stdPointerColor;
     [SerializeField] private Color highlightPointerColor = new Color(1f, 1f, 1f, 0.8f);
+    [SerializeField] private String standartHint = "F для телепортации";
 
     private Image _pointer;
+    private TextMeshProUGUI _hintTextMesh;
 
     private void Start()
     {
@@ -26,6 +31,7 @@ public class GuiManager : MonoBehaviour
         }
         
         stdPointerColor = pointerObj.GetComponent<Image>().color;
+        _hintTextMesh = hintTextObj.GetComponent<TextMeshProUGUI>();
         stdPointerSize = pointerObj.GetComponent<RectTransform>().sizeDelta;
         highlightPointerSize = stdPointerSize * 1.2f;
 
@@ -35,16 +41,18 @@ public class GuiManager : MonoBehaviour
         ShowGui();
     }
 
-    public void HighlightPointer()
+    public void HighlightPointer(String hintText = "")
     {
         _pointer.color = highlightPointerColor;
         _pointer.rectTransform.sizeDelta = highlightPointerSize;
+        _hintTextMesh.text = hintText == "" ? standartHint : hintText;
     }
 
     public void ResetPointer()
     {
         _pointer.color = stdPointerColor;
         _pointer.rectTransform.sizeDelta = stdPointerSize;
+        _hintTextMesh.text = standartHint;
     }
 
     public void HideGui()

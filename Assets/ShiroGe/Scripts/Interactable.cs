@@ -42,9 +42,10 @@ namespace ShiroGe.Scripts
             InteractableOutline.OutlineWidth = _outlineWidthOutline;
         }
 
-        public void ShowHint()
+        public virtual String ShowHint()
         {
             InteractableOutline.enabled = true;
+            return "Нажмите для взаимодействия";
         }
 
         public void HideHint()

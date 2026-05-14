@@ -13,5 +13,11 @@ namespace ShiroGe.Scripts.Objects
             //return PlayerActionsState.PickingUp;
             return PlayerActionsState.Handling1HHorizontal;
         }
+
+        public override string ShowHint()
+        {
+            base.ShowHint();
+            return $"{gameObject.name}\nF чтобы взять в руки";
+        }
     }
 }

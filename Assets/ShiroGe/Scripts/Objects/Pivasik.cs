@@ -18,5 +18,11 @@ namespace ShiroGe.Scripts.Objects
 
             return PlayerActionsState.PickingUp;
         }
+
+        public override string ShowHint()
+        {
+            base.ShowHint();
+            return $"{gameObject.name}\nF для подбора";
+        }
     }
 }

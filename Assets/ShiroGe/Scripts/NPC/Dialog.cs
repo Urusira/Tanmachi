@@ -15,5 +15,11 @@ namespace ShiroGe.Scripts.NPC
 
             return PlayerActionsState.Default;
         }
+
+        public override String ShowHint()
+        {
+            base.ShowHint();
+            return $"{gameObject.name}\nF для разговора";
+        }
     }
 }

@@ -12,5 +12,11 @@ namespace ShiroGe.Scripts.Objects
 
             return PlayerActionsState.Default;
         }
+
+        public override string ShowHint()
+        {
+            base.ShowHint();
+            return $"{gameObject.name}\nF для взаимодействия";
+        }
     }
 }

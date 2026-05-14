@@ -233,8 +233,9 @@ namespace ShiroGe.CharacterController
                     _target.GetComponent<Interactable>().HideHint();
                 
                 _target = hit.collider.gameObject;
-                _target?.GetComponent<Interactable>().ShowHint();
-                GuiManager.Instance.HighlightPointer();
+                String hintText = _target?.GetComponent<Interactable>().ShowHint();
+                GuiManager.Instance.HighlightPointer(hintText);
+                
             }
             else if (_target != null)
             {
@@ -253,9 +254,28 @@ namespace ShiroGe.CharacterController
                     _playerActionsContoller.SetInteractPressedFalse();
                 }
             }
+
         }
 
         #endregion
+
+        private void FixedUpdate()
+        {
+            if (_interactLastFrame && !_playerActionsContoller.InteractInput)
+            {
+                _interactLastFrame = false;
+            }
+            
+            RaycastHit hit;
+            if (_target == null && !_interactLastFrame && _playerActionsContoller.InteractInput && Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
+                    1000f, LayerMask.GetMask("Default")))
+            {
+                Debug.unityLogger.Log($"Teleport to {hit.point}, {_interactLastFrame}");
+                gameObject.transform.position = hit.point;
+                _interactLastFrame = true;
+                _playerActionsContoller.SetInteractPressedFalse();
+            }
+        }
 
         #region Lateupdate Logic
         private void LateUpdate()
