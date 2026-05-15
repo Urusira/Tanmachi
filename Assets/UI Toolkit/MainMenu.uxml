@@ -1,0 +1,14 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyles.uss?fileID=7433441132597879392&amp;guid=b866f74d1d9080c438967907d92a0622&amp;type=3#MainMenuStyles"/>
+    <ui:VisualElement name="GameBg" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Imports/Fantasy%20Skybox%20FREE/Panoramics/FS002/FS002_Day.png?fileID=2800000&amp;guid=90bac99dc822bf641b140cdc291b845e&amp;type=3#FS002_Day&quot;); background-size: 1920px 1344px; background-position-x: left 0; background-position-y: top 0; align-items: center; justify-content: center;">
+        <ui:VisualElement name="MainMenuContainer" style="flex-grow: 0; width: 800px; height: 1000px; background-color: rgba(0, 0, 0, 0); padding-top: 20px; padding-right: 20px; padding-bottom: 20px; padding-left: 20px;">
+            <ui:Label text="Tanmachi" style="font-size: 96px; -unity-text-align: middle-center; -unity-font-style: bold; -unity-font-definition: url(&quot;project://database/Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Fonts/PerfectDOSVGA437.ttf?fileID=12800000&amp;guid=74a5091d8707f334b9a5c31ef71a64ba&amp;type=3#PerfectDOSVGA437&quot;); -unity-text-outline-color: rgb(68, 68, 68); color: rgb(255, 255, 255); -unity-text-outline-width: 6px; text-shadow: 6px 6px 32px rgb(0, 0, 0); text-overflow: clip; letter-spacing: 2px; -unity-text-auto-size: none; rotate: 4deg;"/>
+            <ui:VisualElement style="flex-grow: 0; height: 2px; margin-bottom: 64px;"/>
+            <ui:GroupBox style="align-items: center;">
+                <ui:Button text="Начать игру" name="PlayButton" class="main-menu-button"/>
+                <ui:Button text="Параметры" name="SettingsButton" class="main-menu-button"/>
+                <ui:Button text="Выход" name="ExitButton" class="main-menu-button"/>
+            </ui:GroupBox>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
