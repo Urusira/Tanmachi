@@ -1,7 +1,6 @@
 ﻿using System;
 using ShiroGe.CharacterController;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace ShiroGe.Scripts
 {
@@ -16,7 +15,7 @@ namespace ShiroGe.Scripts
 
         private void Start()
         {
-            if (TryGetComponent(out InteractableOutline))
+            if (TryGetComponent<Outline>(out InteractableOutline))
             {
                 InteractableOutline.enabled = false;
             }
@@ -27,7 +26,11 @@ namespace ShiroGe.Scripts
                 OutlineSetParams();
                 InteractableOutline.enabled = false;
             }
+
+            Initiate();
         }
+
+        public abstract void Initiate();
 
         public void OutlineUpdate(Color outlineColor, float outlineWidthOutline)
         {

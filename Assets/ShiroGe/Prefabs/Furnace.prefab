@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3159762821357451936}
   - component: {fileID: 1135734176754720532}
   - component: {fileID: 207084131068224810}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Onlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,6 +88,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2209647334309533365
 GameObject:
@@ -100,7 +101,7 @@ GameObject:
   - component: {fileID: 7486962521559054621}
   - component: {fileID: 2855736221171219337}
   - component: {fileID: 2620301873559147372}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,6 +178,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4703456189619691387
 GameObject:
@@ -189,7 +191,8 @@ GameObject:
   - component: {fileID: 1721676882891384589}
   - component: {fileID: 4596718704329612491}
   - component: {fileID: 3288625625280694115}
-  m_Layer: 0
+  - component: {fileID: 8277612503638676922}
+  m_Layer: 7
   m_Name: Furnace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,6 +263,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.18, y: 1.21, z: 0.54}
   m_Center: {x: 0, y: 1.47, z: 0.48}
+--- !u!114 &8277612503638676922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4703456189619691387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4243abbb9094d62a7cebd9358b41214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Objects.Furnace
+  stationName: "\u041F\u0435\u0447\u043A\u0430"
 --- !u!1 &7067061761719882173
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,7 +287,7 @@ GameObject:
   - component: {fileID: 8747685581430987397}
   - component: {fileID: 1409928296653663014}
   - component: {fileID: 1824801215069690516}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -348,6 +364,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7108334494245008225
 GameObject:
@@ -360,7 +377,7 @@ GameObject:
   - component: {fileID: 6288290584853136527}
   - component: {fileID: 1726838858963707247}
   - component: {fileID: 8113349844512961682}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Shelf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -437,6 +454,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7671465713028958744
 GameObject:
@@ -449,7 +467,7 @@ GameObject:
   - component: {fileID: 3857896937918400076}
   - component: {fileID: 7688207980441319912}
   - component: {fileID: 4930941947626210484}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -526,6 +544,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8909165482850991862
 GameObject:
@@ -538,7 +557,7 @@ GameObject:
   - component: {fileID: 8885596636964624965}
   - component: {fileID: 6727628127203800560}
   - component: {fileID: 1944246924421400558}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Backplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -615,6 +634,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &7313751345332082588
 PrefabInstance:
@@ -676,13 +696,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6311025996487218220, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6818030028194434397, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
       propertyPath: m_Name
       value: Woods
       objectReference: {fileID: 0}
     - target: {fileID: 6818030028194434397, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6818030028194434397, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8892903996476394079, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7659629895873156095, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}

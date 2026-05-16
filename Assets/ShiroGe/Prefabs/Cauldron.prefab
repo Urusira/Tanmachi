@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8264369436397794593}
   - component: {fileID: 6839276022838479551}
-  m_Layer: 0
+  - component: {fileID: 4069661382064678753}
+  m_Layer: 7
   m_Name: Cauldron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,6 +59,19 @@ CapsuleCollider:
   m_Height: 0.07
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &4069661382064678753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7952995385779140483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf1166625e145928554b9e7cbdb7097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Objects.Cauldron
+  stationName: "\u041A\u043E\u0442\u0451\u043B"
 --- !u!1 &8315372262495648948
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,7 +83,7 @@ GameObject:
   - component: {fileID: 586296234336138584}
   - component: {fileID: 6808699125202311520}
   - component: {fileID: 6594836445108311315}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cauldron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,6 +160,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8821668180964631308
 GameObject:
@@ -158,7 +173,7 @@ GameObject:
   - component: {fileID: 6572886810713833538}
   - component: {fileID: 5864050141648754859}
   - component: {fileID: 103683488453753641}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pod
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,6 +250,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &2216370775173291607
 PrefabInstance:
@@ -284,13 +300,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6311025996487218220, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6818030028194434397, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
       propertyPath: m_Name
       value: Woods
       objectReference: {fileID: 0}
     - target: {fileID: 6818030028194434397, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6818030028194434397, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8892903996476394079, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7659629895873156095, guid: 22762a613052ded45ad38c7436fd71bf, type: 3}

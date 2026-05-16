@@ -1,15 +1,19 @@
 ﻿using System;
 using ShiroGe.CharacterController;
-using UnityEngine;
 
-namespace ShiroGe.Scripts.Objects
+namespace ShiroGe.Scripts.Items
 {
-    public class Pivasik : Interactable
+    public abstract class PickapbleItem : Interactable
     {
+        public int amount = 1;
+        
+        public ItemSO scriptableItem;
+        
         public override PlayerActionsState Interact()
         {
             try
             {
+                InventoryManager.Instance.AddItem(scriptableItem, amount);
                 GetComponentInParent<AssignDestoryer>().Destroyer();
             }
             catch (NullReferenceException _){

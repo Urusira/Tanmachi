@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ShiroGe.Scripts.Objects
 {
-    public class Kotelok : Interactable
+    public class Cauldron : Station
     {
         public override PlayerActionsState Interact()
         {
@@ -13,10 +13,9 @@ namespace ShiroGe.Scripts.Objects
             return PlayerActionsState.Default;
         }
 
-        public override string ShowHint()
+        public override void Initiate()
         {
-            base.ShowHint();
-            return $"{gameObject.name}\nF для взаимодействия";
+            this.stationName = "Котёл";
         }
     }
 }

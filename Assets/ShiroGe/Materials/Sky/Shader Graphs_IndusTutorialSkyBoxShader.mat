@@ -53,6 +53,7 @@ Material:
     m_Floats:
     - _AuroraBlend: 3.85
     - _AuroraDistortionSpeed: 0.1
+    - _AuroraEnabled: 1
     - _AuroraIntensity: 2.56
     - _AuroraNoiseScale: 525.2
     - _AuroraPower: 2.18
@@ -60,6 +61,7 @@ Material:
     - _DayNightSlider: 0
     - _GradientOffset: -0.15
     - _HorizonBlend: 30
+    - _MoonSize: 0.02
     - _NadirBlend: 30
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -76,6 +78,7 @@ Material:
     - _GroundColor: {r: 0.28235295, g: 0.105882354, b: 0.07058824, a: 1}
     - _HorizonColor: {r: 0.5283019, g: 0.33977064, b: 0, a: 1}
     - _MainLightDirection: {r: 0, g: 0, b: 0, a: 0}
+    - _MoonColor: {r: 2.1185474, g: 1.4953593, b: 0.9093765, a: 1}
     - _NightSkyColor: {r: 0.028969381, g: 0.03216078, b: 0.1981132, a: 1}
     - _SkyColor: {r: 0.4669811, g: 0.6760532, b: 1, a: 1}
     - _SunColor: {r: 40.8951, g: 15.332472, b: 6.751549, a: 1}

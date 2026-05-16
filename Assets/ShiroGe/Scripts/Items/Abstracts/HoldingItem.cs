@@ -2,15 +2,20 @@
 using ShiroGe.CharacterController;
 using UnityEngine;
 
-namespace ShiroGe.Scripts.Objects
+namespace ShiroGe.Scripts.Items
 {
-    public class Podnos : Interactable
+    public abstract class HoldingItem : Interactable
     {
+        public int amount = 1;
+        
+        public ItemSO scriptableItem;
+        
         public override PlayerActionsState Interact()
         {
+            InventoryManager.Instance.AddItem(scriptableItem, amount);
+            
             Destroy(gameObject);
             
-            //return PlayerActionsState.PickingUp;
             return PlayerActionsState.Handling1HHorizontal;
         }
 

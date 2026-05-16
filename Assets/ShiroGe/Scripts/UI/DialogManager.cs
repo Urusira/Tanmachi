@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts.LLM.Data.Repository;
 using TMPro;
-using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class DialogManager : MonoBehaviour
 {
@@ -16,11 +11,13 @@ public class DialogManager : MonoBehaviour
     [SerializeField] private GameObject responseFieldObj;
     [SerializeField] private GameObject thinksFieldObj;
     [SerializeField] private GameObject playerObj;
-    //[SerializeField] private GameObject cinemachineCameraObj;
+    
+    public bool InDialog { get; private set; }
 
+    private PlayerController _playerController;
+    
     private TextMeshProUGUI responseField;
     private TMP_InputField thinksField;
-    private PlayerState _playerState;
     
     public string currTalkativeNpcId { get; private set; }
 
@@ -33,10 +30,13 @@ public class DialogManager : MonoBehaviour
         }
 
         Instance = this;
+        
         DontDestroyOnLoad(gameObject);
+        
         responseField = responseFieldObj.GetComponent<TextMeshProUGUI>();
         thinksField = thinksFieldObj.GetComponent<TMP_InputField>();
-        _playerState = playerObj.GetComponent<PlayerState>();
+        
+        _playerController = playerObj.GetComponent<PlayerController>();
         
         HideDialogUI();
     }
@@ -48,13 +48,6 @@ public class DialogManager : MonoBehaviour
         
         responseField.text = $"{npcName}\n\n" + string.Join("\n", NpcDialogRepository.Instance.GetNpcHistoryUI(currTalkativeNpcId));
         
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        
-        
-
-        _playerState.InDialogChange();
-        
         ShowDialogUI();
     }
 
@@ -62,11 +55,6 @@ public class DialogManager : MonoBehaviour
     {
         responseField.text = "";
         thinksField.text = "";
-        
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        
-        _playerState.InDialogChange();
         
         HideDialogUI();
     }
@@ -76,26 +64,32 @@ public class DialogManager : MonoBehaviour
         string message = thinksField.text;
         if (string.IsNullOrEmpty(message)) return;
         
-        responseField.text += $"\tИгрок: {message}\n\n";
+        responseField.text += $"Игрок: {message}\n\n";
         
         LlmCore.Instance.OnUserMessageSent(message);
     }
 
     public void Response(string response)
     {
-        responseField.text += $"\tНПС: {response}\n\n";
+        responseField.text += $"НПС: {response}\n\n";
     }
-
 
     private void ShowDialogUI()
     {
+        InDialog = true;
         dialogCanvas.SetActive(true);
+        GuiManager.Instance.UnlockMouse();
         GuiManager.Instance.HideGui();
+        _playerController.LockControl();
     }
+    
     private void HideDialogUI()
     {
+        InDialog = false;
         dialogCanvas.SetActive(false);
+        GuiManager.Instance.LockMouse();
         GuiManager.Instance.ShowGui();
+        _playerController.UnlockControl();
     }
 
     private void OnDestroy()

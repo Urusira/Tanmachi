@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5278967879793627516}
   - component: {fileID: 6388079748522776630}
   - component: {fileID: 6036266836425460609}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,6 +88,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2684649389984491846
 GameObject:
@@ -101,7 +102,8 @@ GameObject:
   - component: {fileID: 2605858316695136015}
   - component: {fileID: 2248130709322834833}
   - component: {fileID: 8927274140642486500}
-  m_Layer: 0
+  - component: {fileID: 1535779383827887623}
+  m_Layer: 7
   m_Name: Mug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,6 +200,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.06, y: 0.03, z: 0.06}
   m_Center: {x: 0, y: 0.009, z: 0}
+--- !u!114 &1535779383827887623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2684649389984491846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e2325fdac81496583fcdf2695581de9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.BeerMug
+  amount: 1
+  scriptableItem: {fileID: 11400000, guid: 7a07599ccbb364f4c99e666b9f971c35, type: 2}
 --- !u!1 &3858208953691203729
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +225,7 @@ GameObject:
   - component: {fileID: 5955207223128651346}
   - component: {fileID: 4030385532854473285}
   - component: {fileID: 3665912983579053696}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -286,6 +302,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5360907777168694795
 GameObject:
@@ -298,7 +315,7 @@ GameObject:
   - component: {fileID: 2185653833367294224}
   - component: {fileID: 3998143511739102773}
   - component: {fileID: 8384030449750887500}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -375,6 +392,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5966803379906646077
 GameObject:
@@ -387,7 +405,7 @@ GameObject:
   - component: {fileID: 6587500413943357492}
   - component: {fileID: 5943344415926258763}
   - component: {fileID: 6268782638097526515}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Rims
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -464,4 +482,5 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}

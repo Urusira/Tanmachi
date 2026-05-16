@@ -1,5 +1,6 @@
 ﻿using System;
 using ShiroGe.Scripts;
+using ShiroGe.Scripts.Objects;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
@@ -56,6 +57,7 @@ namespace ShiroGe.CharacterController
         
         private PlayerInputController _playerInputContoller;
         private PlayerActionsController _playerActionsContoller;
+        private PlayerIngameUiController _playerIngameUiController;
         private PlayerState _playerState;
         
         private Vector2 _cameraRotation = Vector2.zero;
@@ -86,10 +88,12 @@ namespace ShiroGe.CharacterController
         {
             _playerInputContoller = GetComponent<PlayerInputController>();
             _playerActionsContoller = GetComponent<PlayerActionsController>();
+            _playerIngameUiController = GetComponent<PlayerIngameUiController>();
             _playerState = GetComponent<PlayerState>();
 
             _antiBumpSpeed = sprintMaxSpeed;
             _stepOffset = _characterController.stepOffset;
+            
         }
         private void Start()
         {
@@ -98,6 +102,13 @@ namespace ShiroGe.CharacterController
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+
+        private void OnDestroy()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         #endregion
         
         #region Update Logic
@@ -124,7 +135,7 @@ namespace ShiroGe.CharacterController
                                                 isSprinting ? PlayerMovementState.Sprinting :
                                                 isMovingLaterally || isMovementInput ? PlayerMovementState.Running : PlayerMovementState.Idling;
             
-            _playerState.SetPlayerMovementState(!_playerState._inDialogState ? lateralState : PlayerMovementState.Idling);
+            _playerState.SetPlayerMovementState(lateralState);
 
             if ((!isGrounded || (_jumpedLastFrame && !superJumps)) && _characterController.velocity.y > 0)
             {
@@ -155,7 +166,7 @@ namespace ShiroGe.CharacterController
                 _verticalVelocity = -_antiBumpSpeed;
             
 
-            if (_playerInputContoller.JumpPressed && isGrounded  && !_playerState._inDialogState)
+            if (_playerInputContoller.JumpPressed && isGrounded)
             {
                 _verticalVelocity += Mathf.Sqrt(jumpSpeed * 3 * gravity);
                 _jumpedLastFrame = true;
@@ -187,8 +198,8 @@ namespace ShiroGe.CharacterController
             
             Vector3 cameraForwardXZ = new Vector3(_playerCamera.transform.forward.x, 0, _playerCamera.transform.forward.z).normalized;
             Vector3 cameraRightXZ = new Vector3(_playerCamera.transform.right.x, 0, _playerCamera.transform.right.z).normalized;
-            Vector3 moveDirection = cameraRightXZ * (!_playerState._inDialogState ? _playerInputContoller.MovementInput.x : 0f) +
-                                    cameraForwardXZ * (!_playerState._inDialogState ? _playerInputContoller.MovementInput.y : 0f);
+            Vector3 moveDirection = cameraRightXZ * _playerInputContoller.MovementInput.x +
+                                    cameraForwardXZ * _playerInputContoller.MovementInput.y;
             
             Vector3 movementDelta = moveDirection * lateralAcceleration * Time.deltaTime;
             Vector3 newVelocity = _characterController.velocity + movementDelta;
@@ -226,7 +237,7 @@ namespace ShiroGe.CharacterController
             }
             
             RaycastHit hit;
-            if (!_playerState._inDialogState && Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
+            if (Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
                     interactionDistance, _layerMask))
             {
                 if(_target != null && !_target.Equals(hit.collider.gameObject))
@@ -244,14 +255,18 @@ namespace ShiroGe.CharacterController
                 GuiManager.Instance.ResetPointer();
             }
             
-            if (_target != null && !_playerState._inDialogState && !_interactLastFrame && _playerActionsContoller.InteractInput)
+            if (_target != null && !_interactLastFrame && _playerActionsContoller.InteractInput)
             {
                 _interactLastFrame = true;
                 PlayerActionsState typeAction = _target.GetComponent<Interactable>().Interact();
                 _playerState.SetPlayerActionsState(typeAction);
-                if (typeAction == PlayerActionsState.Default)
+                switch (typeAction)
                 {
-                    _playerActionsContoller.SetInteractPressedFalse();
+                    case PlayerActionsState.Default:
+                    {
+                        _playerActionsContoller.SetInteractPressedFalse();
+                        break;
+                    }
                 }
             }
 
@@ -267,8 +282,9 @@ namespace ShiroGe.CharacterController
             }
             
             RaycastHit hit;
-            if (_target == null && !_interactLastFrame && _playerActionsContoller.InteractInput && Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
-                    1000f, LayerMask.GetMask("Default")))
+            if (_target == null && !_interactLastFrame && _playerActionsContoller.InteractInput && 
+                Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, 
+                    out hit, 1000f, LayerMask.GetMask("Default")))
             {
                 Debug.unityLogger.Log($"Teleport to {hit.point}, {_interactLastFrame}");
                 gameObject.transform.position = hit.point;
@@ -280,10 +296,7 @@ namespace ShiroGe.CharacterController
         #region Lateupdate Logic
         private void LateUpdate()
         {
-            if (!_playerState._inDialogState)
-            {
-                UpdateCameraRotation();
-            }
+            UpdateCameraRotation();
         }
 
         private void UpdateCameraRotation()
@@ -338,7 +351,7 @@ namespace ShiroGe.CharacterController
         #region State Checks
         private bool IsMovingLaterally()
         {
-            Vector3 laterallyVelocity =  !_playerState._inDialogState ? new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z) : Vector3.zero;
+            Vector3 laterallyVelocity =  new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z);
             
             return laterallyVelocity.magnitude > movingThreesold;
         }
@@ -377,6 +390,18 @@ namespace ShiroGe.CharacterController
             
             return true;
         }
+        
         #endregion
+        
+        public void LockControl()
+        {
+            _playerInputContoller.MovementDisable();
+            _playerActionsContoller.ActionsDisable();
+        }
+        public void UnlockControl()
+        {
+            _playerInputContoller.MovementEnable();
+            _playerActionsContoller.ActionsEnable();
+        }
     }
 }

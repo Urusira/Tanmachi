@@ -32,8 +32,6 @@ public class GuiManager : MonoBehaviour
         
         stdPointerColor = pointerObj.GetComponent<Image>().color;
         _hintTextMesh = hintTextObj.GetComponent<TextMeshProUGUI>();
-        stdPointerSize = pointerObj.GetComponent<RectTransform>().sizeDelta;
-        highlightPointerSize = stdPointerSize * 1.2f;
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
@@ -62,5 +60,17 @@ public class GuiManager : MonoBehaviour
     public void ShowGui()
     {
         guiCanvas.SetActive(true);
+    }
+
+    public void LockMouse()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void UnlockMouse()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

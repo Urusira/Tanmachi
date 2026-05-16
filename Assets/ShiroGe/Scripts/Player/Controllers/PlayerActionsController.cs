@@ -25,6 +25,16 @@ namespace ShiroGe.CharacterController
             PlayerControls.PlayerActions.Disable();
             PlayerControls.PlayerActions.RemoveCallbacks(this);
         }
+        
+        public void ActionsDisable()
+        {
+            PlayerControls.PlayerActions.Disable();
+        }
+        
+        public void ActionsEnable()
+        {
+            PlayerControls.PlayerActions.Enable();
+        }
 
         public void SetAttackPressedFalse()
         {

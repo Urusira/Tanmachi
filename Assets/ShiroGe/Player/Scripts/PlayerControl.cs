@@ -1027,6 +1027,15 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""8cdd5770-59a5-4cca-beeb-64051e14d816"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1038,6 +1047,17 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""BackToMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d89dd1e6-91d9-43cc-a950-3ca6940eb4da"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""OpenInventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1133,6 +1153,7 @@ namespace ShiroGe.CharacterController
             // IngameUI
             m_IngameUI = asset.FindActionMap("IngameUI", throwIfNotFound: true);
             m_IngameUI_BackToMenu = m_IngameUI.FindAction("BackToMenu", throwIfNotFound: true);
+            m_IngameUI_OpenInventory = m_IngameUI.FindAction("OpenInventory", throwIfNotFound: true);
         }
 
         ~@PlayerControls()
@@ -1659,6 +1680,7 @@ namespace ShiroGe.CharacterController
         private readonly InputActionMap m_IngameUI;
         private List<IIngameUIActions> m_IngameUIActionsCallbackInterfaces = new List<IIngameUIActions>();
         private readonly InputAction m_IngameUI_BackToMenu;
+        private readonly InputAction m_IngameUI_OpenInventory;
         /// <summary>
         /// Provides access to input actions defined in input action map "IngameUI".
         /// </summary>
@@ -1674,6 +1696,10 @@ namespace ShiroGe.CharacterController
             /// Provides access to the underlying input action "IngameUI/BackToMenu".
             /// </summary>
             public InputAction @BackToMenu => m_Wrapper.m_IngameUI_BackToMenu;
+            /// <summary>
+            /// Provides access to the underlying input action "IngameUI/OpenInventory".
+            /// </summary>
+            public InputAction @OpenInventory => m_Wrapper.m_IngameUI_OpenInventory;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1703,6 +1729,9 @@ namespace ShiroGe.CharacterController
                 @BackToMenu.started += instance.OnBackToMenu;
                 @BackToMenu.performed += instance.OnBackToMenu;
                 @BackToMenu.canceled += instance.OnBackToMenu;
+                @OpenInventory.started += instance.OnOpenInventory;
+                @OpenInventory.performed += instance.OnOpenInventory;
+                @OpenInventory.canceled += instance.OnOpenInventory;
             }
 
             /// <summary>
@@ -1717,6 +1746,9 @@ namespace ShiroGe.CharacterController
                 @BackToMenu.started -= instance.OnBackToMenu;
                 @BackToMenu.performed -= instance.OnBackToMenu;
                 @BackToMenu.canceled -= instance.OnBackToMenu;
+                @OpenInventory.started -= instance.OnOpenInventory;
+                @OpenInventory.performed -= instance.OnOpenInventory;
+                @OpenInventory.canceled -= instance.OnOpenInventory;
             }
 
             /// <summary>
@@ -1972,6 +2004,13 @@ namespace ShiroGe.CharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnBackToMenu(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "OpenInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnOpenInventory(InputAction.CallbackContext context);
         }
     }
 }

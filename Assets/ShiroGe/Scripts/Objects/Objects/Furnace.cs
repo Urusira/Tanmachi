@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ShiroGe.Scripts.Objects
 {
-    public class Pechka : Interactable
+    public class Furnace : Station
     {
         public override PlayerActionsState Interact()
         {
@@ -12,11 +12,10 @@ namespace ShiroGe.Scripts.Objects
             
             return PlayerActionsState.Default;
         }
-
-        public override string ShowHint()
+        
+        public override void Initiate()
         {
-            base.ShowHint();
-            return $"{gameObject.name}\nF для взаимодействия";
+            this.stationName = "Печка с плитой";
         }
     }
 }

@@ -21,5 +21,7 @@ namespace ShiroGe.Scripts.NPC
             base.ShowHint();
             return $"{gameObject.name}\nF для разговора";
         }
+
+        public override void Initiate() { return; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ShiroGe.Scripts.Objects
+namespace ShiroGe.Scripts.Items
 {
     public class AssignDestoryer : MonoBehaviour
     {

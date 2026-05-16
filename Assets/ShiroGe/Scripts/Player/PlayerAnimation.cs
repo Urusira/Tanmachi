@@ -67,8 +67,6 @@ namespace ShiroGe.CharacterController
                                     isRunningBlendValue ? _inputController.MovementInput * _runMaxBlendValue : 
                                                             _inputController.MovementInput * _walkMaxBlendValue;
             
-            inputTarget = !_playerState._inDialogState ? inputTarget : Vector2.zero;
-            
             _currentBlendInput = Vector3.Lerp(_currentBlendInput, inputTarget, locomotionBlendSpeed * Time.deltaTime);
             
             _animator.SetBool(isGroundedHash, isGrounded);
