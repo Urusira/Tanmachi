@@ -33,6 +33,7 @@ namespace ShiroGe.Scripts.UI
 
         public void ShowInventory()
         {
+            GuiManager.Instance.HideGui();
             GuiManager.Instance.UnlockMouse();
             _playerController.LockControl();
             
@@ -42,11 +43,19 @@ namespace ShiroGe.Scripts.UI
 
         public void HideInventory()
         {
+            InventoryManager.Instance.InventoryClosedHandler();
+            
+            GuiManager.Instance.ShowGui();
             GuiManager.Instance.LockMouse();
             _playerController.UnlockControl();
             
             inventoryObj.SetActive(false);
             IsOpen = false;
+        }
+
+        public void LeftClick()
+        {
+            InventoryManager.Instance.DragAndDrop();
         }
     }
 }

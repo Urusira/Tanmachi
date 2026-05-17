@@ -1036,6 +1036,15 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""85ff512b-72ea-4f73-ad52-552cbad4e86f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1058,6 +1067,17 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""OpenInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6a5bd3a-41b1-4cb2-85da-f8f6920ba5c4"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""LeftClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1154,6 +1174,7 @@ namespace ShiroGe.CharacterController
             m_IngameUI = asset.FindActionMap("IngameUI", throwIfNotFound: true);
             m_IngameUI_BackToMenu = m_IngameUI.FindAction("BackToMenu", throwIfNotFound: true);
             m_IngameUI_OpenInventory = m_IngameUI.FindAction("OpenInventory", throwIfNotFound: true);
+            m_IngameUI_LeftClick = m_IngameUI.FindAction("LeftClick", throwIfNotFound: true);
         }
 
         ~@PlayerControls()
@@ -1681,6 +1702,7 @@ namespace ShiroGe.CharacterController
         private List<IIngameUIActions> m_IngameUIActionsCallbackInterfaces = new List<IIngameUIActions>();
         private readonly InputAction m_IngameUI_BackToMenu;
         private readonly InputAction m_IngameUI_OpenInventory;
+        private readonly InputAction m_IngameUI_LeftClick;
         /// <summary>
         /// Provides access to input actions defined in input action map "IngameUI".
         /// </summary>
@@ -1700,6 +1722,10 @@ namespace ShiroGe.CharacterController
             /// Provides access to the underlying input action "IngameUI/OpenInventory".
             /// </summary>
             public InputAction @OpenInventory => m_Wrapper.m_IngameUI_OpenInventory;
+            /// <summary>
+            /// Provides access to the underlying input action "IngameUI/LeftClick".
+            /// </summary>
+            public InputAction @LeftClick => m_Wrapper.m_IngameUI_LeftClick;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1732,6 +1758,9 @@ namespace ShiroGe.CharacterController
                 @OpenInventory.started += instance.OnOpenInventory;
                 @OpenInventory.performed += instance.OnOpenInventory;
                 @OpenInventory.canceled += instance.OnOpenInventory;
+                @LeftClick.started += instance.OnLeftClick;
+                @LeftClick.performed += instance.OnLeftClick;
+                @LeftClick.canceled += instance.OnLeftClick;
             }
 
             /// <summary>
@@ -1749,6 +1778,9 @@ namespace ShiroGe.CharacterController
                 @OpenInventory.started -= instance.OnOpenInventory;
                 @OpenInventory.performed -= instance.OnOpenInventory;
                 @OpenInventory.canceled -= instance.OnOpenInventory;
+                @LeftClick.started -= instance.OnLeftClick;
+                @LeftClick.performed -= instance.OnLeftClick;
+                @LeftClick.canceled -= instance.OnLeftClick;
             }
 
             /// <summary>
@@ -2011,6 +2043,13 @@ namespace ShiroGe.CharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnOpenInventory(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "LeftClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnLeftClick(InputAction.CallbackContext context);
         }
     }
 }

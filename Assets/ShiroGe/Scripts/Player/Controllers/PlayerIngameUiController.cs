@@ -69,5 +69,15 @@ namespace ShiroGe.CharacterController
                 InventoryUiManager.Instance.HideInventory();
             }
         }
+
+        public void OnLeftClick(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+            
+            if (InventoryUiManager.Instance.IsOpen)
+            {
+                InventoryUiManager.Instance.LeftClick();
+            }
+        }
     }
 }

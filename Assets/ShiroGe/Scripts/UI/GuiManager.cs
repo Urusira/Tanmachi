@@ -70,7 +70,7 @@ public class GuiManager : MonoBehaviour
 
     public void UnlockMouse()
     {
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState     = CursorLockMode.None;
         Cursor.visible = true;
     }
 }

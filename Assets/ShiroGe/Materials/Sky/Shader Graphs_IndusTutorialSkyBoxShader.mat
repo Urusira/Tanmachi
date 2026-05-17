@@ -62,7 +62,7 @@ Material:
     - _GradientOffset: -0.15
     - _HorizonBlend: 30
     - _MoonSize: 0.02
-    - _NadirBlend: 30
+    - _NadirBlend: 0.1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _StarIntensity: 223
@@ -75,8 +75,8 @@ Material:
     - _AuroraScrollSpeed: {r: 0, g: 0.02, b: 0, a: 0}
     - _AuroraTiling: {r: 0, g: 2.2, b: 0, a: 0}
     - _AuroraTwirlOffset: {r: 0, g: 1.08, b: 0, a: 0}
-    - _GroundColor: {r: 0.28235295, g: 0.105882354, b: 0.07058824, a: 1}
-    - _HorizonColor: {r: 0.5283019, g: 0.33977064, b: 0, a: 1}
+    - _GroundColor: {r: 0.46666667, g: 0.6745098, b: 1, a: 1}
+    - _HorizonColor: {r: 0.5294118, g: 0.5182612, b: 0, a: 1}
     - _MainLightDirection: {r: 0, g: 0, b: 0, a: 0}
     - _MoonColor: {r: 2.1185474, g: 1.4953593, b: 0.9093765, a: 1}
     - _NightSkyColor: {r: 0.028969381, g: 0.03216078, b: 0.1981132, a: 1}
