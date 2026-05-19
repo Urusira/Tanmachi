@@ -60,6 +60,7 @@ public class InventoryManager : MonoBehaviour
 
     public int AddItem(ItemSO itemToAdd, int amount)
     {
+        ItemRedraw();
         return AddItem(itemToAdd, amount, _allSlots);
     }
     
@@ -82,6 +83,7 @@ public class InventoryManager : MonoBehaviour
                     remaining -= amountToAdd;
 
                     if (remaining <= 0)
+                        ItemRedraw();
                         return remaining;
                 }
             }
@@ -96,6 +98,7 @@ public class InventoryManager : MonoBehaviour
                 remaining -= amountToPlace;
                 
                 if(remaining <= 0)
+                    ItemRedraw();
                     return remaining;
             }
         }
@@ -105,6 +108,8 @@ public class InventoryManager : MonoBehaviour
             Debug.Log($"Inventory Full, could not add {remaining} of {itemToAdd.itemName}");
         }
 
+        ItemRedraw();
+        
         return remaining;
     }
 
@@ -198,6 +203,8 @@ public class InventoryManager : MonoBehaviour
         {
             _isDragging = false;
         }
+        
+        ItemRedraw();
     }
 
     private void EndDrag()
@@ -263,6 +270,8 @@ public class InventoryManager : MonoBehaviour
         
         to.SetItem(from.GetItem(), from.GetItemAmount());
         from.ClearSlot();
+        
+        ItemRedraw();
     }
 
     private void UpdateDragItemPosition()
@@ -287,16 +296,35 @@ public class InventoryManager : MonoBehaviour
         WorldSpawner.Instance.PlayerDrop(selectedSlot.GetItem().itemPrefab);
         
         selectedSlot.RemoveAmount(1);
+        
+        ItemRedraw();
     }
 
     public void SetQuickTransfer()
     {
         _quickTransfer = !_quickTransfer;
+        
+        ItemRedraw();
     }
 
     public void HotbarSelectorUpdate(int value)
     {
         value = value < 0 ? _hotbarSlots.Capacity-1 : value > _hotbarSlots.Capacity-1 ? 0 : value;
         SelectedHotbarSlot = value;
+        InventorySlot currentSlot = _hotbarSlots[SelectedHotbarSlot];
+        
+        ItemRedraw();
+    }
+
+    public void ItemRedraw()
+    {
+        InventorySlot currentSlot = _hotbarSlots[SelectedHotbarSlot];
+        
+        PlayerEquipController.Instance.UnequipRightHand();
+        
+        if(currentSlot.HasItem())
+        {
+            PlayerEquipController.Instance.EquipRightHand(_hotbarSlots[SelectedHotbarSlot].GetItem().handItemPrefab);
+        }
     }
 }
