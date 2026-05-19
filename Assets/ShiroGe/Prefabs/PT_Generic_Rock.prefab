@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3620098201178672556}
   - component: {fileID: 8387729503606520541}
-  - component: {fileID: 5653767039043707994}
   m_Layer: 0
   m_Name: PT_Generic_Rock
   m_TagString: Untagged
@@ -63,18 +62,6 @@ LODGroup:
     renderers:
     - renderer: {fileID: 4901771407451701469}
   m_Enabled: 1
---- !u!114 &5653767039043707994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4140774597986965270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7835547a8f47467a8824c2f4b9c26138, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Objects.AssignDestoryer
 --- !u!1 &5215970427928307999
 GameObject:
   m_ObjectHideFlags: 0

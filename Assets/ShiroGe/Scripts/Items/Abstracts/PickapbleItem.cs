@@ -1,5 +1,6 @@
 ﻿using System;
 using ShiroGe.CharacterController;
+using UnityEngine;
 
 namespace ShiroGe.Scripts.Items
 {
@@ -11,12 +12,24 @@ namespace ShiroGe.Scripts.Items
         
         public override PlayerActionsState Interact()
         {
-            try
+            InventoryManager.Instance.AddItem(scriptableItem, amount);
+            
+            /*try
             {
                 InventoryManager.Instance.AddItem(scriptableItem, amount);
                 GetComponentInParent<AssignDestoryer>().Destroyer();
             }
             catch (NullReferenceException _){
+                Destroy(gameObject);
+            }*/
+            
+            LODGroup lodGroup = GetComponentInParent<LODGroup>();
+            if (lodGroup != null)
+            {
+                Destroy(lodGroup.gameObject);
+            }
+            else
+            {
                 Destroy(gameObject);
             }
 

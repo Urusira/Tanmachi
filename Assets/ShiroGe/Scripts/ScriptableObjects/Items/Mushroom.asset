@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bf87d2d62441ed42a5b93a6b6f63a89, type: 3}
   m_Name: Mushroom
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: 
+  itemName: "\u0413\u0440\u0438\u0431\u0430\u0431\u0430\u0441"
   icon: {fileID: 21300000, guid: 8b493044b9d92ad4692dac6be4e35e09, type: 3}
   maxStackSize: 64
-  itemPrefab: {fileID: 0}
-  handItemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 5984911598340929997, guid: ecf8254644a404e4aa53f955bbab9f92, type: 3}
+  handItemPrefab: {fileID: 5984911598340929997, guid: ecf8254644a404e4aa53f955bbab9f92, type: 3}

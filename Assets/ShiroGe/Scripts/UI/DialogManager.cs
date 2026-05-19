@@ -31,7 +31,7 @@ public class DialogManager : MonoBehaviour
 
         Instance = this;
         
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         
         responseField = responseFieldObj.GetComponent<TextMeshProUGUI>();
         thinksField = thinksFieldObj.GetComponent<TMP_InputField>();
@@ -80,7 +80,7 @@ public class DialogManager : MonoBehaviour
         dialogCanvas.SetActive(true);
         GuiManager.Instance.UnlockMouse();
         GuiManager.Instance.HideGui();
-        _playerController.LockControl();
+        _playerController.LockControl(blockInventoryControl: true);
     }
     
     private void HideDialogUI()

@@ -15,5 +15,5 @@ MonoBehaviour:
   itemName: "\u041A\u0430\u043C\u0435\u0448\u0435\u043A"
   icon: {fileID: 21300000, guid: dc323b5d9a04049479d7daa2ed0db491, type: 3}
   maxStackSize: 64
-  itemPrefab: {fileID: 0}
-  handItemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 4140774597986965270, guid: c0e197ddeb4a4824796a82b1e043874b, type: 3}
+  handItemPrefab: {fileID: 4140774597986965270, guid: c0e197ddeb4a4824796a82b1e043874b, type: 3}

@@ -303,3 +303,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventorySlot
   hovering: 0
+  iconImageObj: {fileID: 5419119337233224462}
+  amountTxtObj: {fileID: 1451151926043009713}

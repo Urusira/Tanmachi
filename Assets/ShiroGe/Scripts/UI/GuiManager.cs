@@ -34,7 +34,7 @@ public class GuiManager : MonoBehaviour
         _hintTextMesh = hintTextObj.GetComponent<TextMeshProUGUI>();
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         _pointer = pointerObj.GetComponent<Image>();
         ShowGui();
     }

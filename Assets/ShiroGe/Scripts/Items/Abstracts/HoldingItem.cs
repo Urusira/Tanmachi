@@ -4,12 +4,8 @@ using UnityEngine;
 
 namespace ShiroGe.Scripts.Items
 {
-    public abstract class HoldingItem : Interactable
+    public abstract class HoldingItem : PickapbleItem
     {
-        public int amount = 1;
-        
-        public ItemSO scriptableItem;
-        
         public override PlayerActionsState Interact()
         {
             InventoryManager.Instance.AddItem(scriptableItem, amount);

@@ -1,4 +1,5 @@
-﻿using ShiroGe.CharacterController;
+﻿using System;
+using ShiroGe.CharacterController;
 using UnityEngine;
 
 namespace ShiroGe.Scripts.UI
@@ -9,6 +10,8 @@ namespace ShiroGe.Scripts.UI
         
         [SerializeField] private GameObject inventoryObj;
         [SerializeField] private GameObject playerObj;
+        
+        [SerializeField] private GameObject selectorBorderObj;
         
         private PlayerController _playerController;
         
@@ -22,7 +25,7 @@ namespace ShiroGe.Scripts.UI
                 return;
             }
             
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
 
             Instance = this;
             
@@ -56,6 +59,36 @@ namespace ShiroGe.Scripts.UI
         public void LeftClick()
         {
             InventoryManager.Instance.DragAndDrop();
+        }
+
+        public void RightClick()
+        {
+            InventoryManager.Instance.DragAndDrop(half: true);
+        }
+
+        public void SetQuickTransfer()
+        {
+            InventoryManager.Instance.SetQuickTransfer();
+        }
+
+        public void HotbarSelect(int value)
+        {
+            InventoryManager.Instance.HotbarSelectorUpdate(value);
+            selectorBorderObj.transform.position = new Vector3(
+                InventoryManager.Instance._hotbarSlots[InventoryManager.Instance.SelectedHotbarSlot].transform.position.x, 
+                selectorBorderObj.transform.position.y, 
+                selectorBorderObj.transform.position.z
+                );
+        }
+        
+        public void NextItem()
+        {
+            HotbarSelect(InventoryManager.Instance.SelectedHotbarSlot+1);
+        }
+        
+        public void PrevoiusItem()
+        {
+            HotbarSelect(InventoryManager.Instance.SelectedHotbarSlot-1);
         }
     }
 }

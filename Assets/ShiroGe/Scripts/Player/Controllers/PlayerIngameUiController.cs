@@ -42,42 +42,20 @@ namespace ShiroGe.CharacterController
         {
             if (!context.performed) return;
             
-            if(InventoryUiManager.Instance.IsOpen)
-            {
-                InventoryUiManager.Instance.HideInventory();
-                return;
-            }
             if(DialogManager.Instance.InDialog)
             {
                 DialogManager.Instance.CloseDialog();
                 return;
             }
-            SceneManager.UnloadSceneAsync("GameMainScene");
-            SceneManager.LoadScene("MainMenuScene");
-        }
 
-        public void OnOpenInventory(InputAction.CallbackContext context)
-        {
-            if (!context.performed) return;
-            
-            if (!InventoryUiManager.Instance.IsOpen)
-            {
-                InventoryUiManager.Instance.ShowInventory();
-            }
-            else
-            {
-                InventoryUiManager.Instance.HideInventory();
-            }
-        }
-
-        public void OnLeftClick(InputAction.CallbackContext context)
-        {
-            if (!context.performed) return;
-            
             if (InventoryUiManager.Instance.IsOpen)
             {
-                InventoryUiManager.Instance.LeftClick();
+                InventoryUiManager.Instance.HideInventory();
+                return;
             }
+            
+            SceneManager.UnloadSceneAsync("GameMainScene");
+            SceneManager.LoadScene("MainMenuScene");
         }
     }
 }

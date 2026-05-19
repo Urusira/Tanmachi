@@ -1027,24 +1027,6 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""OpenInventory"",
-                    ""type"": ""Button"",
-                    ""id"": ""8cdd5770-59a5-4cca-beeb-64051e14d816"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""LeftClick"",
-                    ""type"": ""Button"",
-                    ""id"": ""85ff512b-72ea-4f73-ad52-552cbad4e86f"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1058,26 +1040,312 @@ namespace ShiroGe.CharacterController
                     ""action"": ""BackToMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
+                }
+            ]
+        },
+        {
+            ""name"": ""Inventory"",
+            ""id"": ""4dab0285-84a3-4e62-8526-e97b5f92fcdd"",
+            ""actions"": [
                 {
-                    ""name"": """",
-                    ""id"": ""d89dd1e6-91d9-43cc-a950-3ca6940eb4da"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
+                    ""name"": ""LeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc35b55e-0be3-455b-aedd-77ac6811c701"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""OpenInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ToggleInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""8fdb925a-b576-4c03-9721-3b1b7900c4fd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DropItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""94ba9285-ffbd-4565-9c4e-60854e57cdbe"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""QuickTransferItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""caed8ff8-90c2-4025-88e0-fff1cd7e7bd5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""dc382902-1904-4752-974b-be23641b3d0a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar1"",
+                    ""type"": ""Button"",
+                    ""id"": ""52149861-7ad4-469c-9dd8-f8bcc88bef15"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar2"",
+                    ""type"": ""Button"",
+                    ""id"": ""d01d291b-ecc0-434b-90ac-6ce8441b0637"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar3"",
+                    ""type"": ""Button"",
+                    ""id"": ""f40700c5-9979-459d-97c7-f18821a08643"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar4"",
+                    ""type"": ""Button"",
+                    ""id"": ""0446cd96-729b-4a39-a743-02d8c1a44323"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar5"",
+                    ""type"": ""Button"",
+                    ""id"": ""07605bc5-0111-4a18-b944-0a21ba43a8b6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar6"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b106950-09f6-4c16-8ad0-1d86ef095de5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar7"",
+                    ""type"": ""Button"",
+                    ""id"": ""abee9ea7-a006-4056-b83c-523bd20e9264"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar8"",
+                    ""type"": ""Button"",
+                    ""id"": ""ded27d6c-f3da-4ee8-82ec-a2c9367a9636"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotbar9"",
+                    ""type"": ""Button"",
+                    ""id"": ""75a3523b-3541-4feb-bac3-f0db7cc3a283"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemsScroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""7a0181ff-507b-4b8f-ae12-c4475a577c90"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
                     ""name"": """",
-                    ""id"": ""a6a5bd3a-41b1-4cb2-85da-f8f6920ba5c4"",
+                    ""id"": ""68a713e0-ad0d-446d-b4f7-5cf7a19b9173"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""679140ad-e84c-4c75-941a-1ec224fc1f8f"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ToggleInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c99601c4-e2fe-4ac1-906e-05931d382238"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bbb1e173-83e5-49da-9ba2-0eb6757d48d2"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""QuickTransferItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a568bafe-da33-4979-92bf-1187a5469aba"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b11d35d-d9e7-4083-b9f1-e12b0a237c5f"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7534667a-f3cb-4ff3-b387-a20c900881ce"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71cfd04b-ad21-4d8f-a540-20a421befb98"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""83bcd86a-543a-4580-956f-3cbe8b318599"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0de804e-3add-4d4b-ae26-74e960714c76"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b424561c-a903-48a3-958e-aa2b6075dd4f"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""97e56b57-38d0-43f2-9b26-149dbb71e801"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar7"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""203995be-dcbf-4474-b0b2-a55bd8f39fcd"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar8"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1c87c110-c2c6-4cf6-aab6-9f4a0ebe0dff"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Hotbar9"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3ab6b49-4226-485b-aac5-9d91fe57732e"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ItemsScroll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1173,8 +1441,23 @@ namespace ShiroGe.CharacterController
             // IngameUI
             m_IngameUI = asset.FindActionMap("IngameUI", throwIfNotFound: true);
             m_IngameUI_BackToMenu = m_IngameUI.FindAction("BackToMenu", throwIfNotFound: true);
-            m_IngameUI_OpenInventory = m_IngameUI.FindAction("OpenInventory", throwIfNotFound: true);
-            m_IngameUI_LeftClick = m_IngameUI.FindAction("LeftClick", throwIfNotFound: true);
+            // Inventory
+            m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
+            m_Inventory_LeftClick = m_Inventory.FindAction("LeftClick", throwIfNotFound: true);
+            m_Inventory_ToggleInventory = m_Inventory.FindAction("ToggleInventory", throwIfNotFound: true);
+            m_Inventory_DropItem = m_Inventory.FindAction("DropItem", throwIfNotFound: true);
+            m_Inventory_QuickTransferItem = m_Inventory.FindAction("QuickTransferItem", throwIfNotFound: true);
+            m_Inventory_RightClick = m_Inventory.FindAction("RightClick", throwIfNotFound: true);
+            m_Inventory_Hotbar1 = m_Inventory.FindAction("Hotbar1", throwIfNotFound: true);
+            m_Inventory_Hotbar2 = m_Inventory.FindAction("Hotbar2", throwIfNotFound: true);
+            m_Inventory_Hotbar3 = m_Inventory.FindAction("Hotbar3", throwIfNotFound: true);
+            m_Inventory_Hotbar4 = m_Inventory.FindAction("Hotbar4", throwIfNotFound: true);
+            m_Inventory_Hotbar5 = m_Inventory.FindAction("Hotbar5", throwIfNotFound: true);
+            m_Inventory_Hotbar6 = m_Inventory.FindAction("Hotbar6", throwIfNotFound: true);
+            m_Inventory_Hotbar7 = m_Inventory.FindAction("Hotbar7", throwIfNotFound: true);
+            m_Inventory_Hotbar8 = m_Inventory.FindAction("Hotbar8", throwIfNotFound: true);
+            m_Inventory_Hotbar9 = m_Inventory.FindAction("Hotbar9", throwIfNotFound: true);
+            m_Inventory_ItemsScroll = m_Inventory.FindAction("ItemsScroll", throwIfNotFound: true);
         }
 
         ~@PlayerControls()
@@ -1183,6 +1466,7 @@ namespace ShiroGe.CharacterController
             UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerControls.UI.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerActions.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_IngameUI.enabled, "This will cause a leak and performance issues, PlayerControls.IngameUI.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Inventory.enabled, "This will cause a leak and performance issues, PlayerControls.Inventory.Disable() has not been called.");
         }
 
         /// <summary>
@@ -1701,8 +1985,6 @@ namespace ShiroGe.CharacterController
         private readonly InputActionMap m_IngameUI;
         private List<IIngameUIActions> m_IngameUIActionsCallbackInterfaces = new List<IIngameUIActions>();
         private readonly InputAction m_IngameUI_BackToMenu;
-        private readonly InputAction m_IngameUI_OpenInventory;
-        private readonly InputAction m_IngameUI_LeftClick;
         /// <summary>
         /// Provides access to input actions defined in input action map "IngameUI".
         /// </summary>
@@ -1718,14 +2000,6 @@ namespace ShiroGe.CharacterController
             /// Provides access to the underlying input action "IngameUI/BackToMenu".
             /// </summary>
             public InputAction @BackToMenu => m_Wrapper.m_IngameUI_BackToMenu;
-            /// <summary>
-            /// Provides access to the underlying input action "IngameUI/OpenInventory".
-            /// </summary>
-            public InputAction @OpenInventory => m_Wrapper.m_IngameUI_OpenInventory;
-            /// <summary>
-            /// Provides access to the underlying input action "IngameUI/LeftClick".
-            /// </summary>
-            public InputAction @LeftClick => m_Wrapper.m_IngameUI_LeftClick;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1755,12 +2029,6 @@ namespace ShiroGe.CharacterController
                 @BackToMenu.started += instance.OnBackToMenu;
                 @BackToMenu.performed += instance.OnBackToMenu;
                 @BackToMenu.canceled += instance.OnBackToMenu;
-                @OpenInventory.started += instance.OnOpenInventory;
-                @OpenInventory.performed += instance.OnOpenInventory;
-                @OpenInventory.canceled += instance.OnOpenInventory;
-                @LeftClick.started += instance.OnLeftClick;
-                @LeftClick.performed += instance.OnLeftClick;
-                @LeftClick.canceled += instance.OnLeftClick;
             }
 
             /// <summary>
@@ -1775,12 +2043,6 @@ namespace ShiroGe.CharacterController
                 @BackToMenu.started -= instance.OnBackToMenu;
                 @BackToMenu.performed -= instance.OnBackToMenu;
                 @BackToMenu.canceled -= instance.OnBackToMenu;
-                @OpenInventory.started -= instance.OnOpenInventory;
-                @OpenInventory.performed -= instance.OnOpenInventory;
-                @OpenInventory.canceled -= instance.OnOpenInventory;
-                @LeftClick.started -= instance.OnLeftClick;
-                @LeftClick.performed -= instance.OnLeftClick;
-                @LeftClick.canceled -= instance.OnLeftClick;
             }
 
             /// <summary>
@@ -1814,6 +2076,256 @@ namespace ShiroGe.CharacterController
         /// Provides a new <see cref="IngameUIActions" /> instance referencing this action map.
         /// </summary>
         public IngameUIActions @IngameUI => new IngameUIActions(this);
+
+        // Inventory
+        private readonly InputActionMap m_Inventory;
+        private List<IInventoryActions> m_InventoryActionsCallbackInterfaces = new List<IInventoryActions>();
+        private readonly InputAction m_Inventory_LeftClick;
+        private readonly InputAction m_Inventory_ToggleInventory;
+        private readonly InputAction m_Inventory_DropItem;
+        private readonly InputAction m_Inventory_QuickTransferItem;
+        private readonly InputAction m_Inventory_RightClick;
+        private readonly InputAction m_Inventory_Hotbar1;
+        private readonly InputAction m_Inventory_Hotbar2;
+        private readonly InputAction m_Inventory_Hotbar3;
+        private readonly InputAction m_Inventory_Hotbar4;
+        private readonly InputAction m_Inventory_Hotbar5;
+        private readonly InputAction m_Inventory_Hotbar6;
+        private readonly InputAction m_Inventory_Hotbar7;
+        private readonly InputAction m_Inventory_Hotbar8;
+        private readonly InputAction m_Inventory_Hotbar9;
+        private readonly InputAction m_Inventory_ItemsScroll;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "Inventory".
+        /// </summary>
+        public struct InventoryActions
+        {
+            private @PlayerControls m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public InventoryActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/LeftClick".
+            /// </summary>
+            public InputAction @LeftClick => m_Wrapper.m_Inventory_LeftClick;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/ToggleInventory".
+            /// </summary>
+            public InputAction @ToggleInventory => m_Wrapper.m_Inventory_ToggleInventory;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/DropItem".
+            /// </summary>
+            public InputAction @DropItem => m_Wrapper.m_Inventory_DropItem;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/QuickTransferItem".
+            /// </summary>
+            public InputAction @QuickTransferItem => m_Wrapper.m_Inventory_QuickTransferItem;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/RightClick".
+            /// </summary>
+            public InputAction @RightClick => m_Wrapper.m_Inventory_RightClick;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar1".
+            /// </summary>
+            public InputAction @Hotbar1 => m_Wrapper.m_Inventory_Hotbar1;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar2".
+            /// </summary>
+            public InputAction @Hotbar2 => m_Wrapper.m_Inventory_Hotbar2;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar3".
+            /// </summary>
+            public InputAction @Hotbar3 => m_Wrapper.m_Inventory_Hotbar3;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar4".
+            /// </summary>
+            public InputAction @Hotbar4 => m_Wrapper.m_Inventory_Hotbar4;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar5".
+            /// </summary>
+            public InputAction @Hotbar5 => m_Wrapper.m_Inventory_Hotbar5;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar6".
+            /// </summary>
+            public InputAction @Hotbar6 => m_Wrapper.m_Inventory_Hotbar6;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar7".
+            /// </summary>
+            public InputAction @Hotbar7 => m_Wrapper.m_Inventory_Hotbar7;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar8".
+            /// </summary>
+            public InputAction @Hotbar8 => m_Wrapper.m_Inventory_Hotbar8;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/Hotbar9".
+            /// </summary>
+            public InputAction @Hotbar9 => m_Wrapper.m_Inventory_Hotbar9;
+            /// <summary>
+            /// Provides access to the underlying input action "Inventory/ItemsScroll".
+            /// </summary>
+            public InputAction @ItemsScroll => m_Wrapper.m_Inventory_ItemsScroll;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_Inventory; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="InventoryActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(InventoryActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="InventoryActions" />
+            public void AddCallbacks(IInventoryActions instance)
+            {
+                if (instance == null || m_Wrapper.m_InventoryActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_InventoryActionsCallbackInterfaces.Add(instance);
+                @LeftClick.started += instance.OnLeftClick;
+                @LeftClick.performed += instance.OnLeftClick;
+                @LeftClick.canceled += instance.OnLeftClick;
+                @ToggleInventory.started += instance.OnToggleInventory;
+                @ToggleInventory.performed += instance.OnToggleInventory;
+                @ToggleInventory.canceled += instance.OnToggleInventory;
+                @DropItem.started += instance.OnDropItem;
+                @DropItem.performed += instance.OnDropItem;
+                @DropItem.canceled += instance.OnDropItem;
+                @QuickTransferItem.started += instance.OnQuickTransferItem;
+                @QuickTransferItem.performed += instance.OnQuickTransferItem;
+                @QuickTransferItem.canceled += instance.OnQuickTransferItem;
+                @RightClick.started += instance.OnRightClick;
+                @RightClick.performed += instance.OnRightClick;
+                @RightClick.canceled += instance.OnRightClick;
+                @Hotbar1.started += instance.OnHotbar1;
+                @Hotbar1.performed += instance.OnHotbar1;
+                @Hotbar1.canceled += instance.OnHotbar1;
+                @Hotbar2.started += instance.OnHotbar2;
+                @Hotbar2.performed += instance.OnHotbar2;
+                @Hotbar2.canceled += instance.OnHotbar2;
+                @Hotbar3.started += instance.OnHotbar3;
+                @Hotbar3.performed += instance.OnHotbar3;
+                @Hotbar3.canceled += instance.OnHotbar3;
+                @Hotbar4.started += instance.OnHotbar4;
+                @Hotbar4.performed += instance.OnHotbar4;
+                @Hotbar4.canceled += instance.OnHotbar4;
+                @Hotbar5.started += instance.OnHotbar5;
+                @Hotbar5.performed += instance.OnHotbar5;
+                @Hotbar5.canceled += instance.OnHotbar5;
+                @Hotbar6.started += instance.OnHotbar6;
+                @Hotbar6.performed += instance.OnHotbar6;
+                @Hotbar6.canceled += instance.OnHotbar6;
+                @Hotbar7.started += instance.OnHotbar7;
+                @Hotbar7.performed += instance.OnHotbar7;
+                @Hotbar7.canceled += instance.OnHotbar7;
+                @Hotbar8.started += instance.OnHotbar8;
+                @Hotbar8.performed += instance.OnHotbar8;
+                @Hotbar8.canceled += instance.OnHotbar8;
+                @Hotbar9.started += instance.OnHotbar9;
+                @Hotbar9.performed += instance.OnHotbar9;
+                @Hotbar9.canceled += instance.OnHotbar9;
+                @ItemsScroll.started += instance.OnItemsScroll;
+                @ItemsScroll.performed += instance.OnItemsScroll;
+                @ItemsScroll.canceled += instance.OnItemsScroll;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="InventoryActions" />
+            private void UnregisterCallbacks(IInventoryActions instance)
+            {
+                @LeftClick.started -= instance.OnLeftClick;
+                @LeftClick.performed -= instance.OnLeftClick;
+                @LeftClick.canceled -= instance.OnLeftClick;
+                @ToggleInventory.started -= instance.OnToggleInventory;
+                @ToggleInventory.performed -= instance.OnToggleInventory;
+                @ToggleInventory.canceled -= instance.OnToggleInventory;
+                @DropItem.started -= instance.OnDropItem;
+                @DropItem.performed -= instance.OnDropItem;
+                @DropItem.canceled -= instance.OnDropItem;
+                @QuickTransferItem.started -= instance.OnQuickTransferItem;
+                @QuickTransferItem.performed -= instance.OnQuickTransferItem;
+                @QuickTransferItem.canceled -= instance.OnQuickTransferItem;
+                @RightClick.started -= instance.OnRightClick;
+                @RightClick.performed -= instance.OnRightClick;
+                @RightClick.canceled -= instance.OnRightClick;
+                @Hotbar1.started -= instance.OnHotbar1;
+                @Hotbar1.performed -= instance.OnHotbar1;
+                @Hotbar1.canceled -= instance.OnHotbar1;
+                @Hotbar2.started -= instance.OnHotbar2;
+                @Hotbar2.performed -= instance.OnHotbar2;
+                @Hotbar2.canceled -= instance.OnHotbar2;
+                @Hotbar3.started -= instance.OnHotbar3;
+                @Hotbar3.performed -= instance.OnHotbar3;
+                @Hotbar3.canceled -= instance.OnHotbar3;
+                @Hotbar4.started -= instance.OnHotbar4;
+                @Hotbar4.performed -= instance.OnHotbar4;
+                @Hotbar4.canceled -= instance.OnHotbar4;
+                @Hotbar5.started -= instance.OnHotbar5;
+                @Hotbar5.performed -= instance.OnHotbar5;
+                @Hotbar5.canceled -= instance.OnHotbar5;
+                @Hotbar6.started -= instance.OnHotbar6;
+                @Hotbar6.performed -= instance.OnHotbar6;
+                @Hotbar6.canceled -= instance.OnHotbar6;
+                @Hotbar7.started -= instance.OnHotbar7;
+                @Hotbar7.performed -= instance.OnHotbar7;
+                @Hotbar7.canceled -= instance.OnHotbar7;
+                @Hotbar8.started -= instance.OnHotbar8;
+                @Hotbar8.performed -= instance.OnHotbar8;
+                @Hotbar8.canceled -= instance.OnHotbar8;
+                @Hotbar9.started -= instance.OnHotbar9;
+                @Hotbar9.performed -= instance.OnHotbar9;
+                @Hotbar9.canceled -= instance.OnHotbar9;
+                @ItemsScroll.started -= instance.OnItemsScroll;
+                @ItemsScroll.performed -= instance.OnItemsScroll;
+                @ItemsScroll.canceled -= instance.OnItemsScroll;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />.
+            /// </summary>
+            /// <seealso cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />
+            public void RemoveCallbacks(IInventoryActions instance)
+            {
+                if (m_Wrapper.m_InventoryActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="InventoryActions.AddCallbacks(IInventoryActions)" />
+            /// <seealso cref="InventoryActions.RemoveCallbacks(IInventoryActions)" />
+            /// <seealso cref="InventoryActions.UnregisterCallbacks(IInventoryActions)" />
+            public void SetCallbacks(IInventoryActions instance)
+            {
+                foreach (var item in m_Wrapper.m_InventoryActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_InventoryActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="InventoryActions" /> instance referencing this action map.
+        /// </summary>
+        public InventoryActions @Inventory => new InventoryActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         /// <summary>
         /// Provides access to the input control scheme.
@@ -2036,13 +2548,14 @@ namespace ShiroGe.CharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnBackToMenu(InputAction.CallbackContext context);
-            /// <summary>
-            /// Method invoked when associated input action "OpenInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnOpenInventory(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Inventory" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="InventoryActions.AddCallbacks(IInventoryActions)" />
+        /// <seealso cref="InventoryActions.RemoveCallbacks(IInventoryActions)" />
+        public interface IInventoryActions
+        {
             /// <summary>
             /// Method invoked when associated input action "LeftClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
@@ -2050,6 +2563,104 @@ namespace ShiroGe.CharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnLeftClick(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "ToggleInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnToggleInventory(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "DropItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDropItem(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "QuickTransferItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnQuickTransferItem(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "RightClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnRightClick(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar1(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar2(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar3(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar4(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar5" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar5(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar6" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar6(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar7" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar7(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar8" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar8(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Hotbar9" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHotbar9(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "ItemsScroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnItemsScroll(InputAction.CallbackContext context);
         }
     }
 }

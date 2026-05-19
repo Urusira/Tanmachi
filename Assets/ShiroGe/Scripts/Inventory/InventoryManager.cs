@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using ShiroGe.CharacterController;
+using ShiroGe.Scripts;
+using ShiroGe.Scripts.Items;
 using ShiroGe.Scripts.UI;
+using ShiroGe.Scripts.World;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,17 +12,23 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance  { get; private set; }
     
-    public GameObject hotbarObj;
-    public GameObject inventorySlotParent;
+    [SerializeField] private GameObject hotbarObj;
+    [SerializeField] private GameObject inventorySlotParent;
 
-    public Image dragIcon;
+    [SerializeField] private InventoryDragSlot dragSlot;
+
+    [SerializeField] private Vector2 dragSlotOffset = new Vector2(90, -90);
     
-    private List<InventorySlot> _inventorySlots = new List<InventorySlot>();
-    private List<InventorySlot> _hotbarSlots = new List<InventorySlot>();
-    private List<InventorySlot> _allSlots = new List<InventorySlot>();
+    public List<InventorySlot> _inventorySlots { get; private set; } = new List<InventorySlot>();
+    public List<InventorySlot> _hotbarSlots { get; private set; } = new List<InventorySlot>();
+    public List<InventorySlot> _allSlots { get; private set; } = new List<InventorySlot>();
     
     private InventorySlot _draggedSlot = null;
+
+    public int SelectedHotbarSlot { get; private set; } = 0;
+    
     private bool _isDragging = false;
+    private bool _quickTransfer = false;
 
     private void Start()
     {
@@ -28,7 +38,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
         
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         Instance = this;
     }
@@ -38,8 +48,8 @@ public class InventoryManager : MonoBehaviour
         _inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<InventorySlot>());
         _hotbarSlots.AddRange(hotbarObj.GetComponentsInChildren<InventorySlot>());
         
-        _allSlots.AddRange(_inventorySlots);
         _allSlots.AddRange(_hotbarSlots);
+        _allSlots.AddRange(_inventorySlots);
     }
 
     private void Update()
@@ -48,11 +58,16 @@ public class InventoryManager : MonoBehaviour
             UpdateDragItemPosition();
     }
 
-    public void AddItem(ItemSO itemToAdd, int amount)
+    public int AddItem(ItemSO itemToAdd, int amount)
+    {
+        return AddItem(itemToAdd, amount, _allSlots);
+    }
+    
+    private int AddItem(ItemSO itemToAdd, int amount, List<InventorySlot> targetInventoryZone)
     {
         int remaining = amount;
 
-        foreach (InventorySlot slot in _allSlots)
+        foreach (InventorySlot slot in targetInventoryZone)
         {
             if (slot.HasItem() && slot.GetItem() == itemToAdd)
             {
@@ -67,12 +82,12 @@ public class InventoryManager : MonoBehaviour
                     remaining -= amountToAdd;
 
                     if (remaining <= 0)
-                        return;
+                        return remaining;
                 }
             }
         }
 
-        foreach (InventorySlot slot in _allSlots)
+        foreach (InventorySlot slot in targetInventoryZone)
         {
             if (!slot.HasItem())
             {
@@ -81,7 +96,7 @@ public class InventoryManager : MonoBehaviour
                 remaining -= amountToPlace;
                 
                 if(remaining <= 0)
-                    return;
+                    return remaining;
             }
         }
 
@@ -89,15 +104,15 @@ public class InventoryManager : MonoBehaviour
         {
             Debug.Log($"Inventory Full, could not add {remaining} of {itemToAdd.itemName}");
         }
+
+        return remaining;
     }
 
-    public void DragAndDrop()
+    public void DragAndDrop(bool half = false)
     {
-        _isDragging = !_isDragging;
-        
-        if (_isDragging)
+        if (!_isDragging)
         {
-            StartDrag();
+            StartDrag(half);
         }
         else
         {
@@ -105,18 +120,79 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private void StartDrag()
+    public bool HotbarItemCheck(ItemSO item)
+    {
+        foreach (InventorySlot slot in _hotbarSlots)
+        {
+            if (slot.GetItem() == item) return true;
+        }
+
+        return false;
+    }
+    
+    public bool InventoryItemCheck(ItemSO item)
+    {
+        foreach (InventorySlot slot in _inventorySlots)
+        {
+            if (slot.GetItem() == item) return true;
+        }
+
+        return false;
+    }
+    
+    public bool AllInventoryItemCheck(ItemSO item)
+    {
+        return HotbarItemCheck(item) || InventoryItemCheck(item);
+    }
+
+    private void StartDrag(bool half = false)
     {
         InventorySlot hovered = GetHoveredSlot();
 
+        if (_quickTransfer)
+        {
+            ItemSO tempItem = hovered.GetItem();
+            int tempAmount = hovered.GetItemAmount();
+                
+            hovered.ClearSlot();
+            
+            if (_hotbarSlots.Contains(hovered))
+            {
+                AddItem(tempItem, tempAmount, _inventorySlots);
+            }
+            else
+            {
+                AddItem(tempItem, tempAmount, _hotbarSlots);
+            }
+            
+            return;
+        }
+        
         if (hovered != null && hovered.HasItem())
         {
             _draggedSlot = hovered;
             _isDragging = true;
 
-            dragIcon.sprite = hovered.GetItem().icon;
-            dragIcon.color = new Color(1, 1, 1, 0.5f);
-            dragIcon.enabled = true;
+            if (half)
+            {
+                int draggedSlotAmount = _draggedSlot.GetItemAmount();
+                int halfDragAmount = Math.Max(1, Mathf.CeilToInt(draggedSlotAmount / 2));
+                
+                dragSlot.SetItem(hovered.GetItem(), halfDragAmount);
+                
+                if(draggedSlotAmount > halfDragAmount)
+                    _draggedSlot.RemoveAmount(halfDragAmount);
+                else
+                {
+                    _draggedSlot.ClearSlot();
+                }
+            }
+            else
+            {
+                dragSlot.SetItem(_draggedSlot.GetItem(), _draggedSlot.GetItemAmount());
+                
+                _draggedSlot.ClearSlot();
+            }
         }
         else
         {
@@ -128,12 +204,13 @@ public class InventoryManager : MonoBehaviour
     {
         InventorySlot hovered = GetHoveredSlot();
 
-        HandleDrop(_draggedSlot, hovered);
-        
-        dragIcon.enabled = false;
+        HandleDrop(from: dragSlot, to: hovered);
 
-        _draggedSlot = null;
-        _isDragging = false;
+        if(!dragSlot.HasItem())
+        {
+            _draggedSlot = null;
+            _isDragging = false;
+        }
     }
 
     private InventorySlot GetHoveredSlot()
@@ -148,9 +225,9 @@ public class InventoryManager : MonoBehaviour
         return null;
     }
 
-    private void HandleDrop(InventorySlot from, InventorySlot to)
+    private void HandleDrop(InventoryDragSlot from, InventorySlot to)
     {
-        if (from == to || to == null || from == null) return;
+        if (to == null) return;
 
         if (to.HasItem() && to.GetItem() == from.GetItem())
         {
@@ -192,7 +269,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (_isDragging)
         {
-            dragIcon.transform.position = Input.mousePosition;
+            dragSlot.transform.position = Input.mousePosition + new Vector3(dragSlotOffset.x, dragSlotOffset.y, 0);
         }
     }
 
@@ -200,5 +277,26 @@ public class InventoryManager : MonoBehaviour
     {
         if(_isDragging && _draggedSlot != null)
             EndDrag();
+        
+        _quickTransfer = false;
+    }
+
+    public void DropItem()
+    {
+        InventorySlot selectedSlot = _hotbarSlots[SelectedHotbarSlot];
+        WorldSpawner.Instance.PlayerDrop(selectedSlot.GetItem().itemPrefab);
+        
+        selectedSlot.RemoveAmount(1);
+    }
+
+    public void SetQuickTransfer()
+    {
+        _quickTransfer = !_quickTransfer;
+    }
+
+    public void HotbarSelectorUpdate(int value)
+    {
+        value = value < 0 ? _hotbarSlots.Capacity-1 : value > _hotbarSlots.Capacity-1 ? 0 : value;
+        SelectedHotbarSlot = value;
     }
 }

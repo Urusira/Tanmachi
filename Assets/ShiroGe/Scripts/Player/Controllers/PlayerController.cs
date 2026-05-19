@@ -15,7 +15,8 @@ namespace ShiroGe.CharacterController
         #region Class Variables
         [Header("Components")]
         [SerializeField] private UnityEngine.CharacterController _characterController;
-        [SerializeField] private Camera _playerCamera;
+
+        [SerializeField] private Camera playerCamera;
         public float RotationMismatch { get; private set; } = 0f;
         public bool IsRotatingToTarget { get; private set; } = false;
         
@@ -46,7 +47,8 @@ namespace ShiroGe.CharacterController
         public float gravity = 25f;
         
         [Header("Environment")]
-        [SerializeField] private LayerMask _groundLayers;
+        [SerializeField] private LayerMask groundLayers;
+        [SerializeField] private LayerMask interactiveLayerMask;
         
         [Header("Rofl")]
         public bool slowedStrafe = false;
@@ -58,6 +60,7 @@ namespace ShiroGe.CharacterController
         private PlayerInputController _playerInputContoller;
         private PlayerActionsController _playerActionsContoller;
         private PlayerIngameUiController _playerIngameUiController;
+        private PlayerInventoryController _playerInventoryContoller;
         private PlayerState _playerState;
         
         private Vector2 _cameraRotation = Vector2.zero;
@@ -71,14 +74,13 @@ namespace ShiroGe.CharacterController
         private float _verticalVelocity = 0f;
         private float _stepOffset;
         private float _antiBumpSpeed;
-
-
+        
         private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
-        LayerMask _layerMask;
         
+        private GameObject _target;
         
-        
-        GameObject _target;
+        public Vector3 GlobalRaycastHit { get; private set; }
+        public Vector3 RawView { get; private set; }
         
         #endregion
 
@@ -89,15 +91,19 @@ namespace ShiroGe.CharacterController
             _playerInputContoller = GetComponent<PlayerInputController>();
             _playerActionsContoller = GetComponent<PlayerActionsController>();
             _playerIngameUiController = GetComponent<PlayerIngameUiController>();
+            _playerInventoryContoller = GetComponent<PlayerInventoryController>();
             _playerState = GetComponent<PlayerState>();
+            
 
             _antiBumpSpeed = sprintMaxSpeed;
             _stepOffset = _characterController.stepOffset;
             
         }
+        
         private void Start()
         {
-            _layerMask = LayerMask.GetMask("Interactable");
+           
+            PlayerInstance.Instance.PlayerRegister(this);
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -196,8 +202,8 @@ namespace ShiroGe.CharacterController
                                             isWalking ? walkMaxSpeed :
                                             isSprinting ? sprintMaxSpeed : runMaxSpeed;
             
-            Vector3 cameraForwardXZ = new Vector3(_playerCamera.transform.forward.x, 0, _playerCamera.transform.forward.z).normalized;
-            Vector3 cameraRightXZ = new Vector3(_playerCamera.transform.right.x, 0, _playerCamera.transform.right.z).normalized;
+            Vector3 cameraForwardXZ = new Vector3(playerCamera.transform.forward.x, 0, playerCamera.transform.forward.z).normalized;
+            Vector3 cameraRightXZ = new Vector3(playerCamera.transform.right.x, 0, playerCamera.transform.right.z).normalized;
             Vector3 moveDirection = cameraRightXZ * _playerInputContoller.MovementInput.x +
                                     cameraForwardXZ * _playerInputContoller.MovementInput.y;
             
@@ -216,7 +222,7 @@ namespace ShiroGe.CharacterController
 
         private Vector3 HandleSteepWalls(Vector3 velocity)
         {
-            Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, _groundLayers);
+            Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, groundLayers);
             float angle = Vector3.Angle(normal, Vector3.up);
             bool validAngle = angle <= _characterController.slopeLimit;
 
@@ -236,9 +242,11 @@ namespace ShiroGe.CharacterController
                 _interactLastFrame = false;
             }
             
+            RawView = playerCamera.transform.position + playerCamera.transform.forward * interactionDistance;
+            
             RaycastHit hit;
-            if (Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, out hit,
-                    interactionDistance, _layerMask))
+            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward.normalized, out hit,
+                    interactionDistance, interactiveLayerMask))
             {
                 if(_target != null && !_target.Equals(hit.collider.gameObject))
                     _target.GetComponent<Interactable>().HideHint();
@@ -269,7 +277,17 @@ namespace ShiroGe.CharacterController
                     }
                 }
             }
-
+            
+            RaycastHit hit2;
+            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward.normalized, out hit2,
+                    interactionDistance, groundLayers))
+            {
+                GlobalRaycastHit = hit2.point;
+            }
+            else
+            {
+                GlobalRaycastHit = Vector3.zero;
+            }
         }
 
         #endregion
@@ -281,11 +299,13 @@ namespace ShiroGe.CharacterController
                 _interactLastFrame = false;
             }
             
+            
             RaycastHit hit;
             if (_target == null && !_interactLastFrame && _playerActionsContoller.InteractInput && 
-                Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward.normalized, 
+                Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward.normalized, 
                     out hit, 1000f, LayerMask.GetMask("Default")))
             {
+                
                 Debug.unityLogger.Log($"Teleport to {hit.point}, {_interactLastFrame}");
                 gameObject.transform.position = hit.point;
                 _interactLastFrame = true;
@@ -318,9 +338,9 @@ namespace ShiroGe.CharacterController
                 UpdateIdleRotation(rotationTolerance);
             }
             
-            _playerCamera.transform.rotation = Quaternion.Euler(_cameraRotation.y, _cameraRotation.x, 0f);
+            playerCamera.transform.rotation = Quaternion.Euler(_cameraRotation.y, _cameraRotation.x, 0f);
             
-            Vector3 camForwardProjectedXZ = new Vector3(_playerCamera.transform.forward.x, 0f, _playerCamera.transform.forward.z).normalized;
+            Vector3 camForwardProjectedXZ = new Vector3(playerCamera.transform.forward.x, 0f, playerCamera.transform.forward.z).normalized;
             Vector3 crossProduct = Vector3.Cross(transform.forward, camForwardProjectedXZ);
             float sign = Mathf.Sign(Vector3.Dot(crossProduct, transform.up));
             RotationMismatch = sign * Vector3.Angle(transform.forward, camForwardProjectedXZ);
@@ -369,14 +389,14 @@ namespace ShiroGe.CharacterController
             
             Vector3 spherePosition = new Vector3(transform.position.x,
                 transform.position.y - _characterController.radius, transform.position.z);
-            bool grounded = Physics.CheckSphere(spherePosition, _characterController.radius, _groundLayers, QueryTriggerInteraction.Ignore);
+            bool grounded = Physics.CheckSphere(spherePosition, _characterController.radius, groundLayers, QueryTriggerInteraction.Ignore);
 
             return grounded /*& validAngle*/; // TODO: Закоменченно для демки. Скатывание при заходе шагом на наклонку, ломает подъём по лестнице
         }
 
         private bool IsGroundedWhileAirborne()
         {
-            Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, _groundLayers);
+            Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, groundLayers);
             float angle = Vector3.Angle(normal, Vector3.up);
             bool validAngle = angle <= _characterController.slopeLimit;
             
@@ -393,15 +413,17 @@ namespace ShiroGe.CharacterController
         
         #endregion
         
-        public void LockControl()
+        public void LockControl(bool blockInventoryControl = false)
         {
             _playerInputContoller.MovementDisable();
             _playerActionsContoller.ActionsDisable();
+            if(blockInventoryControl) _playerInventoryContoller.InventoryActionsDisable();
         }
         public void UnlockControl()
         {
             _playerInputContoller.MovementEnable();
             _playerActionsContoller.ActionsEnable();
+            _playerInventoryContoller.InventoryActionsEnable();
         }
     }
 }

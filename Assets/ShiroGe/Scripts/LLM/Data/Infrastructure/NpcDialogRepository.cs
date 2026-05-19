@@ -26,7 +26,7 @@ namespace ShiroGe.Scripts.LLM.Data.Repository
                 return;
             }
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
     
         public NpcDialogData GetOrCreate(string npcId)

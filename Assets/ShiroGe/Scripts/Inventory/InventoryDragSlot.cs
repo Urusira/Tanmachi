@@ -5,10 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class InventoryDragSlot : MonoBehaviour
 {
-    public bool hovering;
-    
     private ItemSO _heldItem;
     private int _itemAmount;
     
@@ -67,7 +65,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         _itemAmount -= amount;
         
-        if (_itemAmount <= 0)
+        if (amount <= 0)
         {
             ClearSlot();
         }
@@ -89,15 +87,5 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public bool HasItem()
     {
         return _heldItem != null;
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        hovering = true;
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        hovering = false;
     }
 }
