@@ -1,4 +1,6 @@
-﻿using ShiroGe.CharacterController;
+﻿using System.Collections.Generic;
+using ShiroGe.CharacterController;
+using ShiroGe.Scripts.UI;
 using UnityEngine;
 
 namespace ShiroGe.Scripts.Objects
@@ -7,9 +9,11 @@ namespace ShiroGe.Scripts.Objects
     {
         public string stationName;
         
+        public List<RecipeSO> recipes = new List<RecipeSO>();
+        
         public override PlayerActionsState Interact()
         {
-            Debug.unityLogger.Log($"Взаимодействие с объектом {gameObject.name}");
+            InventoryUiManager.Instance.ShowInventory(recipes);
             
             return PlayerActionsState.Default;
         }

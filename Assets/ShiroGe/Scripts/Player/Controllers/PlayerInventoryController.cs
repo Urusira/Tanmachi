@@ -53,7 +53,7 @@ namespace ShiroGe.CharacterController
 
         public void OnDropItem(InputAction.CallbackContext context)
         {
-            if(!context.performed) return;
+            if(!context.performed || InventoryUiManager.Instance.IsOpen) return;
             
             InventoryManager.Instance.DropItem();
         }
@@ -148,7 +148,7 @@ namespace ShiroGe.CharacterController
             }
             if(scroll < 0)
             {
-                InventoryUiManager.Instance.PrevoiusItem();
+                InventoryUiManager.Instance.PreviousItem();
                 return;
             }
         }

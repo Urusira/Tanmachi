@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ShiroGe.CharacterController;
 using UnityEngine;
 
@@ -9,14 +10,35 @@ namespace ShiroGe.Scripts.UI
         public static InventoryUiManager Instance { get; private set; }
         
         [SerializeField] private GameObject inventoryObj;
+        [SerializeField] private GameObject inventorySlotsObj;
+        [SerializeField] private GameObject hotbarSlotsObj;
         [SerializeField] private GameObject playerObj;
-        
+
+        [SerializeField] private GameObject craftingMenuObj;
+
         [SerializeField] private GameObject selectorBorderObj;
         
+        [SerializeField] private InventoryDescriptionPanel descriptionPanel;
+        
+        [SerializeField] private Vector3 floatDescriptionOffset = new Vector3(15, -15, 0);
+
         private PlayerController _playerController;
+        private RectTransform _inventorySlotsRectTransform;
+        private RectTransform _inventoryHotbarRectTransform;
+        private RectTransform _inventoryCraftRectTransform;
+
+        private CraftingPanelController _craftingPanel;
+        
+        private Rect _inventorySlotsStdRect;
+        
+        private string _descriptionPanelTitle = "";
+        private string _descriptionPanelDesc = "";
         
         public bool IsOpen { get; private set; } = false;
+        public bool IsCrafting { get; private set; } = false;
 
+        private bool _needDescription = false;
+        
         private void Start()
         {
             if (Instance != null && Instance != this)
@@ -32,9 +54,34 @@ namespace ShiroGe.Scripts.UI
             inventoryObj.SetActive(false);
             
             _playerController = playerObj.GetComponent<PlayerController>();
+            
+            foreach (InventorySlot slot in InventoryManager.Instance._allSlots)
+            {
+                slot.OnHoverStart += HoverSlot;
+                slot.OnHoverEnd += UnhoverSlot;
+            }
+            
+            descriptionPanel.Hide();
+            craftingMenuObj.SetActive(false);
+            
+            _inventorySlotsRectTransform = inventorySlotsObj.GetComponent<RectTransform>();
+            _inventorySlotsStdRect = _inventorySlotsRectTransform.rect;
+            
+            _inventoryHotbarRectTransform = hotbarSlotsObj.GetComponent<RectTransform>();
+            
+            _inventoryCraftRectTransform = craftingMenuObj.GetComponent<RectTransform>();
+            
+            _craftingPanel = craftingMenuObj.GetComponent<CraftingPanelController>();
+                
+            InventoryManager.Instance.OnInventoryChanged += OnInventoryChangedHandler;
         }
 
-        public void ShowInventory()
+        private void Update()
+        {
+            UpdateDescriptionPanel();
+        }
+
+        public void ShowInventory(List<RecipeSO> craftList = null)
         {
             GuiManager.Instance.HideGui();
             GuiManager.Instance.UnlockMouse();
@@ -42,6 +89,28 @@ namespace ShiroGe.Scripts.UI
             
             inventoryObj.SetActive(true);
             IsOpen = true;
+
+            if (craftList != null)
+            {
+                IsCrafting = true;
+                craftingMenuObj.SetActive(true);
+                
+                _inventorySlotsRectTransform.position += new Vector3(_inventoryCraftRectTransform.rect.width/2, 0, 0);
+                _inventoryHotbarRectTransform.position += new Vector3(_inventoryCraftRectTransform.rect.width/2, 0, 0);
+                
+                _craftingPanel.SetNewRecipesList(craftList);
+
+                _craftingPanel.OnCraftClick += OnCraftClickHandler;
+                _craftingPanel.OnIngredientHoverStart += OnIngredientHoverStartHandler;
+                _craftingPanel.OnIngredientHoverEnd += OnIngredientHoverEndHandler;
+
+                _craftingPanel.UpdateCraftsAllow(InventoryManager.Instance.InventoryItemWithAmountCheck);
+            }
+        }
+
+        private void OnInventoryChangedHandler(InventoryManager _)
+        {
+            _craftingPanel.UpdateCraftsAllow(InventoryManager.Instance.InventoryItemWithAmountCheck);
         }
 
         public void HideInventory()
@@ -52,22 +121,40 @@ namespace ShiroGe.Scripts.UI
             GuiManager.Instance.LockMouse();
             _playerController.UnlockControl();
             
+            if (IsCrafting)
+            {
+                IsCrafting = false;
+                craftingMenuObj.SetActive(false);
+                _inventorySlotsRectTransform.position -= new Vector3(_inventoryCraftRectTransform.rect.width/2, 0, 0);
+                _inventoryHotbarRectTransform.position -= new Vector3(_inventoryCraftRectTransform.rect.width/2, 0, 0);
+                
+                _craftingPanel.OnCraftClick -= OnCraftClickHandler;
+                _craftingPanel.OnIngredientHoverStart -= OnIngredientHoverStartHandler;
+                _craftingPanel.OnIngredientHoverEnd -= OnIngredientHoverEndHandler;
+            }
+            
             inventoryObj.SetActive(false);
             IsOpen = false;
         }
 
         public void LeftClick()
         {
+            if(!IsOpen) return;
+            
             InventoryManager.Instance.DragAndDrop();
         }
 
         public void RightClick()
         {
+            if(!IsOpen) return;
+            
             InventoryManager.Instance.DragAndDrop(half: true);
         }
 
         public void SetQuickTransfer()
         {
+            if(!IsOpen) return;
+
             InventoryManager.Instance.SetQuickTransfer();
         }
 
@@ -81,14 +168,110 @@ namespace ShiroGe.Scripts.UI
                 );
         }
         
+        private void UpdateDescriptionPanel()
+        {
+            if(!IsOpen) return;
+
+            if (_needDescription && !InventoryManager.Instance.IsDragging)
+            {
+                Vector3 mPos = Input.mousePosition;
+            
+                descriptionPanel.UpdateDescritpionPanelPosition(mPos + new Vector3(
+                    descriptionPanel.ObjectTransform.rect.width / 2 + floatDescriptionOffset.x, 
+                    descriptionPanel.ObjectTransform.rect.height / 2 + floatDescriptionOffset.y, 
+                    0)
+                );
+                
+                descriptionPanel.Show(_descriptionPanelTitle, _descriptionPanelDesc);
+            }
+            else
+            {
+                descriptionPanel.Hide();
+            }
+        }
+        
         public void NextItem()
         {
+            if(IsOpen) return;
+
             HotbarSelect(InventoryManager.Instance.SelectedHotbarSlot+1);
         }
         
-        public void PrevoiusItem()
+        public void PreviousItem()
         {
+            if(IsOpen) return;
+
             HotbarSelect(InventoryManager.Instance.SelectedHotbarSlot-1);
+        }
+
+        private void HoverSlot(InventorySlot slot)
+        {
+            if(!IsOpen) return;
+
+            InventoryManager.Instance.HoverSlot(slot);
+            
+            //TODO: Здесь при помещении предмета в слот происходит баг. Слот считается наведённым, но при этой наводке он пустой, поэтому текст ниже не отрабатывает,
+            //но при клике по пустому слоту в него помещается предмет, однако повторной наводки не происходит и состояние не обновляется
+            if(slot.HasItem())
+            {
+                _needDescription = true;
+                
+                _descriptionPanelTitle = slot.GetItem().itemName;
+                _descriptionPanelDesc = slot.GetItem().itemDescription;
+            }
+            else
+            {
+                _needDescription = false;
+                
+                _descriptionPanelTitle = "";
+                _descriptionPanelDesc = "";
+            }
+        }
+
+        private void UnhoverSlot(InventorySlot _)
+        {
+            if(!IsOpen) return;
+
+            InventoryManager.Instance.UnhoverSlot();
+            
+            _needDescription = false;
+            
+            _descriptionPanelTitle = "";
+            _descriptionPanelDesc = "";
+        }
+        
+        private void OnIngredientHoverStartHandler(CraftingIngredientCell cell)
+        {
+            if(!IsOpen) return;
+            
+            _needDescription = true;
+            
+            _descriptionPanelTitle = cell.IngredientName;
+            _descriptionPanelDesc = cell.IngredientDescription;
+        }
+        
+        private void OnIngredientHoverEndHandler(CraftingIngredientCell _)
+        {
+            if(!IsOpen) return;
+            
+            _needDescription = false;
+            
+            _descriptionPanelTitle = "";
+            _descriptionPanelDesc = "";
+        }
+
+        private void OnCraftClickHandler(CraftingRecipeCard recipeCard)
+        {
+            if(!IsOpen) return;
+
+            RecipeSO recipe = recipeCard.Recipe;
+            
+            InventoryManager.Instance.AddItem(recipe.result, recipe.resultAmount);
+
+            foreach (Ingredient ingredient in recipe.ingredients)
+            {
+                InventoryManager.Instance.RemoveItem(ingredient.item, ingredient.amount);
+            }
         }
     }
 }

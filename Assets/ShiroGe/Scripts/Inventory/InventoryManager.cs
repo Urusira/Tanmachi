@@ -11,6 +11,8 @@ using UnityEngine.UI;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance  { get; private set; }
+
+    public event System.Action<InventoryManager> OnInventoryChanged;
     
     [SerializeField] private GameObject hotbarObj;
     [SerializeField] private GameObject inventorySlotParent;
@@ -23,11 +25,14 @@ public class InventoryManager : MonoBehaviour
     public List<InventorySlot> _hotbarSlots { get; private set; } = new List<InventorySlot>();
     public List<InventorySlot> _allSlots { get; private set; } = new List<InventorySlot>();
     
-    private InventorySlot _draggedSlot = null;
+    public InventorySlot HoveredSlot { get; private set; }
 
     public int SelectedHotbarSlot { get; private set; } = 0;
+
+    public bool IsDragging { get; private set; } = false;
     
-    private bool _isDragging = false;
+    private Dictionary<ItemSO, int> _inventoryAllItems = new Dictionary<ItemSO, int>();
+    private InventorySlot _draggedSlot = null;
     private bool _quickTransfer = false;
 
     private void Start()
@@ -41,6 +46,8 @@ public class InventoryManager : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
 
         Instance = this;
+
+        RebuildInventoryCache();
     }
 
     private void Awake()
@@ -54,13 +61,12 @@ public class InventoryManager : MonoBehaviour
 
     private void Update()
     {
-        if(_isDragging)
+        if(IsDragging)
             UpdateDragItemPosition();
     }
 
     public int AddItem(ItemSO itemToAdd, int amount)
     {
-        ItemRedraw();
         return AddItem(itemToAdd, amount, _allSlots);
     }
     
@@ -70,52 +76,92 @@ public class InventoryManager : MonoBehaviour
 
         foreach (InventorySlot slot in targetInventoryZone)
         {
-            if (slot.HasItem() && slot.GetItem() == itemToAdd)
-            {
-                int currentAmout = slot.GetItemAmount();
-                int maxStack = itemToAdd.maxStackSize;
-                if (currentAmout < maxStack)
-                {
-                    int spaceLeft = maxStack - currentAmout;
-                    int amountToAdd = Mathf.Min(spaceLeft, remaining);
-                    
-                    slot.SetItem(itemToAdd, currentAmout+amountToAdd);
-                    remaining -= amountToAdd;
-
-                    if (remaining <= 0)
-                        ItemRedraw();
-                        return remaining;
-                }
-            }
-        }
-
-        foreach (InventorySlot slot in targetInventoryZone)
-        {
-            if (!slot.HasItem())
-            {
-                int amountToPlace = Mathf.Min(itemToAdd.maxStackSize, remaining);
-                slot.SetItem(itemToAdd, amountToPlace);
-                remaining -= amountToPlace;
-                
-                if(remaining <= 0)
-                    ItemRedraw();
-                    return remaining;
-            }
+            if (!slot.HasItem() || slot.GetItem() != itemToAdd) continue;
+        
+            int spaceLeft = itemToAdd.maxStackSize - slot.GetItemAmount();
+            if (spaceLeft <= 0) continue;
+        
+            int toAdd = Mathf.Min(spaceLeft, remaining);
+            slot.AddAmount(toAdd);
+            remaining -= toAdd;
+        
+            if (remaining <= 0) break;
         }
 
         if (remaining > 0)
         {
-            Debug.Log($"Inventory Full, could not add {remaining} of {itemToAdd.itemName}");
+            foreach (InventorySlot slot in targetInventoryZone)
+            {
+                if (slot.HasItem()) continue;
+            
+                int toAdd = Mathf.Min(itemToAdd.maxStackSize, remaining);
+                slot.SetItem(itemToAdd, toAdd);
+                remaining -= toAdd;
+            
+                if (remaining <= 0) break;
+            }
         }
 
+        int actuallyAdded = amount - remaining;
+        if (actuallyAdded > 0 && !_quickTransfer)
+        {
+            if (_inventoryAllItems.ContainsKey(itemToAdd)) _inventoryAllItems[itemToAdd] += actuallyAdded;
+            else _inventoryAllItems.Add(itemToAdd, actuallyAdded);
+        }
+    
         ItemRedraw();
-        
+            
+        if (remaining > 0)
+            Debug.Log($"Inventory Full, could not add {remaining} of {itemToAdd.itemName}");
+    
         return remaining;
+    }
+    
+    public int RemoveItem(ItemSO item, int amount)
+    {
+        int remainingToRemove = amount;
+        int totalRemoved = 0;
+    
+        List<InventorySlot> slotsWithItem = new List<InventorySlot>();
+        foreach (InventorySlot slot in _allSlots)
+        {
+            if (slot.HasItem() && slot.GetItem() == item)
+            {
+                slotsWithItem.Add(slot);
+            }
+        }
+    
+        foreach (InventorySlot slot in slotsWithItem)
+        {
+            int slotAmount = slot.GetItemAmount();
+        
+            if (slotAmount <= remainingToRemove)
+            {
+                totalRemoved += slotAmount;
+                remainingToRemove -= slotAmount;
+                slot.ClearSlot();
+            }
+            else
+            {
+                slot.RemoveAmount(remainingToRemove);
+                totalRemoved += remainingToRemove;
+                remainingToRemove = 0;
+            }
+        
+            if (remainingToRemove <= 0)
+                break;
+        }
+    
+        _inventoryAllItems[item] -= totalRemoved;
+        
+        ItemRedraw();
+    
+        return totalRemoved;
     }
 
     public void DragAndDrop(bool half = false)
     {
-        if (!_isDragging)
+        if (!IsDragging)
         {
             StartDrag(half);
         }
@@ -124,44 +170,26 @@ public class InventoryManager : MonoBehaviour
             EndDrag();
         }
     }
-
-    public bool HotbarItemCheck(ItemSO item)
-    {
-        foreach (InventorySlot slot in _hotbarSlots)
-        {
-            if (slot.GetItem() == item) return true;
-        }
-
-        return false;
-    }
     
+    public bool InventoryItemWithAmountCheck(ItemSO item, int amount)
+    {
+        return _inventoryAllItems.ContainsKey(item) && _inventoryAllItems[item] >= amount;
+    }
     public bool InventoryItemCheck(ItemSO item)
     {
-        foreach (InventorySlot slot in _inventorySlots)
-        {
-            if (slot.GetItem() == item) return true;
-        }
-
-        return false;
-    }
-    
-    public bool AllInventoryItemCheck(ItemSO item)
-    {
-        return HotbarItemCheck(item) || InventoryItemCheck(item);
+        return _inventoryAllItems.ContainsKey(item);
     }
 
     private void StartDrag(bool half = false)
     {
-        InventorySlot hovered = GetHoveredSlot();
-
         if (_quickTransfer)
         {
-            ItemSO tempItem = hovered.GetItem();
-            int tempAmount = hovered.GetItemAmount();
+            ItemSO tempItem = HoveredSlot.GetItem();
+            int tempAmount = HoveredSlot.GetItemAmount();
                 
-            hovered.ClearSlot();
+            HoveredSlot.ClearSlot();
             
-            if (_hotbarSlots.Contains(hovered))
+            if (_hotbarSlots.Contains(HoveredSlot))
             {
                 AddItem(tempItem, tempAmount, _inventorySlots);
             }
@@ -170,20 +198,21 @@ public class InventoryManager : MonoBehaviour
                 AddItem(tempItem, tempAmount, _hotbarSlots);
             }
             
+            OnInventoryChanged?.Invoke(this);
             return;
         }
         
-        if (hovered != null && hovered.HasItem())
+        if (HoveredSlot != null && HoveredSlot.HasItem())
         {
-            _draggedSlot = hovered;
-            _isDragging = true;
+            _draggedSlot = HoveredSlot;
+            IsDragging = true;
 
             if (half)
             {
                 int draggedSlotAmount = _draggedSlot.GetItemAmount();
                 int halfDragAmount = Math.Max(1, Mathf.CeilToInt(draggedSlotAmount / 2));
                 
-                dragSlot.SetItem(hovered.GetItem(), halfDragAmount);
+                dragSlot.SetItem(HoveredSlot.GetItem(), halfDragAmount);
                 
                 if(draggedSlotAmount > halfDragAmount)
                     _draggedSlot.RemoveAmount(halfDragAmount);
@@ -197,39 +226,32 @@ public class InventoryManager : MonoBehaviour
                 dragSlot.SetItem(_draggedSlot.GetItem(), _draggedSlot.GetItemAmount());
                 
                 _draggedSlot.ClearSlot();
+                
             }
+            
+            _inventoryAllItems[dragSlot.GetItem()] -= dragSlot.GetItemAmount();
+            if(_inventoryAllItems[dragSlot.GetItem()] == 0) _inventoryAllItems.Remove(dragSlot.GetItem());
         }
         else
         {
-            _isDragging = false;
+            IsDragging = false;
         }
         
+        OnInventoryChanged?.Invoke(this);
         ItemRedraw();
     }
 
     private void EndDrag()
     {
-        InventorySlot hovered = GetHoveredSlot();
-
-        HandleDrop(from: dragSlot, to: hovered);
+        HandleDrop(from: dragSlot, to: HoveredSlot);
 
         if(!dragSlot.HasItem())
         {
             _draggedSlot = null;
-            _isDragging = false;
+            IsDragging = false;
         }
-    }
-
-    private InventorySlot GetHoveredSlot()
-    {
-        foreach (InventorySlot slot in _allSlots)
-        {
-            if (slot.hovering)
-            {
-                return slot;
-            }
-        }
-        return null;
+        
+        OnInventoryChanged?.Invoke(this);
     }
 
     private void HandleDrop(InventoryDragSlot from, InventorySlot to)
@@ -253,6 +275,12 @@ public class InventoryManager : MonoBehaviour
                     from.ClearSlot();
                 }
 
+                if(_allSlots.Contains(to))
+                {
+                    if (_inventoryAllItems.ContainsKey(to.GetItem())) _inventoryAllItems[to.GetItem()] += move;
+                    else _inventoryAllItems.Add(to.GetItem(), move);
+                }
+                
                 return;
             }
         }
@@ -265,28 +293,70 @@ public class InventoryManager : MonoBehaviour
             to.SetItem(from.GetItem(), from.GetItemAmount());
             from.SetItem(tempItem, tempAmount);
 
+            if (_allSlots.Contains(to))
+            {
+                if (_inventoryAllItems.ContainsKey(to.GetItem())) _inventoryAllItems[to.GetItem()] += to.GetItemAmount();
+                else _inventoryAllItems.Add(to.GetItem(), to.GetItemAmount());
+
+                _inventoryAllItems[from.GetItem()] -= from.GetItemAmount();
+                if (_inventoryAllItems[from.GetItem()] == 0) _inventoryAllItems.Remove(from.GetItem());
+            }
+
             return;
         }
         
         to.SetItem(from.GetItem(), from.GetItemAmount());
         from.ClearSlot();
-        
+
+        if ( _allSlots.Contains(to))
+        {
+            if (_inventoryAllItems.ContainsKey(to.GetItem())) _inventoryAllItems[to.GetItem()] += to.GetItemAmount();
+            else _inventoryAllItems.Add(to.GetItem(), to.GetItemAmount());
+        }
+
         ItemRedraw();
     }
 
     private void UpdateDragItemPosition()
     {
-        if (_isDragging)
+        if (IsDragging)
         {
             dragSlot.transform.position = Input.mousePosition + new Vector3(dragSlotOffset.x, dragSlotOffset.y, 0);
         }
     }
 
+    private void RebuildInventoryCache()
+    {
+        _inventoryAllItems.Clear();
+        foreach (InventorySlot slot in _allSlots)
+        {
+            if (slot.HasItem())
+            {
+                ItemSO item = slot.GetItem();
+                int amount = slot.GetItemAmount();
+            
+                if (_inventoryAllItems.ContainsKey(item))
+                    _inventoryAllItems[item] += amount;
+                else
+                    _inventoryAllItems.Add(item, amount);
+            }
+        }
+        
+        OnInventoryChanged?.Invoke(this);
+    }
+
     public void InventoryClosedHandler()
     {
-        if(_isDragging && _draggedSlot != null)
-            EndDrag();
-        
+        if (IsDragging)
+        {
+            AddItem(dragSlot.GetItem(), dragSlot.GetItemAmount());
+            
+            _draggedSlot = null;
+            IsDragging = false;
+            
+            dragSlot.ClearSlot();
+        }
+
         _quickTransfer = false;
     }
 
@@ -298,6 +368,7 @@ public class InventoryManager : MonoBehaviour
         selectedSlot.RemoveAmount(1);
         
         ItemRedraw();
+        OnInventoryChanged?.Invoke(this);
     }
 
     public void SetQuickTransfer()
@@ -311,7 +382,6 @@ public class InventoryManager : MonoBehaviour
     {
         value = value < 0 ? _hotbarSlots.Capacity-1 : value > _hotbarSlots.Capacity-1 ? 0 : value;
         SelectedHotbarSlot = value;
-        InventorySlot currentSlot = _hotbarSlots[SelectedHotbarSlot];
         
         ItemRedraw();
     }
@@ -326,5 +396,20 @@ public class InventoryManager : MonoBehaviour
         {
             PlayerEquipController.Instance.EquipRightHand(_hotbarSlots[SelectedHotbarSlot].GetItem().handItemPrefab);
         }
+    }
+    
+    public void HoverSlot(InventorySlot slot)
+    {
+        HoveredSlot = slot;
+    }
+
+    public void UnhoverSlot()
+    {
+        HoveredSlot = null;
+    }
+    
+    public bool HasHoveredSlot()
+    {
+        return HoveredSlot != null;
     }
 }

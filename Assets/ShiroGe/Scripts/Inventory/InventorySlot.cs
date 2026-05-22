@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public bool hovering;
+    public event System.Action<InventorySlot> OnHoverStart;
+    public event System.Action<InventorySlot> OnHoverEnd;
     
     private ItemSO _heldItem;
     private int _itemAmount;
@@ -79,7 +80,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         return _itemAmount;
     }
 
-    public void ClearSlot()
+    public void ClearSlot() 
     {
         _heldItem = null;
         _itemAmount = 0;
@@ -93,11 +94,11 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        hovering = true;
+        OnHoverStart?.Invoke(this);
     }
-
+    
     public void OnPointerExit(PointerEventData eventData)
     {
-        hovering = false;
+        OnHoverEnd?.Invoke(this);
     }
 }

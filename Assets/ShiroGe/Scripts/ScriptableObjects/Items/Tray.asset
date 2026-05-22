@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Tray
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: "\u041F\u043E\u0434\u043D\u043E\u0441"
+  itemDescription: "\u041C\u043E\u0439 \u0440\u0430\u0431\u043E\u0447\u0438\u0439
+    \u043F\u043E\u0434\u043D\u043E\u0441, \u043A\u0440\u0438\u0432\u043E\u0432\u0430\u0442,\\n\u043D\u043E
+    \u0434\u043B\u044F \u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043E\u0439\u0434\u0451\u0442."
   icon: {fileID: 21300000, guid: 324ebcdcd3c45834a90bcfceeccc3080, type: 3}
   maxStackSize: 1
   itemPrefab: {fileID: 6615651912010513265, guid: 123441f7d54643b4893a73215f99f6cb, type: 3}
