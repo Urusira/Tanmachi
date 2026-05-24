@@ -143,12 +143,12 @@ namespace ShiroGe.CharacterController
             
             if(scroll > 0)
             {
-                InventoryUiManager.Instance.NextItem();
+                InventoryUiManager.Instance.PreviousItem();
                 return;
             }
             if(scroll < 0)
             {
-                InventoryUiManager.Instance.PreviousItem();
+                InventoryUiManager.Instance.NextItem();
                 return;
             }
         }

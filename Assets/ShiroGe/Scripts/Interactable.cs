@@ -13,7 +13,7 @@ namespace ShiroGe.Scripts
         
         public abstract PlayerActionsState Interact();
 
-        private void Start()
+        private void Awake()
         {
             if (TryGetComponent<Outline>(out InteractableOutline))
             {

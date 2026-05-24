@@ -234,7 +234,6 @@ namespace ShiroGe.CharacterController
             return velocity;
         }
         
-        //TODO: Needs Refactor
         private void PointerScan()
         {
             if (_interactLastFrame && !_playerActionsContoller.InteractInput)
@@ -248,13 +247,13 @@ namespace ShiroGe.CharacterController
             if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward.normalized, out hit,
                     interactionDistance, interactiveLayerMask))
             {
-                if(_target != null && !_target.Equals(hit.collider.gameObject))
+                //TODO: Нет проверки на наличие компонента и существование таргета, создаёт нулреференсные ошибки
+                if (_target != null && !_target.Equals(hit.collider.gameObject))
                     _target.GetComponent<Interactable>().HideHint();
-                
+
                 _target = hit.collider.gameObject;
                 String hintText = _target?.GetComponent<Interactable>().ShowHint();
                 GuiManager.Instance.HighlightPointer(hintText);
-                
             }
             else if (_target != null)
             {
@@ -292,6 +291,7 @@ namespace ShiroGe.CharacterController
 
         #endregion
 
+        //TODO: Убрать для билда, админская функция для теста билдов
         private void FixedUpdate()
         {
             if (_interactLastFrame && !_playerActionsContoller.InteractInput)

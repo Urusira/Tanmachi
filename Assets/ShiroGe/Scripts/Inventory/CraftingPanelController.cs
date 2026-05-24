@@ -102,6 +102,7 @@ public class CraftingPanelController : MonoBehaviour
 
     public void UpdateCraftsAllow(Func<ItemSO, int, bool> inventoryCheckFunction)
     {
+        if(_recipes != null && _recipesCards.Count > 0)
         foreach (RecipeSO recipe in _recipes)
         {
             bool available = true;

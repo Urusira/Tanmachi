@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts;
 using ShiroGe.Scripts.Items;
@@ -159,15 +160,15 @@ public class InventoryManager : MonoBehaviour
         return totalRemoved;
     }
 
-    public void DragAndDrop(bool half = false)
+    public InventorySlot DragAndDrop(bool half = false)
     {
         if (!IsDragging)
         {
-            StartDrag(half);
+            return StartDrag(half);
         }
         else
         {
-            EndDrag();
+            return EndDrag();
         }
     }
     
@@ -180,26 +181,30 @@ public class InventoryManager : MonoBehaviour
         return _inventoryAllItems.ContainsKey(item);
     }
 
-    private void StartDrag(bool half = false)
+    private InventorySlot StartDrag(bool half = false)
     {
         if (_quickTransfer)
         {
-            ItemSO tempItem = HoveredSlot.GetItem();
-            int tempAmount = HoveredSlot.GetItemAmount();
-                
-            HoveredSlot.ClearSlot();
-            
-            if (_hotbarSlots.Contains(HoveredSlot))
+            if (HoveredSlot != null)
             {
-                AddItem(tempItem, tempAmount, _inventorySlots);
+                ItemSO tempItem = HoveredSlot.GetItem();
+                int tempAmount = HoveredSlot.GetItemAmount();
+
+                HoveredSlot.ClearSlot();
+
+                if (_hotbarSlots.Contains(HoveredSlot))
+                {
+                    AddItem(tempItem, tempAmount, _inventorySlots);
+                }
+                else
+                {
+                    AddItem(tempItem, tempAmount, _hotbarSlots);
+                }
+
+                OnInventoryChanged?.Invoke(this);
+                return HoveredSlot;
             }
-            else
-            {
-                AddItem(tempItem, tempAmount, _hotbarSlots);
-            }
-            
-            OnInventoryChanged?.Invoke(this);
-            return;
+            else return null;
         }
         
         if (HoveredSlot != null && HoveredSlot.HasItem())
@@ -239,9 +244,12 @@ public class InventoryManager : MonoBehaviour
         
         OnInventoryChanged?.Invoke(this);
         ItemRedraw();
+
+        return HoveredSlot;
     }
 
-    private void EndDrag()
+    [CanBeNull]
+    private InventorySlot EndDrag()
     {
         HandleDrop(from: dragSlot, to: HoveredSlot);
 
@@ -252,6 +260,9 @@ public class InventoryManager : MonoBehaviour
         }
         
         OnInventoryChanged?.Invoke(this);
+
+        if (HoveredSlot != null && HoveredSlot.HasItem()) return HoveredSlot;
+        else return null;
     }
 
     private void HandleDrop(InventoryDragSlot from, InventorySlot to)
@@ -363,12 +374,17 @@ public class InventoryManager : MonoBehaviour
     public void DropItem()
     {
         InventorySlot selectedSlot = _hotbarSlots[SelectedHotbarSlot];
-        WorldSpawner.Instance.PlayerDrop(selectedSlot.GetItem().itemPrefab);
         
-        selectedSlot.RemoveAmount(1);
+        if(selectedSlot.HasItem())
+        {
+            WorldSpawner.Instance.PlayerDrop(selectedSlot.GetItem().itemPrefab);
         
-        ItemRedraw();
-        OnInventoryChanged?.Invoke(this);
+            selectedSlot.RemoveAmount(1);
+            
+            ItemRedraw();
+            
+            OnInventoryChanged?.Invoke(this);
+        }
     }
 
     public void SetQuickTransfer()

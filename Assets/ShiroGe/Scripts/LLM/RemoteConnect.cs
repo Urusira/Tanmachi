@@ -54,7 +54,6 @@ public class RemoteConnect : MonoBehaviour
             request.SetRequestHeader("Content-Type", "application/json");
 
             yield return request.SendWebRequest();
-            Debug.Log("Заебись6");
 
             if (request.result != UnityWebRequest.Result.Success)
             {

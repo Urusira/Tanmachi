@@ -131,7 +131,11 @@ namespace ShiroGe.Scripts.UI
                 _craftingPanel.OnCraftClick -= OnCraftClickHandler;
                 _craftingPanel.OnIngredientHoverStart -= OnIngredientHoverStartHandler;
                 _craftingPanel.OnIngredientHoverEnd -= OnIngredientHoverEndHandler;
+                
             }
+        
+            descriptionPanel.Hide();
+            _needDescription = false;
             
             inventoryObj.SetActive(false);
             IsOpen = false;
@@ -141,14 +145,23 @@ namespace ShiroGe.Scripts.UI
         {
             if(!IsOpen) return;
             
-            InventoryManager.Instance.DragAndDrop();
+            InventorySlot slot = InventoryManager.Instance.DragAndDrop();
+            if (slot != null)
+            {
+                HoverSlot(slot);
+            }
         }
 
         public void RightClick()
         {
             if(!IsOpen) return;
             
-            InventoryManager.Instance.DragAndDrop(half: true);
+            InventorySlot slot = InventoryManager.Instance.DragAndDrop(half: true);
+            
+            if (slot != null)
+            {
+                HoverSlot(slot);
+            }
         }
 
         public void SetQuickTransfer()
@@ -210,8 +223,6 @@ namespace ShiroGe.Scripts.UI
 
             InventoryManager.Instance.HoverSlot(slot);
             
-            //TODO: Здесь при помещении предмета в слот происходит баг. Слот считается наведённым, но при этой наводке он пустой, поэтому текст ниже не отрабатывает,
-            //но при клике по пустому слоту в него помещается предмет, однако повторной наводки не происходит и состояние не обновляется
             if(slot.HasItem())
             {
                 _needDescription = true;
