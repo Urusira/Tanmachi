@@ -22,6 +22,6 @@ namespace ShiroGe.Scripts.NPC
             return $"{gameObject.name}\nF для разговора";
         }
 
-        public override void Initiate() { return; }
+        protected override void Initiate() { return; }
     }
 }

@@ -30,7 +30,6 @@ namespace ShiroGe.Scripts
             Initiate();
         }
 
-        public abstract void Initiate();
 
         public void OutlineUpdate(Color outlineColor, float outlineWidthOutline)
         {
@@ -55,5 +54,7 @@ namespace ShiroGe.Scripts
         {
             InteractableOutline.enabled = false;
         }
+        
+        protected abstract void Initiate();
     }
 }

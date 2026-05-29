@@ -17,6 +17,7 @@ public class InventoryManager : MonoBehaviour
     
     [SerializeField] private GameObject hotbarObj;
     [SerializeField] private GameObject inventorySlotParent;
+    [SerializeField] private GameObject armorSlotsObj;
 
     [SerializeField] private InventoryDragSlot dragSlot;
 
@@ -24,6 +25,7 @@ public class InventoryManager : MonoBehaviour
     
     public List<InventorySlot> _inventorySlots { get; private set; } = new List<InventorySlot>();
     public List<InventorySlot> _hotbarSlots { get; private set; } = new List<InventorySlot>();
+    public List<InventorySlot> _armorSlots { get; private set; } = new List<InventorySlot>();
     public List<InventorySlot> _allSlots { get; private set; } = new List<InventorySlot>();
     
     public InventorySlot HoveredSlot { get; private set; }
@@ -55,9 +57,11 @@ public class InventoryManager : MonoBehaviour
     {
         _inventorySlots.AddRange(inventorySlotParent.GetComponentsInChildren<InventorySlot>());
         _hotbarSlots.AddRange(hotbarObj.GetComponentsInChildren<InventorySlot>());
+        _armorSlots.AddRange(armorSlotsObj.GetComponentsInChildren<InventorySlot>());
         
         _allSlots.AddRange(_hotbarSlots);
         _allSlots.AddRange(_inventorySlots);
+        _allSlots.AddRange(_armorSlots);
     }
 
     private void Update()
@@ -77,7 +81,7 @@ public class InventoryManager : MonoBehaviour
 
         foreach (InventorySlot slot in targetInventoryZone)
         {
-            if (!slot.HasItem() || slot.GetItem() != itemToAdd) continue;
+            if (!slot.HasItem() || slot.GetItem() != itemToAdd || slot.specialType != ItemTypeEnum.DEFAULT) continue;
         
             int spaceLeft = itemToAdd.maxStackSize - slot.GetItemAmount();
             if (spaceLeft <= 0) continue;
@@ -93,7 +97,7 @@ public class InventoryManager : MonoBehaviour
         {
             foreach (InventorySlot slot in targetInventoryZone)
             {
-                if (slot.HasItem()) continue;
+                if (slot.HasItem() || slot.specialType != ItemTypeEnum.DEFAULT) continue;
             
                 int toAdd = Mathf.Min(itemToAdd.maxStackSize, remaining);
                 slot.SetItem(itemToAdd, toAdd);
@@ -190,9 +194,12 @@ public class InventoryManager : MonoBehaviour
                 ItemSO tempItem = HoveredSlot.GetItem();
                 int tempAmount = HoveredSlot.GetItemAmount();
 
-                HoveredSlot.ClearSlot();
 
-                if (_hotbarSlots.Contains(HoveredSlot))
+                if (_armorSlots.Contains(HoveredSlot))
+                {
+                    AddItem(tempItem, tempAmount, _allSlots);
+                }
+                else if (_hotbarSlots.Contains(HoveredSlot))
                 {
                     AddItem(tempItem, tempAmount, _inventorySlots);
                 }
@@ -201,6 +208,11 @@ public class InventoryManager : MonoBehaviour
                     AddItem(tempItem, tempAmount, _hotbarSlots);
                 }
 
+                if(HoveredSlot.specialType != ItemTypeEnum.DEFAULT)
+                    PlayerEquipController.Instance.UnequipItem(HoveredSlot.GetItem());
+                
+                HoveredSlot.ClearSlot();
+                
                 OnInventoryChanged?.Invoke(this);
                 return HoveredSlot;
             }
@@ -236,6 +248,9 @@ public class InventoryManager : MonoBehaviour
             
             _inventoryAllItems[dragSlot.GetItem()] -= dragSlot.GetItemAmount();
             if(_inventoryAllItems[dragSlot.GetItem()] == 0) _inventoryAllItems.Remove(dragSlot.GetItem());
+            
+            if(HoveredSlot.specialType != ItemTypeEnum.DEFAULT)
+                PlayerEquipController.Instance.UnequipItem(dragSlot.GetItem());
         }
         else
         {
@@ -245,6 +260,7 @@ public class InventoryManager : MonoBehaviour
         OnInventoryChanged?.Invoke(this);
         ItemRedraw();
 
+        
         return HoveredSlot;
     }
 
@@ -257,17 +273,31 @@ public class InventoryManager : MonoBehaviour
         {
             _draggedSlot = null;
             IsDragging = false;
+            
         }
         
         OnInventoryChanged?.Invoke(this);
 
-        if (HoveredSlot != null && HoveredSlot.HasItem()) return HoveredSlot;
-        else return null;
+        
+        if (HoveredSlot != null && HoveredSlot.HasItem())
+        {
+            ItemTypeEnum type = HoveredSlot.GetItem().itemType;
+            if (type != ItemTypeEnum.DEFAULT && type == HoveredSlot.specialType)
+            {
+                PlayerEquipController.Instance.EquipItem(HoveredSlot.GetItem());
+            }
+            
+            return HoveredSlot;
+        }
+        
+        return null;
     }
 
     private void HandleDrop(InventoryDragSlot from, InventorySlot to)
     {
         if (to == null) return;
+
+        if (to.specialType != ItemTypeEnum.DEFAULT && from.GetItem().itemType != to.specialType) return;
 
         if (to.HasItem() && to.GetItem() == from.GetItem())
         {
@@ -405,13 +435,8 @@ public class InventoryManager : MonoBehaviour
     public void ItemRedraw()
     {
         InventorySlot currentSlot = _hotbarSlots[SelectedHotbarSlot];
-        
-        PlayerEquipController.Instance.UnequipRightHand();
-        
-        if(currentSlot.HasItem())
-        {
-            PlayerEquipController.Instance.EquipRightHand(_hotbarSlots[SelectedHotbarSlot].GetItem().handItemPrefab);
-        }
+
+        PlayerEquipController.Instance.TakeInHand(currentSlot.HasItem() ? currentSlot.GetItem() : null);
     }
     
     public void HoverSlot(InventorySlot slot)

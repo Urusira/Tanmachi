@@ -278,8 +278,6 @@ MonoBehaviour:
   stationName: "\u041F\u0435\u0447\u043A\u0430"
   recipes:
   - {fileID: 11400000, guid: b6873969143d01d44b4b3fcecd94f504, type: 2}
-  - {fileID: 11400000, guid: 8c6f0a8232daf6b43bd0dec06063e01d, type: 2}
-  - {fileID: 11400000, guid: 4253db152e388e3448879a0d376ce08c, type: 2}
 --- !u!1 &7067061761719882173
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using ShiroGe.Scripts.Items;
 using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
@@ -9,6 +10,8 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 {
     public event System.Action<InventorySlot> OnHoverStart;
     public event System.Action<InventorySlot> OnHoverEnd;
+
+    public ItemTypeEnum specialType =  ItemTypeEnum.DEFAULT;
     
     private ItemSO _heldItem;
     private int _itemAmount;

@@ -21,15 +21,15 @@ namespace ShiroGe.Scripts.World
             Instance = this;
         }
 
-        public PickapbleItem PlayerDrop(GameObject item)
+        public PickupbleItem PlayerDrop(GameObject item)
         {
             Vector3 viewPoint = PlayerInstance.Instance.PlayerGroundedPointView();
             if(viewPoint != Vector3.zero)
             {
-                return Instantiate(item, viewPoint, new Quaternion()).GetComponent<PickapbleItem>();
+                return Instantiate(item, viewPoint, new Quaternion()).GetComponent<PickupbleItem>();
             }
             return Instantiate(item, PlayerInstance.Instance.PlayerRawView(),
-                new Quaternion()).GetComponent<PickapbleItem>();
+                new Quaternion()).GetComponent<PickupbleItem>();
         }
     }
 }

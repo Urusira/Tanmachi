@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 4328566817098671277}
   - component: {fileID: 31718447998784673}
   - component: {fileID: 1437141197821304178}
-  - component: {fileID: 8572270958510967619}
+  - component: {fileID: 3042058648600925861}
   m_Layer: 7
   m_Name: PT_Generic_Rock_01_LOD0
   m_TagString: Untagged
@@ -176,7 +176,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -3282209725294213285, guid: f226223b3a11d2d4b980aaa520301583, type: 3}
---- !u!114 &8572270958510967619
+--- !u!114 &3042058648600925861
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -185,9 +185,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5215970427928307999}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff70e35cfa5c40948c60a94bf3b04423, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cecd930192b44a9a4cba3451dff4a32, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.Rock
+  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.PickupbleItem
   amount: 1
   scriptableItem: {fileID: 11400000, guid: 0d2d00b8324ec9b4baa2d49f3c83d7e4, type: 2}
 --- !u!1 &7126759119823987389

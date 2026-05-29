@@ -1,0 +1,41 @@
+﻿using System;
+using ShiroGe.CharacterController;
+using UnityEngine;
+
+namespace ShiroGe.Scripts.Items
+{
+    public class PickupbleItem : Interactable
+    {
+        public int amount = 1;
+        
+        public ItemSO scriptableItem;
+        
+        public override PlayerActionsState Interact()
+        {
+            InventoryManager.Instance.AddItem(scriptableItem, amount);
+            
+            LODGroup lodGroup = GetComponentInParent<LODGroup>();
+            if (lodGroup != null)
+            {
+                Destroy(lodGroup.gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+
+            return PlayerActionsState.PickingUp;
+        }
+
+        public override string ShowHint()
+        {
+            base.ShowHint();
+            return $"{gameObject.name}\nF для подбора";
+        }
+
+        protected override void Initiate()
+        {
+            return;
+        }
+    }
+}

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.Inventory;
+using TMPro;
 using UnityEngine;
 
 namespace ShiroGe.Scripts.UI
@@ -11,6 +13,8 @@ namespace ShiroGe.Scripts.UI
         
         [SerializeField] private GameObject inventoryObj;
         [SerializeField] private GameObject inventorySlotsObj;
+        [SerializeField] private GameObject armorSlotsObj;
+        [SerializeField] private GameObject cashObj;
         [SerializeField] private GameObject hotbarSlotsObj;
         [SerializeField] private GameObject playerObj;
 
@@ -26,6 +30,8 @@ namespace ShiroGe.Scripts.UI
         private RectTransform _inventorySlotsRectTransform;
         private RectTransform _inventoryHotbarRectTransform;
         private RectTransform _inventoryCraftRectTransform;
+        
+        private TextMeshProUGUI _cashText;
 
         private CraftingPanelController _craftingPanel;
         
@@ -72,8 +78,16 @@ namespace ShiroGe.Scripts.UI
             _inventoryCraftRectTransform = craftingMenuObj.GetComponent<RectTransform>();
             
             _craftingPanel = craftingMenuObj.GetComponent<CraftingPanelController>();
+            
+            _cashText = cashObj.GetComponent<TextMeshProUGUI>();
+            playerObj.GetComponent<CashManager>().OnCashChanged += OnCashChangedHandler;
                 
             InventoryManager.Instance.OnInventoryChanged += OnInventoryChangedHandler;
+        }
+
+        private void OnCashChangedHandler(float newValue)
+        {
+            _cashText.text = newValue.ToString();
         }
 
         private void Update()

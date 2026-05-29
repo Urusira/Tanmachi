@@ -14,7 +14,7 @@ namespace ShiroGe.Scripts.Objects
             return PlayerActionsState.Default;
         }
 
-        public override void Initiate()
+        protected override void Initiate()
         {
             this.stationName = "Котёл";
         }
