@@ -23,6 +23,8 @@ namespace ShiroGe.Scripts.Quests.Orders
 
         public override void CompleteQuest()
         {
+            InventoryManager.Instance.RemoveItem(_item, 1);
+            
             PlayerInstance.Instance.GiveCash(2);
             
             base.CompleteQuest();

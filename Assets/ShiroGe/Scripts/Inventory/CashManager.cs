@@ -12,14 +12,14 @@ namespace ShiroGe.Scripts.Inventory
         {
             this.CashAmount += cashAmount;
             
-            OnCashChanged?.Invoke(cashAmount);
+            OnCashChanged?.Invoke(this.CashAmount);
         }
 
         public void removeCash(float cashAmount)
         {
             this.CashAmount -= cashAmount;
             
-            OnCashChanged?.Invoke(cashAmount);
+            OnCashChanged?.Invoke(this.CashAmount);
         }
     }
 }

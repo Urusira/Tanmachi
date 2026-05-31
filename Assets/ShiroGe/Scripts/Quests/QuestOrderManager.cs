@@ -63,6 +63,7 @@ namespace ShiroGe.Scripts.Quests
         public void QuestComplete(string npcId, string questId)
         {
             _npcQuestOrdersList[npcId][questId].CompleteQuest();
+            
             _npcQuestOrdersList[npcId].Remove(questId);
             if (_npcQuestOrdersList[npcId].Count == 0)
                 _npcQuestOrdersList.Remove(npcId);
