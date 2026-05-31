@@ -1,5 +1,6 @@
 ﻿using System;
 using ShiroGe.Scripts;
+using ShiroGe.Scripts.Inventory;
 using ShiroGe.Scripts.Objects;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -103,7 +104,7 @@ namespace ShiroGe.CharacterController
         private void Start()
         {
            
-            PlayerInstance.Instance.PlayerRegister(this);
+            PlayerInstance.Instance.PlayerRegister(this, gameObject.GetComponent<CashManager>());
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;

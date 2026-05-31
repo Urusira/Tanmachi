@@ -194,6 +194,16 @@ namespace ShiroGe.Scripts.UI
                 selectorBorderObj.transform.position.z
                 );
         }
+
+        public void HotbarHide()
+        {
+            hotbarSlotsObj.SetActive(false);
+        }
+
+        public void HotbarShow()
+        {
+            hotbarSlotsObj.SetActive(true);
+        }
         
         private void UpdateDescriptionPanel()
         {
