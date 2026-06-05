@@ -90,6 +90,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &3197070828673411284
 MeshCollider:
@@ -125,3 +126,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cecd930192b44a9a4cba3451dff4a32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Objects.Pivasik
+  amount: 1
+  scriptableItem: {fileID: 11400000, guid: 29843f6a74941a84ca3c2ff7f20e8f51, type: 2}

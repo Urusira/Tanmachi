@@ -15,8 +15,8 @@ TagManager:
   - Interactable
   - Post Processing
   - UIPreviewCamera
-  - 
-  - 
+  - TransparentWalk
+  - NonBakingNavObstacle
   - 
   - 
   - 

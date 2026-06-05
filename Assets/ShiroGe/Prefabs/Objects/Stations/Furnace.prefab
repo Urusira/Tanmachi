@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 4596718704329612491}
   - component: {fileID: 3288625625280694115}
   - component: {fileID: 8277612503638676922}
+  - component: {fileID: 3834694048659719393}
   m_Layer: 7
   m_Name: Furnace
   m_TagString: Untagged
@@ -275,9 +276,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4243abbb9094d62a7cebd9358b41214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Objects.Furnace
+  playerCanInteract: 1
+  npcCanInteract: 0
   stationName: "\u041F\u0435\u0447\u043A\u0430"
   recipes:
   - {fileID: 11400000, guid: b6873969143d01d44b4b3fcecd94f504, type: 2}
+--- !u!208 &3834694048659719393
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4703456189619691387}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.09, y: 1.05, z: 0.72}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1.01, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &7067061761719882173
 GameObject:
   m_ObjectHideFlags: 0

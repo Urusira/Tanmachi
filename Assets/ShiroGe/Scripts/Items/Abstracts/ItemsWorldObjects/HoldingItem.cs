@@ -6,7 +6,7 @@ namespace ShiroGe.Scripts.Items
 {
     public abstract class HoldingItem : PickupbleItem
     {
-        public override PlayerActionsState Interact()
+        protected override PlayerActionsState PlayerOverridableInteract(GameObject player)
         {
             InventoryManager.Instance.AddItem(scriptableItem, amount);
             

@@ -1,17 +1,36 @@
 ﻿using System;
+using JetBrains.Annotations;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.NPC;
 using UnityEngine;
 
 namespace ShiroGe.Scripts
 {
     public abstract class Interactable : MonoBehaviour
     { 
+        [SerializeField] protected bool playerCanInteract = true;
+        [SerializeField] protected bool npcCanInteract = false;
+        
         protected Outline InteractableOutline; 
         
         private Color _outlineColor = Color.white;
         private float _outlineWidthOutline = 10f;
-        
-        public abstract PlayerActionsState Interact();
+
+        public PlayerActionsState PlayerInteract(GameObject player)
+        {
+            if (!playerCanInteract) return PlayerActionsState.Default;
+            else return PlayerOverridableInteract(player);
+        }
+
+        protected abstract PlayerActionsState PlayerOverridableInteract(GameObject player);
+
+        public virtual NPCActionsState NpcInteract(GameObject npc)
+        {
+            if (!npcCanInteract) return NPCActionsState.Default;
+            else return NpcOverridableInteract(npc);
+        }
+
+        protected abstract NPCActionsState NpcOverridableInteract(GameObject npc);
 
         private void Awake()
         {
@@ -44,14 +63,17 @@ namespace ShiroGe.Scripts
             InteractableOutline.OutlineWidth = _outlineWidthOutline;
         }
 
+        [CanBeNull]
         public virtual String ShowHint()
         {
+            if (!playerCanInteract) return null;
             InteractableOutline.enabled = true;
             return "Нажмите для взаимодействия";
         }
 
         public void HideHint()
         {
+            if (!playerCanInteract) return;
             InteractableOutline.enabled = false;
         }
         

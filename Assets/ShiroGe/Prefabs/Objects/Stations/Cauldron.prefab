@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8264369436397794593}
   - component: {fileID: 6839276022838479551}
   - component: {fileID: 4069661382064678753}
+  - component: {fileID: 6033414831034740932}
   m_Layer: 7
   m_Name: Cauldron
   m_TagString: Untagged
@@ -71,9 +72,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddf1166625e145928554b9e7cbdb7097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Objects.Cauldron
+  playerCanInteract: 1
+  npcCanInteract: 0
   stationName: "\u041A\u043E\u0442\u0451\u043B"
   recipes:
   - {fileID: 11400000, guid: 8c6f0a8232daf6b43bd0dec06063e01d, type: 2}
+--- !u!208 &6033414831034740932
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7952995385779140483}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.57, y: 0.035, z: 0.57}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &8315372262495648948
 GameObject:
   m_ObjectHideFlags: 0

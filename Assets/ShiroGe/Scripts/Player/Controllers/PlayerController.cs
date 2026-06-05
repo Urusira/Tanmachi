@@ -266,7 +266,7 @@ namespace ShiroGe.CharacterController
             if (_target != null && !_interactLastFrame && _playerActionsContoller.InteractInput)
             {
                 _interactLastFrame = true;
-                PlayerActionsState typeAction = _target.GetComponent<Interactable>().Interact();
+                PlayerActionsState typeAction = _target.GetComponent<Interactable>().PlayerInteract(gameObject);
                 _playerState.SetPlayerActionsState(typeAction);
                 switch (typeAction)
                 {

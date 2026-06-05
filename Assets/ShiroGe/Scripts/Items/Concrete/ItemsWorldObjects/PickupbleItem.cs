@@ -1,5 +1,6 @@
 ﻿using System;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.NPC;
 using UnityEngine;
 
 namespace ShiroGe.Scripts.Items
@@ -10,7 +11,7 @@ namespace ShiroGe.Scripts.Items
         
         public ItemSO scriptableItem;
         
-        public override PlayerActionsState Interact()
+        protected override PlayerActionsState PlayerOverridableInteract(GameObject player)
         {
             InventoryManager.Instance.AddItem(scriptableItem, amount);
             
@@ -25,6 +26,11 @@ namespace ShiroGe.Scripts.Items
             }
 
             return PlayerActionsState.PickingUp;
+        }
+
+        protected override NPCActionsState NpcOverridableInteract(GameObject npc)
+        {
+            throw new NotImplementedException();
         }
 
         public override string ShowHint()

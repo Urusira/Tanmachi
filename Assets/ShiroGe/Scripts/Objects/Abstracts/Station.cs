@@ -11,7 +11,7 @@ namespace ShiroGe.Scripts.Objects
         
         public List<RecipeSO> recipes = new List<RecipeSO>();
         
-        public override PlayerActionsState Interact()
+        protected override PlayerActionsState PlayerOverridableInteract(GameObject player)
         {
             InventoryUiManager.Instance.ShowInventory(recipes);
             

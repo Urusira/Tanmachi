@@ -1,6 +1,7 @@
 using System;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts.LLM.Data.Repository;
+using ShiroGe.Scripts.NPC;
 using ShiroGe.Scripts.Quests;
 using ShiroGe.Scripts.UI;
 using TMPro;
@@ -79,21 +80,19 @@ public class DialogManager : MonoBehaviour
     }
 
 
-    public void StartDialog(string npcName, string npcId)
+    public void StartDialog(NPCData npcData)
     {
+        currTalkativeNpcId = npcData.ID;
+        
         if(onlineStrategy)
         {
-            currTalkativeNpcId = npcId;
-
-            responseField.text = $"{npcName}\n\n" +
+            responseField.text = $"{npcData.Name}\n\n" +
                                  string.Join("\n", NpcDialogRepository.Instance.GetNpcHistoryUI(currTalkativeNpcId));
 
             ShowOnlineDialogUI();
         }
         else
         {
-            currTalkativeNpcId = npcId;
-            
             ShowOfflineDialogUI();
         }
     }
