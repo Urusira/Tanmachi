@@ -7,10 +7,16 @@ using UnityEngine;
 [DefaultExecutionOrder(2)]
 public class TavernTable : MonoBehaviour
 {
+    public event System.Action<TavernTable> OnPlacesAvailabilityChanged;
+    public event System.Action<TavernTable> OnPlacesReleased;
+    public event System.Action<TavernTable> OnTableReleased;
+    
     [SerializeField] private SitPlace[] sitPlaces;
     
     [field: SerializeField] public int AmountOccupedPlaces { get; private set; }  = 0;
     [field: SerializeField] public int AmountAvailablePlaces { get; private set; }  = 0;
+    
+    public bool TableFullReserved { get; private set; } = false;
 
     private void Awake()
     {
@@ -31,19 +37,46 @@ public class TavernTable : MonoBehaviour
         RecountAvailablePlaces();
     }
     
-    private void OnPlaceReservedHandler(SitPlace place)
+    private void OnPlaceReservedHandler(SitPlace place, bool reserveFullTable)
     {
+        TableFullReserved = reserveFullTable;
+        
+        /*if(forLoner)
+        {
+            foreach (SitPlace lonerOccupationPlace in sitPlaces)
+            {
+                lonerOccupationPlace.TryReservePlace(false);
+            }
+        }*/
+        
         RecountAvailablePlaces();
+        OnPlacesAvailabilityChanged?.Invoke(this);
     }
     
-    private void OnPlaceVacatedHandler(SitPlace place)
+    private void OnPlaceVacatedHandler(SitPlace place, bool reserveFullTable)
     {
+        if(reserveFullTable)
+        {
+            /*foreach (SitPlace lonerOccupationPlace in sitPlaces)
+            {
+                lonerOccupationPlace.UnreservePlace();
+            }*/
+            
+            TableFullReserved = false;
+        }
+        
         RecountAvailablePlaces();
+        OnPlacesReleased?.Invoke(this);
+        if (AmountOccupedPlaces <= 0)
+        {
+            TableFullReserved = false;
+            OnTableReleased?.Invoke(this);
+        }
     }
 
-    public List<SitPlace> GetAvailablePlaces(int reqAmo, bool completlyFreePlace = true)
+    public List<SitPlace> GetAvailablePlaces(int reqAmo, bool ignoreFullReserved = false)
     {
-        if (AmountAvailablePlaces < reqAmo || (completlyFreePlace && AmountOccupedPlaces != 0)) return null;
+        if (AmountAvailablePlaces < reqAmo || (!ignoreFullReserved && TableFullReserved)) return null;
         
         List<SitPlace> places = new List<SitPlace>();
         
@@ -58,14 +91,33 @@ public class TavernTable : MonoBehaviour
         return places;
     }
 
-    public SitPlace GetAvailablePlace(bool completlyFreePlace = false)
+    public SitPlace GetAvailablePlace(bool ignoreFullReserved = false)
     {
-        if (AmountAvailablePlaces <= 0 || (completlyFreePlace && AmountOccupedPlaces != 0)) return null;
+        if (AmountAvailablePlaces <= 0 || (!ignoreFullReserved && TableFullReserved)) return null;
         
         foreach (SitPlace place in sitPlaces)
         {
             if (place.Available)
             {
+                return place;
+            }
+        }
+        
+        return null;
+    }
+    
+    public SitPlace GetAvailableAndReservePlace(bool reserveFullTable, bool ignoreFullReserved = false)
+    {
+        if (AmountAvailablePlaces <= 0 || (!ignoreFullReserved && TableFullReserved)) return null;
+        
+        foreach (SitPlace place in sitPlaces)
+        {
+            if (place.Available)
+            {
+                bool succesful = place.TryReservePlace(reserveFullTable);
+                
+                if (!succesful) continue;
+                
                 return place;
             }
         }
@@ -80,16 +132,19 @@ public class TavernTable : MonoBehaviour
         
         foreach (SitPlace place in sitPlaces)
         {
-            if(!place.Available)
+            if(place.Available)
             {
-                AmountOccupedPlaces = Mathf.Min(AmountOccupedPlaces+1, sitPlaces.Length);
-                AmountAvailablePlaces = Mathf.Max(AmountAvailablePlaces-1, 0);
+                AmountAvailablePlaces++;
             }
             else
             {
-                AmountAvailablePlaces = Mathf.Min(AmountAvailablePlaces+1, sitPlaces.Length);
-                AmountOccupedPlaces = Mathf.Max(AmountOccupedPlaces-1, 0);
+                AmountOccupedPlaces++;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        TavernTablesManager.Instance.UnregisterTable(this);
     }
 }

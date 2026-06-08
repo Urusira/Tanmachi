@@ -40,7 +40,7 @@ namespace ShiroGe.Scripts.World
             initialStarsIntensity = starsIntensValue != 0 && !Mathf.Approximately(starsIntensValue, initialStarsIntensity) ? starsIntensValue : initialStarsIntensity;
             _currentStarsIntensity = initialStarsIntensity;
 
-            if (_timeManager.currentDay == 0)
+            if (_timeManager.CurrentDay == 0)
             {
                 _currentAuroraIntensity = 0;
                 skyboxMaterial.SetFloat(AuroraIntensityShaderId, _currentAuroraIntensity);
@@ -51,12 +51,12 @@ namespace ShiroGe.Scripts.World
 
         private void Update()
         {
-            if (_timeManager.currentTime < auroraOutTime & _timeManager.currentTime > auroraAwakeningTime)
+            if (_timeManager.CurrentTime < auroraOutTime & _timeManager.CurrentTime > auroraAwakeningTime)
             {
                 if(auroraEnabled)
                 {
                     _currentAuroraIntensity =
-                        Mathf.Clamp(_currentAuroraIntensity + Time.deltaTime * _timeManager.timeFactor * auroraFadeSpeed, 0,
+                        Mathf.Clamp(_currentAuroraIntensity + Time.deltaTime * _timeManager.CurrentTimeFactor * auroraFadeSpeed, 0,
                             initialAuroraIntensity);
                     skyboxMaterial.SetFloat(AuroraIntensityShaderId, _currentAuroraIntensity);
                 }
@@ -66,21 +66,21 @@ namespace ShiroGe.Scripts.World
                 if (auroraEnabled)
                 {
                     _currentAuroraIntensity =
-                        Mathf.Clamp(_currentAuroraIntensity - Time.deltaTime * _timeManager.timeFactor * auroraFadeSpeed, 0,
+                        Mathf.Clamp(_currentAuroraIntensity - Time.deltaTime * _timeManager.CurrentTimeFactor * auroraFadeSpeed, 0,
                             initialAuroraIntensity);
                     skyboxMaterial.SetFloat(AuroraIntensityShaderId, _currentAuroraIntensity);
                 }
             }
 
-            if (_timeManager.currentTime < starsOutTime & _timeManager.currentTime > starsAwakeningTime)
+            if (_timeManager.CurrentTime < starsOutTime & _timeManager.CurrentTime > starsAwakeningTime)
             {
-                _currentStarsIntensity = Mathf.Clamp(_currentStarsIntensity + Time.deltaTime * _timeManager.timeFactor * starsFadeSpeed, 0, 
+                _currentStarsIntensity = Mathf.Clamp(_currentStarsIntensity + Time.deltaTime * _timeManager.CurrentTimeFactor * starsFadeSpeed, 0, 
                     initialStarsIntensity);
                 skyboxMaterial.SetFloat(StarsIntensityShaderId, _currentStarsIntensity);
             }
             else
             {
-                _currentStarsIntensity = Mathf.Clamp(_currentStarsIntensity - Time.deltaTime * _timeManager.timeFactor * starsFadeSpeed, 0,
+                _currentStarsIntensity = Mathf.Clamp(_currentStarsIntensity - Time.deltaTime * _timeManager.CurrentTimeFactor * starsFadeSpeed, 0,
                     initialStarsIntensity);
                 skyboxMaterial.SetFloat(StarsIntensityShaderId, _currentStarsIntensity);
             }

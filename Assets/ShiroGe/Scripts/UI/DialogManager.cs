@@ -13,10 +13,14 @@ public class DialogManager : MonoBehaviour
     public static DialogManager Instance { get; private set; }
 
     [SerializeField] private GameObject dialogCanvas;
-    [SerializeField] private DialogueRunner dialogueRunner;
     [SerializeField] private GameObject responseFieldObj;
     [SerializeField] private GameObject thinksFieldObj;
     [SerializeField] private GameObject playerObj;
+    [SerializeField] private GameObject OfflineDialogUi;
+    [SerializeField] private GameObject OnlineDialogUi;
+    
+    [SerializeField] private DialogueRunner dialogueRunner;
+    [SerializeField] private LineAdvancer lineAdvancer;
     
     public bool InDialog { get; private set; }
 
@@ -27,34 +31,34 @@ public class DialogManager : MonoBehaviour
     private TextMeshProUGUI responseField;
     private TMP_InputField thinksField;
     
-    public string currTalkativeNpcId { get; private set; }
+    public NPCController CurrTalkativeNpc { get; private set; }
 
     private void Awake()
     {
         dialogueRunner.AddFunction("GiveQuest", (string questId) => {
-            QuestOrderManager.Instance.CreateTestOrder(currTalkativeNpcId, questId);
+            QuestOrderManager.Instance.CreateTestOrder(CurrTalkativeNpc, questId);
             return 0;
         });
         
         dialogueRunner.AddFunction("HasQuest", (string questId) => {
-            return QuestOrderManager.Instance.HasQuest(currTalkativeNpcId, questId); 
+            return QuestOrderManager.Instance.HasQuest(CurrTalkativeNpc, questId); 
         });
         
         dialogueRunner.AddFunction("QuestStatusCheck", (string questId) => {
-            return QuestOrderManager.Instance.QuestStatusCheck(currTalkativeNpcId, questId).ToString();
+            return QuestOrderManager.Instance.QuestStatusCheck(CurrTalkativeNpc, questId).ToString();
         });
         
         dialogueRunner.AddFunction("QuestCompleteConditionCheck", (string questId) => {
-            return QuestOrderManager.Instance.QuestCompleteConditionCheck(currTalkativeNpcId, questId); 
+            return QuestOrderManager.Instance.QuestCompleteConditionCheck(CurrTalkativeNpc, questId); 
         });
         
         dialogueRunner.AddFunction("CompleteQuest", (string questId) => { 
-            QuestOrderManager.Instance.QuestComplete(currTalkativeNpcId, questId);
+            QuestOrderManager.Instance.QuestComplete(CurrTalkativeNpc, questId);
             return 0;
         });
         
         dialogueRunner.AddFunction("CancelQuest", (string questId) => { 
-            QuestOrderManager.Instance.CancelQuest(currTalkativeNpcId, questId);
+            QuestOrderManager.Instance.CancelQuest(CurrTalkativeNpc, questId);
             return 0;
         });
     }
@@ -76,18 +80,29 @@ public class DialogManager : MonoBehaviour
         
         _playerController = playerObj.GetComponent<PlayerController>();
         
-        HideDialogUI();
+        dialogCanvas.SetActive(false);
+        OfflineDialogUi.SetActive(false);
+        OnlineDialogUi.SetActive(false);
     }
 
 
-    public void StartDialog(NPCData npcData)
+    public void StartDialog(NPCController npc)
     {
-        currTalkativeNpcId = npcData.ID;
+        if (npc == null)
+        {
+            Debug.LogError("Npc is null, dialog cannot be started");
+            return;
+        }
+        
+        CurrTalkativeNpc = npc;
+        
+        PlayerDialogBlock();
+        dialogCanvas.SetActive(true);
         
         if(onlineStrategy)
         {
-            responseField.text = $"{npcData.Name}\n\n" +
-                                 string.Join("\n", NpcDialogRepository.Instance.GetNpcHistoryUI(currTalkativeNpcId));
+            responseField.text = $"{npc.NpcData.Name}\n\n" +
+                                 string.Join("\n", NpcDialogRepository.Instance.GetNpcHistoryUI(npc.NpcData.ID));
 
             ShowOnlineDialogUI();
         }
@@ -95,6 +110,13 @@ public class DialogManager : MonoBehaviour
         {
             ShowOfflineDialogUI();
         }
+    }
+
+    public void ChangeDialogMode()
+    {
+        CloseDialog();
+        onlineStrategy = !onlineStrategy;
+        StartDialog(CurrTalkativeNpc);
     }
 
     public void CloseDialog()
@@ -122,19 +144,41 @@ public class DialogManager : MonoBehaviour
 
     private void ShowOnlineDialogUI()
     {
-        PlayerDialogBlock();
-        dialogCanvas.SetActive(true);
+        OnlineDialogUi.SetActive(true);
     }
     
     private void ShowOfflineDialogUI()
     {
-        PlayerDialogBlock();
-        YarnTask task = dialogueRunner.StartDialogue("StandartNPCYarnScript");
+        OfflineDialogUi.SetActive(true);
+        YarnTask task = dialogueRunner.StartDialogue(CurrTalkativeNpc.GetActualDialog());
     }
     
     private void HideDialogUI()
     {
         PlayerDialogUnblock();
+        
+        if (onlineStrategy)
+        {
+            OnlineDialogUi.SetActive(false);
+        }
+        else
+        {
+            if (dialogueRunner.IsDialogueRunning)
+            {
+                try
+                {
+                    lineAdvancer?.RequestDialogueCancellation();
+                }
+                catch (NullReferenceException e)
+                {
+                    Debug.LogError(e);
+                    dialogueRunner.enabled = false;
+                    dialogueRunner.enabled = true;
+                }
+            }
+            OfflineDialogUi.SetActive(false);
+        }
+        
         dialogCanvas.SetActive(false);
     }
     

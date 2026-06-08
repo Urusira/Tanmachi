@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using ShiroGe.Scripts.World;
 
@@ -15,12 +16,17 @@ namespace ShiroGe.Scripts.Quests
         public readonly string Title;
         public readonly string Description;
 
+        
         public float TimeLimit { get; private set; } = 0f;
         public float Timer { get; private set; }
+        
+        public int rewardCash { get; private set; } = 0;
+        public List<KeyValuePair<ItemSO, int>> rewardItems { get; private set; } = new  List<KeyValuePair<ItemSO, int>>();
         
         public QuestStatus Status { get; private set; } = QuestStatus.INACTIVE;
         
         private bool _timeSubscribed = false;
+        
 
         /// <summary>
         /// Конструктор квеста, задаёт идентификатор и имя.
@@ -178,5 +184,16 @@ namespace ShiroGe.Scripts.Quests
 
 
         public abstract bool ConditionCheck();
+        
+        
+        public void SetReward(int cash, List<KeyValuePair<ItemSO, int>> items = null)
+        {
+            rewardCash = cash;
+            rewardItems.Clear();
+            if (items != null)
+            {
+                rewardItems.AddRange(items);
+            }
+        }
     }
 }

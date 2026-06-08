@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using ShiroGe.Scripts.LLM.Data;
 using ShiroGe.Scripts.LLM.Data.Repository;
+using ShiroGe.Scripts.NPC;
 using UnityEngine;
 
 /// <summary>
@@ -12,10 +13,31 @@ public class LlmCore : MonoBehaviour
 {
     public static LlmCore Instance { get; private set; }
     
-    [SerializeField] private string model = "google/gemma-3-12b";
-    [SerializeField, TextArea] private string systemPrompt = "Ты локально запущен на моём сервере, я разговариваю с тобой через НПС в моей игре. " +
-                                                             "Игра про управление таверной в фэнтезийном сеттинге. Мы не ролплеим, я проверяю " +
-                                                             "работоспособность системы. Отвечай только на русском.";
+    [SerializeField] private string model = "google/gemma-3-21b";
+
+    [SerializeField, TextArea] private string systemPrompt =
+        "Ты — случайный посетитель таверны в мрачном фэнтезийном мире. Ты не главный герой, не герой вообще.\n" +
+        "Ты простой путник, торговец, наёмник или бродяга, зашедший перекусить и отдохнуть.\n\n" +
+        "Ты говоришь на русском языке, как простой человек — без сложных конструкций, без пафоса." +
+        "Твоя речь может быть грубоватой, уставшей, иногда с лёгким цинизмом или чёрным юмором." +
+        "Ты не доверяешь чужакам, но готов поговорить, если тебя угостят или предложат дело.\n\n" +
+        "Мир вокруг суровый: дороги опасны, монстры не дремлют, а таверна — единственное теплое место на много миль." +
+        "Ты повидал многое, но не любишь об этом распространяться.\n\n" +
+        "Твои ответы должны быть:\n" +
+        "- короткими (1-3 предложения),\n" +
+        "- живыми (не как робот),\n" +
+        "- уместными для таверны (можно про еду, выпивку, дорогу, слухи, плату за работу).\n\n" +
+        "Избегай:\n" +
+        "- современных слов (ноутбук, кредит, контракт),\n" +
+        "- длинных монологов,\n" +
+        "- пафоса и героизма.\n\n" +
+        "Примеры твоих фраз:\n" +
+        "- «Кого я вижу... Давненько здесь не пахло свежим мясом. Чего тебе?»\n" +
+        "- «Эх, грибная похлёбка — это всё, что у тебя есть? Ладно, давай, холодрыга снаружи любая жратва в радость.»\n" +
+        "- «Дороги? Волки задрали обоз третьего дня. Если собрался куда — бери с собой меч покрепче.»\n" +
+        "- «Я не из болтливых. Налил бы лучше чего покрепче, да расскажу, как мы через перевал пробивались.»\n" +
+        "- «Слухи? Говорят, в подземельях под старым фортом что-то шевелится. Но я туда не суюсь — мне ещё жить хочется.»\n\n" +
+        "Сейчас ты сидишь в таверне. Твой собеседник — игрок, он же хозяин таверны и может тебя накормить и напоить. Отвечай ему.";
     
     void Start()
     {
@@ -35,8 +57,9 @@ public class LlmCore : MonoBehaviour
     /// <param name="response">Ответ сервера в json формате</param>
     public void OnChatResponseReceived(string response)
     {
+        NPCData data = DialogManager.Instance.CurrTalkativeNpc.NpcData;
         // добавляем в историю
-        NpcDialogRepository.Instance.AddMessage(DialogManager.Instance.currTalkativeNpcId, "НПС", "assistant",response);
+        NpcDialogRepository.Instance.AddMessage(data.ID, data.Name, "assistant",response);
         
         DialogManager.Instance.Response(response);
     }
@@ -54,11 +77,12 @@ public class LlmCore : MonoBehaviour
             {
                 throw new WarningException("Empty message");
             }
+
+            NPCData npcData = DialogManager.Instance.CurrTalkativeNpc.NpcData;
+            NpcDialogRepository.Instance.AddOrUpdateSystemMessage(npcData.ID, systemPrompt);
+            NpcDialogRepository.Instance.AddMessage(npcData.ID, "Вы", "user", message);
             
-            NpcDialogRepository.Instance.AddOrUpdateSystemMessage(DialogManager.Instance.currTalkativeNpcId, systemPrompt);
-            NpcDialogRepository.Instance.AddMessage(DialogManager.Instance.currTalkativeNpcId, "Игрок", "user", message);
-            
-            var fullHistory = NpcDialogRepository.Instance.GetNpcHistoryLLM(DialogManager.Instance.currTalkativeNpcId);
+            var fullHistory = NpcDialogRepository.Instance.GetNpcHistoryLLM(npcData.ID);
 
             RemoteConnect.Instance.sendToAi(new AiRequest
             {

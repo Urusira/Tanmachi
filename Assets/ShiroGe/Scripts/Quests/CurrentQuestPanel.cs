@@ -47,7 +47,7 @@ namespace ShiroGe.Scripts.Quests
             _questTimerText.text = remainingTime.ToString("F2");
         }
 
-        public void SuccessfulComplete(QuestOrderBase _)
+        public void SuccessfulComplete(QuestOrderBase quest)
         {
             questSuccessfulCompleteObj.SetActive(true);
             StartCoroutine(QuestFinalize(questSuccessfulCompleteObj));

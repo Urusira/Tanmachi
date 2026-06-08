@@ -7,11 +7,11 @@ namespace ShiroGe.Scripts.NPC
 {
     public class NPCDialogInteract : Interactable
     {
-        private NPCData npcData;
+        private NPCController npc;
         
         protected override PlayerActionsState PlayerOverridableInteract(GameObject player)
         {
-            DialogManager.Instance.StartDialog(npcData);
+            DialogManager.Instance.StartDialog(npc);
 
             return PlayerActionsState.Default;
         }
@@ -31,7 +31,7 @@ namespace ShiroGe.Scripts.NPC
 
         public void NPCRegister(NPCController npc)
         {
-            this.npcData = npc.npcData;
+            this.npc = npc;
         }
     }
 }

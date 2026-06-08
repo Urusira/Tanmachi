@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using ShiroGe.CharacterController;
+using ShiroGe.Scripts.NPC;
 using ShiroGe.Scripts.Quests.Orders;
 using ShiroGe.Scripts.World;
 using UnityEngine;
@@ -18,7 +20,7 @@ namespace ShiroGe.Scripts.Quests
         
         private List<TestOrder> _currentOrdersList = new List<TestOrder>();
         
-        private Dictionary<string, Dictionary<string, QuestOrderBase>> _npcQuestOrdersList = new Dictionary<string, Dictionary<string, QuestOrderBase>>();
+        private Dictionary<NPCController, Dictionary<string, QuestOrderBase>> _npcQuestOrdersList = new Dictionary<NPCController, Dictionary<string, QuestOrderBase>>();
 
         public TestOrder CurrentQuest { get; private set; } = null;
 
@@ -35,7 +37,7 @@ namespace ShiroGe.Scripts.Quests
             _currentQuestPanel = currentQuestObj.GetComponent<CurrentQuestPanel>();
         }
 
-        public void CreateTestOrder(string npcId, string questId)
+        public void CreateTestOrder(NPCController npc, string questId)
         {
             TestOrder newOrder = new TestOrder(
                 questId,
@@ -43,48 +45,48 @@ namespace ShiroGe.Scripts.Quests
                 "Приготовьте и отдайте NPC грибное варево (Готовится в котле).",
                 itemForTest);
             
-            CreateNewOrder(npcId, newOrder);
+            CreateNewOrder(npc, newOrder);
         }
 
-        public void CancelQuest(string npcId, string questId)
+        public void CancelQuest(NPCController npc, string questId)
         {
-            _npcQuestOrdersList[npcId][questId].CancelQuest();
-            _npcQuestOrdersList[npcId].Remove(questId);
-            if (_npcQuestOrdersList[npcId].Count == 0)
-                _npcQuestOrdersList.Remove(npcId);
+            _npcQuestOrdersList[npc][questId].CancelQuest();
+            _npcQuestOrdersList[npc].Remove(questId);
+            if (_npcQuestOrdersList[npc].Count == 0)
+                _npcQuestOrdersList.Remove(npc);
         }
 
-        public QuestStatus QuestStatusCheck(string npcId, string questId)
+        public QuestStatus QuestStatusCheck(NPCController npc, string questId)
         {
-            if (!HasQuest(npcId, questId)) return QuestStatus.INACTIVE;
-            return _npcQuestOrdersList[npcId][questId].Status;
+            if (!HasQuest(npc, questId)) return QuestStatus.INACTIVE;
+            return _npcQuestOrdersList[npc][questId].Status;
         }
         
-        public void QuestComplete(string npcId, string questId)
+        public void QuestComplete(NPCController npc, string questId)
         {
-            _npcQuestOrdersList[npcId][questId].CompleteQuest();
+            _npcQuestOrdersList[npc][questId].CompleteQuest();
             
-            _npcQuestOrdersList[npcId].Remove(questId);
-            if (_npcQuestOrdersList[npcId].Count == 0)
-                _npcQuestOrdersList.Remove(npcId);
+            _npcQuestOrdersList[npc].Remove(questId);
+            if (_npcQuestOrdersList[npc].Count == 0)
+                _npcQuestOrdersList.Remove(npc);
         }
 
-        public QuestOrderBase GetQuest(string npcId, string questId)
+        public QuestOrderBase GetQuest(NPCController npc, string questId)
         {
-            return _npcQuestOrdersList[npcId][questId];
+            return _npcQuestOrdersList[npc][questId];
         }
         
-        public bool HasQuest(string npcId, string questId)
+        public bool HasQuest(NPCController npc, string questId)
         {
-            return _npcQuestOrdersList.ContainsKey(npcId) && _npcQuestOrdersList[npcId].ContainsKey(questId);
+            return _npcQuestOrdersList.ContainsKey(npc) && _npcQuestOrdersList[npc].ContainsKey(questId);
         }
         
-        public bool QuestCompleteConditionCheck(string npcId, string questId)
+        public bool QuestCompleteConditionCheck(NPCController npc, string questId)
         {
-            return _npcQuestOrdersList[npcId][questId].ConditionCheck();
+            return _npcQuestOrdersList[npc][questId].ConditionCheck();
         }
         
-        public void CreateNewOrder(string npcId, TestOrder newOrder)
+        public void CreateNewOrder(NPCController npc, TestOrder newOrder)
         {
             currentQuestObj.SetActive(true);
             
@@ -92,10 +94,10 @@ namespace ShiroGe.Scripts.Quests
             _currentOrdersList.Add(newOrder);
             CurrentQuest = newOrder;
             
-            if (!_npcQuestOrdersList.ContainsKey(npcId))
-                _npcQuestOrdersList[npcId] = new Dictionary<string, QuestOrderBase>();
+            if (!_npcQuestOrdersList.ContainsKey(npc))
+                _npcQuestOrdersList[npc] = new Dictionary<string, QuestOrderBase>();
             
-            _npcQuestOrdersList[npcId][newOrder.ID] = newOrder;
+            _npcQuestOrdersList[npc][newOrder.ID] = newOrder;
             
             newOrder.StartQuest(3000f);
             
@@ -110,6 +112,8 @@ namespace ShiroGe.Scripts.Quests
             
             newOrder.OnCancelled += FinalizeOrder;
             newOrder.OnCancelled += _currentQuestPanel.Cancelled;
+            
+            npc.QuestSubscribe(newOrder);
         }
 /*
         public void NextQuest()
@@ -182,6 +186,19 @@ namespace ShiroGe.Scripts.Quests
             catch (Exception e)
             {
                 Debug.LogException(e);
+            }
+            
+            if(quest.rewardItems != null)
+            {
+                foreach (KeyValuePair<ItemSO, int> rewardItem in quest.rewardItems)
+                {
+                    InventoryManager.Instance.AddItem(rewardItem.Key, rewardItem.Value);
+                }
+            }
+
+            if (quest.rewardCash > 0)
+            {
+                PlayerInstance.Instance.GiveCash(quest.rewardCash);
             }
         }
     }

@@ -10,8 +10,8 @@ public class DayNightCycleManager : MonoBehaviour
         theSun.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
     }
 
-    public void SetSunTimeRotation(float currentTime)
+    public void SetSunTimeRotation(float newAngle)
     {
-        theSun.transform.rotation = Quaternion.Euler(currentTime/10, 0, 0);
+        theSun.transform.rotation = Quaternion.Euler(newAngle, 0, 0);
     }
 }

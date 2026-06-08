@@ -6,6 +6,7 @@
         ACTIVE,
         FAILED,
         COMPLETED,
-        CANCELLED
+        CANCELLED,
+        CREATED = 99
     }
 }

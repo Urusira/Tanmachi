@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts.Inventory;
 using UnityEngine;

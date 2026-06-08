@@ -1,0 +1,43 @@
+﻿title: HungryInTavernNeutralDialog
+---
+<<if HasQuest("TestQuest")>>
+    <<if QuestStatusCheck("TestQuest") == "FAILED">>
+        NPC: Эй, мне тут до вечера своей еды ждать!?
+        -> Ну и вали, больно ты мне нужен.
+            <<return>>
+        -> Да. <color=\#FF5733> \[НАЧАТЬ КВЕСТ ЗАНОВО\] </color>
+            <<call GiveQuest("TestQuest")>>
+            <<return>>
+        <<elseif QuestStatusCheck("TestQuest") == "ACTIVE">>
+            NPC: Уже готово?
+            <<if QuestCompleteConditionCheck("TestQuest")>>
+                -> Да, пожалуйста.
+                    <<call CompleteQuest("TestQuest")>>
+                    NPC: Благодарю.
+                    <<return>>
+            <<endif>>
+            -> Ещё нет.
+                <<return>>
+            -> Я не могу приготовить ваш заказ. 
+                <<call CancelQuest("TestQuest")>>
+                NPC: Да ты!- Ай, к чёрту, что за день дряной...
+                <<return>>
+        <<else>>
+            //Невозможная ветка диалога
+            Разработчик: ТЫ КАК СЮДА ЗАЛЕЗ, ЧУВАК???
+            <<return>>
+    <<endif>>
+
+    <<else>>
+        NPC: Доброго дня.
+        -> Здравствуйте, что закажете?
+            NPC: Супчику бы.
+            -> Сию минуту.
+                <<call GiveQuest("TestQuest")>>
+                <<return>>
+            -> Изивините, не могу это сделать.
+                <<return>>
+        -> До свидания.
+            <<return>>
+<<endif>>
+===

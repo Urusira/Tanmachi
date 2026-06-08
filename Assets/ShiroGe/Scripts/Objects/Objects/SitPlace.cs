@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts.NPC;
 using Unity.VisualScripting;
@@ -9,15 +10,19 @@ namespace ShiroGe.Scripts.Tavern
 {
     public class SitPlace : Interactable
     {
-        public event System.Action<SitPlace> OnPlaceReserved;
+        public event System.Action<SitPlace, bool> OnPlaceReserved;
         public event System.Action<SitPlace> OnPlaceTaken;
-        public event System.Action<SitPlace> OnPlaceVacated;
+        public event System.Action<SitPlace, bool> OnPlaceVacated;
 
-        [field: SerializeField] public bool Available { get; private set; } = true;
+        private int _available = 1;
+        
+        public bool Available => _available == 1;
         
         [field: SerializeField] public GameObject PlacedEntity { get; private set; }
+        [field: SerializeField] public Vector3 SittingOffset { get; private set; }
 
-        private GameObject _sitPlace;
+        [SerializeField] private GameObject leftLegAnchor;
+        [SerializeField] private GameObject rightLegAnchor;
 
         protected override PlayerActionsState PlayerOverridableInteract(GameObject player)
         {
@@ -33,8 +38,13 @@ namespace ShiroGe.Scripts.Tavern
 
         private void Awake()
         {
-            _sitPlace = gameObject;
-            Available = true;
+            _available = 1;
+        }
+
+        private void FixedUpdate()
+        {
+            if(PlacedEntity != null)
+                EntityPositionCorrect();
         }
 
         protected override void Initiate()
@@ -42,43 +52,52 @@ namespace ShiroGe.Scripts.Tavern
             return;
         }
 
-        public void ReservePlace()
+        public bool TryReservePlace(bool reserveFullTable)
         {
-            Available = false;
-            OnPlaceReserved?.Invoke(this);
+            int original = Interlocked.CompareExchange(ref _available, 0, 1);
+            
+            if(original == 1)
+                OnPlaceReserved?.Invoke(this, reserveFullTable);
+            
+            return original == 1;
         }
 
         public void UnreservePlace()
         {
-            Available = true;
+            Interlocked.Exchange(ref _available, 1);
         }
 
-        public void TakePlace(GameObject npc)
+        public void TakePlace(GameObject entity)
         {
-            if(Available) ReservePlace();
+            if(Available) TryReservePlace(false);
             
-            PlacedEntity = npc;
-            Available = false;
+            PlacedEntity = entity;
             
             OnPlaceTaken?.Invoke(this);
 
-            EntityPositionCorrect();
+            SeatingRig rig;
+            PlacedEntity.TryGetComponent(out rig);
+            if (rig != null)
+            {
+                rig.SetLegsAnchors(leftLegAnchor.transform, rightLegAnchor.transform);
+                rig.SitDown();
+            }
         }
 
-        public GameObject ReleasePlace()
+        public GameObject ReleasePlace(bool wasReserveFullTable)
         {
             if(!Available) UnreservePlace();
             
             GameObject tempEntity = PlacedEntity;
             PlacedEntity = null;
-            OnPlaceVacated?.Invoke(this);
+            OnPlaceVacated?.Invoke(this, wasReserveFullTable);
             
             return tempEntity;
         }
 
         public void EntityPositionCorrect()
         {
-            PlacedEntity.transform.position = new Vector3(transform.position.x, PlacedEntity.transform.position.y, transform.position.z);
+            PlacedEntity.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z)+SittingOffset;
             PlacedEntity.transform.rotation = transform.rotation;
         }
     }

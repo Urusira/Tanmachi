@@ -28,9 +28,9 @@ public class NPCNavigator : MonoBehaviour
     public bool walkToggledOn = true;
     
     [Header("Блуждание")]
-    public bool wandering;
-    public float wanderRadius;
-    public float wanderingIdleDuration;
+    public bool isWandering = false;
+    public float wanderRadius = 100;
+    public float wanderingIdleDuration = 10;
     
     [Header("Анимация")]
     public float playerModelRotationSpeed = 10f;
@@ -38,6 +38,8 @@ public class NPCNavigator : MonoBehaviour
     
     private NavMeshAgent _navAgent;
     private NPCState _npcState;
+
+    private Vector3 _destination;
     
     private bool _isRotatingClockwise = false;
     
@@ -111,9 +113,10 @@ public class NPCNavigator : MonoBehaviour
     /// Задаёт в AI навигаторе цель следования, куда агент будет двигаться, пока не достигнет цели
     /// </summary>
     /// <param name="target">Координаты точки, куда агент будет двигаться по NAVMesh-сетке</param>
-    public void MoveToTarget(Vector3 target)
+    public bool MoveToTarget(Vector3 target)
     {
-        _navAgent.SetDestination(target);
+        _destination = target;
+        return _navAgent.SetDestination(target);
     }
 
     /// <summary>
@@ -121,11 +124,11 @@ public class NPCNavigator : MonoBehaviour
     /// </summary>
     private void Wander()
     {
-        if (!wandering) return;
+        if (!isWandering) return;
         
         if (_npcState.CurrentNPCMovementState == NPCMovementState.Idling)
         {
-            currentWanderIdleTimer -= TimeManager.Instance.deltaTime;
+            currentWanderIdleTimer -= TimeManager.Instance.DeltaTime;
 
             if (currentWanderIdleTimer <= 0f)
             {
@@ -164,8 +167,14 @@ public class NPCNavigator : MonoBehaviour
     {
         if(_navAgent.enabled)
         {
-            if (!_navAgent.pathPending && _navAgent.remainingDistance <= _navAgent.stoppingDistance &&
+            /*if (!_navAgent.pathPending && _navAgent.remainingDistance <= _navAgent.stoppingDistance &&
                 _navAgent.velocity.sqrMagnitude < movementThreesold)
+            {
+                OnDestinationReached?.Invoke();
+            }*/ //Устаревший способ определения достижения цели движения
+            
+            float distance = Vector3.Distance(transform.position, _destination);
+            if (distance <= _navAgent.stoppingDistance)
             {
                 OnDestinationReached?.Invoke();
             }
@@ -182,6 +191,9 @@ public class NPCNavigator : MonoBehaviour
     {
         _navAgent.enabled = true;
         _navAgent.isStopped = false;
+
+        //TODO: Заглушка чтоб дурачок не стоял
+        isWandering = true;
     }
 
     public void FixLookAt(Vector3 target)

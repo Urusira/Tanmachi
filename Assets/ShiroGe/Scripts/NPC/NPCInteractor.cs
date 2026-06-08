@@ -28,7 +28,7 @@ namespace ShiroGe.Scripts.NPC
             {
                 if (_navigator != null)
                 {
-                    _navigator.wandering = false;
+                    _navigator.isWandering = false;
                     _navigator.MoveToTarget(InteractTarget.transform.position);
                     _navigator.OnDestinationReached += InteractWithTarget;
                 }
@@ -41,7 +41,6 @@ namespace ShiroGe.Scripts.NPC
             _navigator.LocomotionBlock();
             
             InteractTarget.NpcInteract(gameObject);
-            
         }
 
         public void NavigatorInject(NPCNavigator navigator)
