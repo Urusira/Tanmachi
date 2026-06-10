@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 namespace ShiroGe.CharacterController
 {
+    
+    [DefaultExecutionOrder(-2)]
     public class PlayerIngameUiController: MonoBehaviour, PlayerControls.IIngameUIActions
     {
         public PlayerControls PlayerControls { get; private set; }
@@ -23,16 +25,6 @@ namespace ShiroGe.CharacterController
         {
             PlayerControls.IngameUI.Disable();
             PlayerControls.IngameUI.RemoveCallbacks(this);
-        }
-        
-        public void IngameUiActionsDisable()
-        {
-            PlayerControls.IngameUI.Disable();
-        }
-        
-        public void IngameUiActionsEnable()
-        {
-            PlayerControls.IngameUI.Enable();
         }
         
         //TODO: ВИДИШЬ ГОВНОКОД. РЕФАКТОРЬ. (ТУТ ГОВНО, ВНИМАНИЕ, ТРЕБУЕТСЯ ПЕРЕДЕЛКА, ВНИМАНИЕ, ПЕРЕДЕЛКА СРОЧНО ТРЕБУЕТСЯ ПЕРЕДЕЛКА)
@@ -56,6 +48,12 @@ namespace ShiroGe.CharacterController
             
             SceneManager.UnloadSceneAsync("GameMainScene");
             SceneManager.LoadScene("MainMenuScene");
+        }
+
+        public void OnHelp(InputAction.CallbackContext context)
+        {
+            if(!context.performed) return;
+            GuiManager.Instance.SwitchControlHint();
         }
     }
 }

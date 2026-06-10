@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.Items;
 using ShiroGe.Scripts.NPC;
+using ShiroGe.Scripts.World;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -23,6 +25,8 @@ namespace ShiroGe.Scripts.Tavern
 
         [SerializeField] private GameObject leftLegAnchor;
         [SerializeField] private GameObject rightLegAnchor;
+        
+        [SerializeField] private GameObject foodAnchor;
 
         protected override PlayerActionsState PlayerOverridableInteract(GameObject player)
         {
@@ -84,21 +88,30 @@ namespace ShiroGe.Scripts.Tavern
             }
         }
 
-        public GameObject ReleasePlace(bool wasReserveFullTable)
+        public void ReleasePlace(bool wasReserveFullTable)
         {
             if(!Available) UnreservePlace();
             
             GameObject tempEntity = PlacedEntity;
             PlacedEntity = null;
             OnPlaceVacated?.Invoke(this, wasReserveFullTable);
-            
-            return tempEntity;
         }
 
         public void EntityPositionCorrect()
         {
             PlacedEntity.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z)+SittingOffset;
             PlacedEntity.transform.rotation = transform.rotation;
+        }
+
+        public void SetDish(GameObject obj)
+        {
+            Instantiate(obj, foodAnchor.transform).layer = 0;
+        }
+
+        public void RemoveDish()
+        {
+            if(foodAnchor.transform.childCount > 0)
+                Destroy(foodAnchor.transform.GetChild(0).gameObject);
         }
     }
 }

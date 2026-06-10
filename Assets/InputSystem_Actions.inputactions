@@ -286,17 +286,6 @@
                 },
                 {
                     "name": "",
-                    "id": "2e53e27b-a8b6-4d77-a040-b524b79c72b9",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "WalkToggle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "fe50d8b4-962e-4e05-a580-09c60d1d79bd",
                     "path": "<Keyboard>/x",
                     "interactions": "",
@@ -950,6 +939,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Help",
+                    "type": "Button",
+                    "id": "f004dcd5-e539-42ef-af7b-c34497ab320f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -961,6 +959,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "BackToMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c149851a-648e-469f-97d9-4ea79c77799f",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Help",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1269,6 +1278,122 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "ItemsScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlacementMode",
+            "id": "5fec1ec3-479d-4309-9197-84e23ee31e40",
+            "actions": [
+                {
+                    "name": "Place",
+                    "type": "Button",
+                    "id": "b9f59669-0689-4a33-a860-eba2596b7d23",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateMode",
+                    "type": "Button",
+                    "id": "21319dfd-8793-4fe3-963a-74dad4598879",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "52b070f2-e2b0-4125-b931-dfdefceceb60",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "FastRotation",
+                    "type": "Button",
+                    "id": "c63b7a1d-e4b2-4c22-ac6d-1b574589d4fb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e4a4f13e-9d01-427d-a6e4-4f15776e9d4c",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Place",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8d29d26-b386-41f0-bd9d-ccccf86ab4e5",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RotateMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d16518eb-d014-4668-bf74-f481dab056c6",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "23a510c8-c0bf-4e0e-ad33-b94ac137aee0",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "FastRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "DebugFunctions",
+            "id": "144a1a5c-c55d-4b2f-a4cb-83922e8e118e",
+            "actions": [
+                {
+                    "name": "Teleport",
+                    "type": "Button",
+                    "id": "f201098d-e1c0-4b57-9cc6-b6e5aa5a727c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "fdb4f3d5-3ba4-44af-994e-d0182bd0de04",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Teleport",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

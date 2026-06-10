@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3690732212398605953}
   m_LocalEulerAnglesHint: {x: -5.268, y: 90, z: 88.328}
+--- !u!1 &3845109290808460481
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6540764862100906288}
+  m_Layer: 11
+  m_Name: FoodAnchor1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6540764862100906288
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3845109290808460481}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.488, y: 1.072, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 206425766050929964}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &3936084774082443900
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,6 +93,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6653673151032309901}
   m_LocalEulerAnglesHint: {x: 3.585, y: 90, z: -89.124}
+--- !u!1 &5366593772877151519
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7058886974962268916}
+  m_Layer: 11
+  m_Name: FoodAnchor2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7058886974962268916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5366593772877151519}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.70710665, z: -0, w: 0.707107}
+  m_LocalPosition: {x: 0.477, y: 1.072, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 206425766050929964}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &6009480398312644193
 GameObject:
   m_ObjectHideFlags: 0
@@ -76,7 +138,7 @@ GameObject:
   - component: {fileID: 910901924952480813}
   - component: {fileID: 8904518469008342086}
   m_Layer: 11
-  m_Name: Furniture_chair1 (1)
+  m_Name: RightChair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -195,6 +257,7 @@ MonoBehaviour:
   <SittingOffset>k__BackingField: {x: -0.1, y: -0.31, z: -0.09}
   leftLegAnchor: {fileID: 3936084774082443900}
   rightLegAnchor: {fileID: 8333469076996664299}
+  foodAnchor: {fileID: 5366593772877151519}
 --- !u!1 &7566386860018340056
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,7 +271,7 @@ GameObject:
   - component: {fileID: 3257981123320535398}
   - component: {fileID: 8163717971371885513}
   m_Layer: 11
-  m_Name: Furniture_table_round
+  m_Name: Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -226,7 +289,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.9, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6540764862100906288}
+  - {fileID: 7058886974962268916}
   m_Father: {fileID: 5534754211367666232}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1851966757925472074
@@ -384,7 +449,7 @@ GameObject:
   - component: {fileID: 2876157914614503027}
   - component: {fileID: 5361740575080156676}
   m_Layer: 11
-  m_Name: Furniture_chair1
+  m_Name: LeftChair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -503,6 +568,7 @@ MonoBehaviour:
   <SittingOffset>k__BackingField: {x: -0.1, y: -0.31, z: -0.09}
   leftLegAnchor: {fileID: 7636773777795887247}
   rightLegAnchor: {fileID: 1853165556546601264}
+  foodAnchor: {fileID: 3845109290808460481}
 --- !u!1 &9041475644705189129
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,3 +17,5 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 29843f6a74941a84ca3c2ff7f20e8f51, type: 2}
     amount: 1
   resultAmount: 1
+  craftStation: 2
+  thatDish: 1

@@ -8,6 +8,8 @@
         LEGSWEAR,
         WEAPON,
         TOOL,
-        CONSUMABLE
+        CONSUMABLE,
+        PLACEABLE,
+        DISHES
     }
 }

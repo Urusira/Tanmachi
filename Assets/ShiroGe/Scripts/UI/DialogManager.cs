@@ -36,7 +36,7 @@ public class DialogManager : MonoBehaviour
     private void Awake()
     {
         dialogueRunner.AddFunction("GiveQuest", (string questId) => {
-            QuestOrderManager.Instance.CreateTestOrder(CurrTalkativeNpc, questId);
+            QuestOrderManager.Instance.GenerateOrder(CurrTalkativeNpc, questId);
             return 0;
         });
         

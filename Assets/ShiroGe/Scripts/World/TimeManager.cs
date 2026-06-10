@@ -17,7 +17,7 @@ namespace ShiroGe.Scripts.World
         
         public event System.Action<float> OnTimeTick;
         public event System.Action<float> OnDeltaTimeTick; 
-        public event System.Action OnDayPhaseChanged;
+        public event System.Action<DayPhase> OnDayPhaseChanged;
         public event System.Action OnDayChanged;
         
         [field: SerializeField] public float CurrentTime { get; private set; }
@@ -25,17 +25,46 @@ namespace ShiroGe.Scripts.World
         [field: SerializeField] public float NormalTimeFactor { get; private set; } = 0.1f;
         [field: SerializeField] public float SleepingTimeFactor { get; private set; } = 2f;
         
+        [field: SerializeField] public int hourCorrectiveOffset = 11;
+        [field: SerializeField] public int minCorrectiveOffset = 0;
+        [field: SerializeField] public int secCorrectiveOffset = 0;
+        
         [field: SerializeField] public int CurrentDay  { get; private set; } = 0;
+        
+        private bool dayChanged = false;
         
         public float DeltaTime { get; private set; }
         
         public DayPhase CurrentDayPhase { get; private set; } = DayPhase.Day;
+
+        public string NamedCurrentDayPhase
+        {
+            get
+            {
+                switch (CurrentDayPhase)
+                {
+                    case DayPhase.Day:
+                    {
+                        return "День";
+                        break;
+                    }
+                    case DayPhase.Night:
+                    {
+                        return "Ночь";
+                        break;
+                    }
+                }
+                
+                return "Проклятый День";
+            }
+        }
 
         public float DayPhaseSkipTime { get; private set; } = 10f;
         
         [SerializeField] private float dayLength = 36000f;
         [SerializeField] private float dayTiming = 0f;
         [SerializeField] private float nightTiming = 19000f;
+        [SerializeField] private float midnightTiming = 25500f;
         [SerializeField] private float initialTime = 0f;
         
         private DayNightCycleManager _dayNightCycle;
@@ -63,18 +92,21 @@ namespace ShiroGe.Scripts.World
             float lateTime = CurrentTime;
             CurrentTime += 1*CurrentTimeFactor;
 
-            if (CurrentTime >= dayLength)
+            if (CurrentTime >= midnightTiming && CurrentTime < dayLength && !dayChanged)
             {
+                dayChanged = true;
                 CurrentDay++;
                 OnDayChanged?.Invoke();
             }
+
+            if (CurrentTime >= dayLength) dayChanged = false;
 
 
             DayPhase newPhase = (CurrentTime >= nightTiming) ? DayPhase.Night : DayPhase.Day;
             if (newPhase != CurrentDayPhase)
             {
                 CurrentDayPhase = newPhase;
-                OnDayPhaseChanged?.Invoke();
+                OnDayPhaseChanged?.Invoke(CurrentDayPhase);
             }
             
             CurrentTime = CurrentTime % dayLength;
@@ -94,11 +126,11 @@ namespace ShiroGe.Scripts.World
 
             float totalMinutes = CurrentTime / ticksInMinute;
     
-            int currentHours = Mathf.FloorToInt(totalMinutes / 60);
-            int currentMins = Mathf.FloorToInt(totalMinutes % 60);
-            int currentSeconds = Mathf.FloorToInt((totalMinutes % 1) * 60);
+            int currentHours = (Mathf.FloorToInt(totalMinutes / 60)+hourCorrectiveOffset)%24;
+            int currentMins = (Mathf.FloorToInt(totalMinutes % 60)+minCorrectiveOffset)%60;
+            int currentSeconds = (Mathf.FloorToInt((totalMinutes % 1) * 60)+secCorrectiveOffset)%60;
             
-            return new []{CurrentDay, currentHours, currentMins, currentSeconds};
+            return new []{CurrentDay+1, currentHours, currentMins, currentSeconds};
         }
 
         private void OnDestroy()
@@ -140,7 +172,7 @@ namespace ShiroGe.Scripts.World
                 CurrentTime = dayTiming;
             }
             
-            OnDayPhaseChanged?.Invoke();
+            OnDayPhaseChanged?.Invoke(CurrentDayPhase);
         }
     }
 }

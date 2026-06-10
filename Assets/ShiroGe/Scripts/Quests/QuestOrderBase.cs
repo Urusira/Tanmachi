@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using ShiroGe.Scripts.Quests.Orders;
+using ShiroGe.Scripts.Tavern;
 using ShiroGe.Scripts.World;
+using Unity.VisualScripting;
+using UnityEngine;
 
 namespace ShiroGe.Scripts.Quests
 {
@@ -11,23 +15,23 @@ namespace ShiroGe.Scripts.Quests
         public event System.Action<QuestOrderBase> OnFailed;
         public event System.Action<QuestOrderBase> OnCompleted;
         public event System.Action<QuestOrderBase> OnCancelled;
+        public event System.Action<float> OnRemainingTimeChanged;
 
         public readonly string ID;
         public readonly string Title;
         public readonly string Description;
-
         
         public float TimeLimit { get; private set; } = 0f;
-        public float Timer { get; private set; }
         
+        
+        public float rewardReputation { get; private set; } = 0.01f;
         public int rewardCash { get; private set; } = 0;
-        public List<KeyValuePair<ItemSO, int>> rewardItems { get; private set; } = new  List<KeyValuePair<ItemSO, int>>();
+        public HashSet<ItemWithAmount> rewardItems { get; private set; } = new  HashSet<ItemWithAmount>();
         
         public QuestStatus Status { get; private set; } = QuestStatus.INACTIVE;
         
-        private bool _timeSubscribed = false;
+        private int _timerId = -1;
         
-
         /// <summary>
         /// Конструктор квеста, задаёт идентификатор и имя.
         /// </summary>
@@ -59,11 +63,12 @@ namespace ShiroGe.Scripts.Quests
             }
         
             TimeLimit = timeLimit;
-            Timer = 0f;
+            if(!Mathf.Approximately(TimeLimit, 0)) {
+                _timerId = TimerService.Instance.AddTimer(TimeLimit, FailQuest, f => OnRemainingTimeChanged?.Invoke(f));
+            }
+            
             Status = QuestStatus.ACTIVE;
             OnStarted?.Invoke(this);
-            
-            TimeSubscribeUpdate();
         }
         
         /// <summary>
@@ -82,7 +87,9 @@ namespace ShiroGe.Scripts.Quests
 
             OnFailed?.Invoke(this);
             
-            TimeSubscribeUpdate();
+            TimerService.Instance.RemoveTimer(_timerId);
+            
+            TavernReputationManager.Instance.DownReputation(rewardReputation/2);
         }
         
         /// <summary>
@@ -99,9 +106,12 @@ namespace ShiroGe.Scripts.Quests
 
             Status = QuestStatus.COMPLETED;
             
-            OnCompleted?.Invoke(this);
+            TimerService.Instance.RemoveTimer(_timerId);
             
-            TimeSubscribeUpdate();
+            TavernReputationManager.Instance.UpReputation(rewardReputation);
+            
+            OnCompleted?.Invoke(this);
+            //InvokeCompleted();
         }
 
         /// <summary>
@@ -120,7 +130,9 @@ namespace ShiroGe.Scripts.Quests
             
             OnCancelled?.Invoke(this);
             
-            TimeSubscribeUpdate();
+            TimerService.Instance.RemoveTimer(_timerId);
+            
+            TavernReputationManager.Instance.DownReputation(rewardReputation/4);
         }
 
         /// <summary>
@@ -128,65 +140,26 @@ namespace ShiroGe.Scripts.Quests
         /// </summary>
         /// <param name="timeLimit">Новый лимит времени.</param>
         /// <exception cref="ArgumentException">Лимит времени не может быть меньше нуля.</exception>
-        public void SetTimeLimit(float timeLimit)
+        public void SetNewTimeLimit(float timeLimit)
         {
             if (timeLimit < 0f)
             {
                 throw new ArgumentException("Time limit must be greater than or equal to 0");
             }
 
-            Timer = 0;
+            if (_timerId == -1)
+            {
+                TimerService.Instance.RemoveTimer(_timerId);
+            }
+
             TimeLimit = timeLimit;
-
-            TimeSubscribeUpdate();
-        }
-
-        /// <summary>
-        /// Обработчик для подписки на изменение мирового времени.
-        /// </summary>
-        /// <param name="deltaTime">Дельта мирового времени.</param>
-        private void DeltaTimeTickHandler(float deltaTime)
-        {
-            if (Status != QuestStatus.ACTIVE || TimeLimit <= 0f) return;
             
-            Timer += deltaTime;
-            if (Timer > TimeLimit)
-            {
-                FailQuest();
-            }
+            _timerId = TimerService.Instance.AddTimer(TimeLimit, FailQuest);
         }
-
-        /// <summary>
-        /// Обновляет статус подписки на мировое время. Отписывает, при нулевом лимите времени и наличии подписки и наоборот.
-        /// </summary>
-        /// <exception cref="ArgumentException">Временной лимит не может быть меньше нуля.</exception>
-        private void TimeSubscribeUpdate()
-        {
-            if (TimeLimit < 0f)
-                throw new ArgumentException("Time limit must be greater than or equal to 0");
-            
-            if (TimeLimit == 0f && _timeSubscribed)
-            {
-                TimeManager.Instance.OnDeltaTimeTick -= DeltaTimeTickHandler;
-                _timeSubscribed = false;
-                return;
-            }
-            
-            if (TimeLimit > 0f && !_timeSubscribed)
-            {
-                TimeManager.Instance.OnDeltaTimeTick += DeltaTimeTickHandler;
-                _timeSubscribed = true;
-                return;
-            }
-
-            return;
-        }
-
-
+        
         public abstract bool ConditionCheck();
         
-        
-        public void SetReward(int cash, List<KeyValuePair<ItemSO, int>> items = null)
+        public void SetReward(int cash, HashSet<ItemWithAmount> items = null, float rep = 0f)
         {
             rewardCash = cash;
             rewardItems.Clear();
@@ -194,6 +167,10 @@ namespace ShiroGe.Scripts.Quests
             {
                 rewardItems.AddRange(items);
             }
+
+            rewardReputation = rep;
         }
+
+        //protected abstract void InvokeCompleted();
     }
 }

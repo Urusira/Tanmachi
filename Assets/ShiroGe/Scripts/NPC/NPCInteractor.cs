@@ -34,11 +34,20 @@ namespace ShiroGe.Scripts.NPC
                 }
             }
         }
+        
+        public void CancelMoveAndInteract()
+        {
+            if (_navigator != null)
+            {
+                _navigator.OnDestinationReached -= InteractWithTarget;
+            }
+        }
 
         private void InteractWithTarget()
         {
             _navigator.OnDestinationReached -= InteractWithTarget;
             _navigator.LocomotionBlock();
+            _navigator.ResetCurrentDestination();
             
             InteractTarget.NpcInteract(gameObject);
         }

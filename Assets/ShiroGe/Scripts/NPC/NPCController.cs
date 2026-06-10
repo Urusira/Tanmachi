@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using ShiroGe.Scripts.Inventory;
 using ShiroGe.Scripts.Quests;
+using ShiroGe.Scripts.Quests.Orders;
 using ShiroGe.Scripts.Tavern;
 using ShiroGe.Scripts.World;
 using UnityEngine;
@@ -25,14 +28,19 @@ namespace ShiroGe.Scripts.NPC
         
         [Header("Названия диалоговых Yarn-нод")]
         [field: SerializeField] public string HungryInTavernNeutral { get; private set; }
-        [field: SerializeField] public string InTavernStandingNeutral { get; private set; }
+
+        [field: SerializeField] public string InTavernStandingNeutral { get; private set; } = null;
         [field: SerializeField] public string DefaultNeutralDialog { get; private set; }
 
+        public int startCapital = 50;
+        
         public float preTableLeavingAwaitTime = 5f;
+        public float eatingTime = 10f;
         
         public bool InTavern { get; private set; }  = false;
         public bool WaitingOrder { get; private set; }  = false;
         public bool Seating { get; private set; }  = false;
+        public bool Eating { get; private set; }  = false;
 
         private NPCDialogInteract _dialog;
         private NPCInteractor _interactor;
@@ -57,7 +65,7 @@ namespace ShiroGe.Scripts.NPC
             //_dialog.NPCRegister(this);
             _interactor.NavigatorInject(_navigator);
             
-            _cash.addCash(100f);
+            _cash.AddCash(startCapital);
 
             _seating.OnSeat += Seated;
             _seating.OnStand += StandUp;
@@ -124,6 +132,14 @@ namespace ShiroGe.Scripts.NPC
             }
         }
 
+        public void CancelGoingToTavern()
+        {
+            if (InTavern) return;
+            
+            _interactor.CancelMoveAndInteract();
+            LeaveTavernTable();
+        }
+        
         public void LeaveTavernTable()
         {
             if(_occupedTavernPlaceTable.HasValue)
@@ -139,12 +155,19 @@ namespace ShiroGe.Scripts.NPC
                 _seating.StandUp();
 
                 _navigator.LocomotionUnblock();
+
+                _navigator.GoToLastDestination();
             }
         }
 
         public void SetGoingTarget(Vector3 targetPos)
         {
             _navigator.MoveToTarget(targetPos);
+        }
+        
+        public void SetBaseGoingTarget(Vector3 targetPos)
+        {
+            _navigator.SetBaseDestination(targetPos);
         }
 
         public void GoWandering()
@@ -159,12 +182,12 @@ namespace ShiroGe.Scripts.NPC
 
         public string GetActualDialog()
         {
-            if (InTavern && Seating)
+            if (InTavern && Seating && !Eating)
             {
                 return HungryInTavernNeutral;
             }
 
-            if (InTavern && !Seating && InTavernStandingNeutral != null)
+            if (InTavern && InTavernStandingNeutral != null)
             {
                 return InTavernStandingNeutral;
             }
@@ -189,20 +212,65 @@ namespace ShiroGe.Scripts.NPC
         {
             WaitingOrder = false;
             
+            cancelledQuest.OnFailed -= OrderFail;
+            cancelledQuest.OnCancelled -= OrderCancel;
+            
             TimerService.Instance.AddTimer(preTableLeavingAwaitTime, LeaveTavernTable);
         }
         public void OrderFail(QuestOrderBase failedQuest)
         {
             WaitingOrder = false;
+            
+            failedQuest.OnFailed -= OrderFail;
+            failedQuest.OnCancelled -= OrderCancel;
 
             TimerService.Instance.AddTimer(preTableLeavingAwaitTime, LeaveTavernTable);
         }
-        public void OrderComplete(QuestOrderBase completedQuest)
+        public void OrderComplete(QuestOrderBase completedQuestBase)
         {
+            if (completedQuestBase is not OrderQuest completedQuest)
+                throw new WarningException(
+                    $"Не удаётся привести аргумент к типу OrderQuest или передан пустой параметр: {completedQuestBase}");
+            
             WaitingOrder = false;
-            _cash.removeCash(completedQuest.rewardCash);
-            //TODO: Если у нпс будут инвентари, то тут надо прописать удаление наградных предметов из инвентаря НПС
-            TimerService.Instance.AddTimer(preTableLeavingAwaitTime, LeaveTavernTable);
+            
+            completedQuest.OnFailed -= OrderFail;
+            completedQuest.OnCancelled -= OrderCancel;
+            completedQuest.OnCompleted -= OrderComplete;
+            //completedQuest.OnOrderQuestCompleted -= OrderComplete;
+            
+            StartCoroutine(Buffet(completedQuest));
+        }
+
+        private IEnumerator Buffet(OrderQuest completedQuest)
+        {
+            if(Eating) yield break;
+            
+            Eating = true;
+            if (_occupedTavernPlaceTable.HasValue)
+            {
+                //TODO: Если у нпс будут инвентари, то тут надо прописать удаление наградных предметов из инвентаря НПС
+                foreach (ItemWithAmount dish in completedQuest.RequiredItems)
+                {
+                    _occupedTavernPlaceTable.Value.Value.RemoveDish();
+                    _occupedTavernPlaceTable.Value.Value.SetDish(dish.Item.itemWorldPrefab);
+                    yield return new WaitForSeconds(eatingTime * dish.Amount);
+                }
+
+                _occupedTavernPlaceTable.Value.Value.RemoveDish();
+            }
+
+            Transaction reward = new NpcToPlayerTransaction(gameObject, GameObject.FindWithTag("Player"),
+                completedQuest.rewardCash, completedQuest.rewardItems);
+
+            yield return new WaitForSeconds(preTableLeavingAwaitTime);
+
+            if (reward.Validate()) reward.Commit();
+
+            Eating = false;
+
+            LeaveTavernTable();
+            
         }
 
         public void Seated()
@@ -214,7 +282,7 @@ namespace ShiroGe.Scripts.NPC
             Seating = false;
         }
 
-        public void QuestSubscribe(QuestOrderBase quest)
+        public void QuestOrderSubscribe(QuestOrderBase quest)
         {
             OrderGet();
             quest.OnFailed += OrderFail;

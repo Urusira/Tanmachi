@@ -265,6 +265,7 @@ GameObject:
   - component: {fileID: 7960761493784176997}
   - component: {fileID: 6496935840873863513}
   - component: {fileID: 2882089600964296355}
+  - component: {fileID: 6180515058454977605}
   m_Layer: 0
   m_Name: Tavern_interior_lamp (1)
   m_TagString: Untagged
@@ -346,3 +347,24 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6180515058454977605
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7945694483283318805}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.49812317, y: 0.6221409, z: 0.27491927}
+  m_Center: {x: -0.24906158, y: -0.16479778, z: 0.0000075101852}

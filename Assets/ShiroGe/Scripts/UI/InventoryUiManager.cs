@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts.Inventory;
+using ShiroGe.Scripts.Tavern;
+using ShiroGe.Scripts.World;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ShiroGe.Scripts.UI
 {
+    
+    [DefaultExecutionOrder(3)]
     public class InventoryUiManager : MonoBehaviour
     {
         public static InventoryUiManager Instance { get; private set; }
@@ -14,7 +19,9 @@ namespace ShiroGe.Scripts.UI
         [SerializeField] private GameObject inventoryObj;
         [SerializeField] private GameObject inventorySlotsObj;
         [SerializeField] private GameObject armorSlotsObj;
+        [SerializeField] private GameObject ratingObj;
         [SerializeField] private GameObject cashObj;
+        [SerializeField] private GameObject timeObj;
         [SerializeField] private GameObject hotbarSlotsObj;
         [SerializeField] private GameObject playerObj;
 
@@ -32,6 +39,8 @@ namespace ShiroGe.Scripts.UI
         private RectTransform _inventoryCraftRectTransform;
         
         private TextMeshProUGUI _cashText;
+        private Slider _ratingSlider;
+        private TextMeshProUGUI _timeText;
 
         private CraftingPanelController _craftingPanel;
         
@@ -80,9 +89,31 @@ namespace ShiroGe.Scripts.UI
             _craftingPanel = craftingMenuObj.GetComponent<CraftingPanelController>();
             
             _cashText = cashObj.GetComponent<TextMeshProUGUI>();
+            _timeText = timeObj.GetComponent<TextMeshProUGUI>();
+            _ratingSlider = ratingObj.GetComponent<Slider>();
+            
             playerObj.GetComponent<CashManager>().OnCashChanged += OnCashChangedHandler;
+
+            TimeManager.Instance.OnTimeTick += OnTimeTickHandler;
+
+            TavernReputationManager.Instance.OnReputationChange += OnReputationChangeHandler;
+            _ratingSlider.minValue = TavernReputationManager.Instance.MinReputation;
+            _ratingSlider.maxValue = TavernReputationManager.Instance.MaxReputation;
+            _ratingSlider.value = TavernReputationManager.Instance.CurrentReputation;
                 
             InventoryManager.Instance.OnInventoryChanged += OnInventoryChangedHandler;
+        }
+
+        private void OnReputationChangeHandler(float newRating)
+        {
+            _ratingSlider.value = newRating;
+        }
+
+        private void OnTimeTickHandler(float _)
+        {
+            int[] time = TimeManager.Instance.Get24FormattedTime();
+            
+            _timeText.text = "День " + time[0] + ", " + time[1] + ":" + (time[2]/10 <= 0 ? "0"+time[2] :  time[2]) + "\n" + TimeManager.Instance.NamedCurrentDayPhase;
         }
 
         private void OnCashChangedHandler(float newValue)

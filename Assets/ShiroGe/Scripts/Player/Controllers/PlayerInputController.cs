@@ -36,16 +36,6 @@ namespace ShiroGe.CharacterController
             JumpPressed = false;
         }
 
-        public void MovementDisable()
-        {
-            PlayerControls.PlayerMovement.Disable();
-        }
-        
-        public void MovementEnable()
-        {
-            PlayerControls.PlayerMovement.Enable();
-        }
-
         public void OnMove(InputAction.CallbackContext context)
         {
             MovementInput = context.ReadValue<Vector2>();

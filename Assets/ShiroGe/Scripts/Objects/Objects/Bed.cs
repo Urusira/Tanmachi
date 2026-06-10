@@ -4,6 +4,7 @@ using DG.Tweening;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts;
 using ShiroGe.Scripts.NPC;
+using ShiroGe.Scripts.UI;
 using ShiroGe.Scripts.World;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -40,17 +41,26 @@ public class Bed : Interactable
         
         sleepingUICanvas.gameObject.SetActive(true);
         sleepingUICanvas.alpha = 0;
-        
-        StartCoroutine(SleepTransitionCoroutine());
+        try
+        {
+            StartCoroutine(SleepTransitionCoroutine());
+        }
+        catch (NullReferenceException e)
+        {
+            Debug.LogWarning(e.Message);
+        }
         
         return PlayerActionsState.Default;
     }
 
     private IEnumerator SleepTransitionCoroutine()
     {
+        GuiManager.Instance.HideGui();
+        InventoryUiManager.Instance.HotbarHide();
+        
         if(_sleeper != null)
         {
-            _sleeper.GetComponent<PlayerController>().LockControl();
+            _sleeper.GetComponent<PlayerController>().LockControl(true);
             _sleeper.SetActive(false);
             CameraFollowTarget.Instance.enabled = false;
             _mainCamera.SetActive(true);
@@ -76,7 +86,7 @@ public class Bed : Interactable
         TimeManager.Instance.OnDayPhaseChanged += SleepingAwaiter;
     }
 
-    private void SleepingAwaiter()
+    private void SleepingAwaiter(DayPhase _)
     {
         sleepingUICanvas.gameObject.SetActive(true);
         StartCoroutine(AwakeTransitionCoroutine());
@@ -102,6 +112,10 @@ public class Bed : Interactable
         
         _sleeper?.SetActive(true);
         _sleeper?.GetComponent<PlayerController>()?.UnlockControl();
+        
+        GuiManager.Instance.ShowGui();
+        InventoryUiManager.Instance.HotbarShow();
+        
         CameraFollowTarget.Instance.enabled = true;
         
         isOccupped = false;
@@ -114,7 +128,7 @@ public class Bed : Interactable
 
     protected override void Initiate()
     {
-        this.name = "Кровать";
+        return;
     }
 
     public override string ShowHint()

@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.Inventory;
+using ShiroGe.Scripts.Items;
 using ShiroGe.Scripts.NPC;
 using ShiroGe.Scripts.Quests.Orders;
+using ShiroGe.Scripts.Tavern;
 using ShiroGe.Scripts.World;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace ShiroGe.Scripts.Quests
 {
@@ -14,15 +20,24 @@ namespace ShiroGe.Scripts.Quests
         public static QuestOrderManager Instance { get; private set; }
         
         [SerializeField] private GameObject currentQuestObj;
-        [SerializeField] private ItemSO itemForTest;
+        
+        [SerializeField] public  OrdersBoard ordersBoard;
+        
+        [SerializeField] public int minDishInOrder;
+        [SerializeField] public int maxDishInOrder;
+        
+        [SerializeField] public float standartOrderTimeLimitSeconds = 120f;
         
         private CurrentQuestPanel _currentQuestPanel;
         
-        private List<TestOrder> _currentOrdersList = new List<TestOrder>();
         
+        private List<QuestOrderBase> _currentOrdersList = new List<QuestOrderBase>();
+        
+        //Словарь, где ключ - нпс-квестодатель, а значение - ещё один словарь, в котором ключ - идентификатор квеста, а значение - квест
         private Dictionary<NPCController, Dictionary<string, QuestOrderBase>> _npcQuestOrdersList = new Dictionary<NPCController, Dictionary<string, QuestOrderBase>>();
 
-        public TestOrder CurrentQuest { get; private set; } = null;
+        public QuestOrderBase CurrentQuest { get; private set; } = null;
+
 
         private void Awake()
         {
@@ -37,15 +52,81 @@ namespace ShiroGe.Scripts.Quests
             _currentQuestPanel = currentQuestObj.GetComponent<CurrentQuestPanel>();
         }
 
-        public void CreateTestOrder(NPCController npc, string questId)
+        public void GenerateOrder(NPCController npc, string questId)
         {
-            TestOrder newOrder = new TestOrder(
-                questId,
-                "СКАЗАНИЕ О ВЕЛИКОМ СУПЕ",
-                "Приготовьте и отдайте NPC грибное варево (Готовится в котле).",
-                itemForTest);
+            int orderLen = Mathf.Max(1, Random.Range(minDishInOrder, maxDishInOrder+1));
+            int maximumOrderPrice = npc.GetComponent<CashManager>().CashAmount;
+            int currentOrderPrice = 0;
             
-            CreateNewOrder(npc, newOrder);
+            List<MenuItem> validMenu = TavernMenuManager.Instance.GetRandomDishes(npc);
+            
+            if (validMenu.Count <= 0)
+            {
+                throw new WarningException("Menu haven't reputation-available items.");
+            } 
+            
+            ItemSO[] items = new ItemSO[orderLen];
+            List<ItemWithAmount> reDishesForBack = new List<ItemWithAmount>();
+
+            for (int i = 0; i < orderLen; i++)
+            {
+                int attempts = 0;
+                int maxAttempts = 10;
+                
+                while(items[i] == null && attempts < maxAttempts){
+                    attempts++;
+                    MenuItem randomMenuItem = validMenu[Random.Range(0, validMenu.Count)];
+                    if (currentOrderPrice + randomMenuItem.price > maximumOrderPrice) continue;
+
+                    items[i] = randomMenuItem.dish;
+                    currentOrderPrice += randomMenuItem.price;
+                }
+                
+                if (items[i] == null)
+                {
+                    items[i] = TavernMenuManager.Instance.GetCheapestDish(remainingCash: maximumOrderPrice-currentOrderPrice);
+                }
+
+                if (items[i] != null)
+                {
+                    foreach (Ingredient recipeIngredient in items[i].repice.ingredients)
+                    {
+                        ItemSO dishes = recipeIngredient.item;
+                        if (dishes.itemType == ItemTypeEnum.DISHES)
+                        {
+                            ItemWithAmount item = reDishesForBack.Find(it => it.Item);
+                            if (item != null)
+                            {
+                                reDishesForBack[reDishesForBack.IndexOf(item)].Amount += recipeIngredient.amount;
+                            }
+                            else
+                            {
+                                reDishesForBack.Add(new ItemWithAmount(recipeIngredient.item, recipeIngredient.amount));
+                            }
+                        }
+                    }
+                }
+            }
+            
+            string itemsNames = "";
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                itemsNames += items[i].itemName;
+                if (i < items.Length-1)
+                {
+                    itemsNames += ", ";
+                }
+            }
+            
+            OrderQuest newOrderQuest = new OrderQuest(
+                questId,
+                "Заказ",
+                $"Приготовьте и отдайте NPC {itemsNames}",
+                items);
+
+            newOrderQuest.SetReward(currentOrderPrice, reDishesForBack.ToHashSet(), newOrderQuest.rewardReputation*items.Length);
+            CreateNewOrder(npc, newOrderQuest);
         }
 
         public void CancelQuest(NPCController npc, string questId)
@@ -86,51 +167,29 @@ namespace ShiroGe.Scripts.Quests
             return _npcQuestOrdersList[npc][questId].ConditionCheck();
         }
         
-        public void CreateNewOrder(NPCController npc, TestOrder newOrder)
+        public void CreateNewOrder(NPCController npc, QuestOrderBase newOrderQuest)
         {
             currentQuestObj.SetActive(true);
             
-            _currentQuestPanel.SetQuest(newOrder);
-            _currentOrdersList.Add(newOrder);
-            CurrentQuest = newOrder;
+            _currentQuestPanel.SetQuest(newOrderQuest);
+            _currentOrdersList.Add(newOrderQuest);
+            CurrentQuest = newOrderQuest;
             
             if (!_npcQuestOrdersList.ContainsKey(npc))
                 _npcQuestOrdersList[npc] = new Dictionary<string, QuestOrderBase>();
             
-            _npcQuestOrdersList[npc][newOrder.ID] = newOrder;
+            _npcQuestOrdersList[npc][newOrderQuest.ID] = newOrderQuest;
             
-            newOrder.StartQuest(3000f);
-            
-            TimeManager.Instance.OnTimeTick -= CurrentQuestTimerUpdate;
-            TimeManager.Instance.OnTimeTick += CurrentQuestTimerUpdate;
+            newOrderQuest.StartQuest(standartOrderTimeLimitSeconds);
 
-            newOrder.OnFailed += FinalizeOrder;
-            newOrder.OnFailed += _currentQuestPanel.Failed;
+            newOrderQuest.OnFailed += FinalizeOrder;
+            newOrderQuest.OnCompleted += FinalizeOrder;
+            newOrderQuest.OnCancelled += FinalizeOrder;
             
-            newOrder.OnCompleted += FinalizeOrder;
-            newOrder.OnCompleted += _currentQuestPanel.SuccessfulComplete;
-            
-            newOrder.OnCancelled += FinalizeOrder;
-            newOrder.OnCancelled += _currentQuestPanel.Cancelled;
-            
-            npc.QuestSubscribe(newOrder);
+            npc.QuestOrderSubscribe(newOrderQuest);
+            ordersBoard.AddOrder(newOrderQuest);
         }
-/*
-        public void NextQuest()
-        {
-            OrderListCleaner();
-            
-            TestOrder order = _currentOrdersList[_currentOrdersList.Count-1];
-            if(order.Status == QuestStatus.ACTIVE)
-            {
-                _currentQuestPanel.SetQuest(order);
-                CurrentQuest = order;
 
-                TimeManager.Instance.OnTimeTick -= CurrentQuestTimerUpdate;
-                TimeManager.Instance.OnTimeTick += CurrentQuestTimerUpdate;
-            }
-        }
-*/
         private void OrderListCleaner()
         {
             for (int i = _currentOrdersList.Count-1; i < _currentOrdersList.Count; i--)
@@ -143,62 +202,32 @@ namespace ShiroGe.Scripts.Quests
             }
         }
         
-        private void UnsubscribeFromAllEvents(TestOrder order)
+        private void UnsubscribeFromAllEvents(QuestOrderBase orderQuest)
         {
-            if (order == null) return;
+            if (orderQuest == null) return;
     
-            order.OnFailed -= FinalizeOrder;
-            order.OnFailed -= _currentQuestPanel.Failed;
-            order.OnCompleted -= FinalizeOrder;
-            order.OnCompleted -= _currentQuestPanel.SuccessfulComplete;
-            order.OnCancelled -= FinalizeOrder;
-            order.OnCancelled -= _currentQuestPanel.Cancelled;
-        }
-
-        public void CurrentQuestTimerUpdate(float _)
-        {
-            if (CurrentQuest == null) return;
-            
-            float remainingTime = CurrentQuest.TimeLimit - CurrentQuest.Timer;
-            
-            _currentQuestPanel.TimerUpdate(remainingTime);
+            orderQuest.OnFailed -= FinalizeOrder;
+            orderQuest.OnCompleted -= FinalizeOrder;
+            orderQuest.OnCancelled -= FinalizeOrder;
         }
 
         public void FinalizeOrder(QuestOrderBase quest)
         {
             try
             {
-                TestOrder order = quest as TestOrder;
+                OrderQuest orderQuest = quest as OrderQuest;
                 
-                if (order == null)
+                if (orderQuest == null)
                     throw new WarningException(
-                        $"Не удаётся привести аргумент к типу TestOrder или передан пустой параметр: {quest}");
+                        $"Не удаётся привести аргумент к типу OrderQuest или передан пустой параметр: {quest}");
                 
-                TimeManager.Instance.OnTimeTick -= CurrentQuestTimerUpdate;
-                
-                UnsubscribeFromAllEvents(order);
+                UnsubscribeFromAllEvents(orderQuest);
 
-                _currentOrdersList.Remove(order);
                 CurrentQuest = null;
-                
-                //if(_currentOrdersList.Count > 0) NextQuest();
             }
             catch (Exception e)
             {
                 Debug.LogException(e);
-            }
-            
-            if(quest.rewardItems != null)
-            {
-                foreach (KeyValuePair<ItemSO, int> rewardItem in quest.rewardItems)
-                {
-                    InventoryManager.Instance.AddItem(rewardItem.Key, rewardItem.Value);
-                }
-            }
-
-            if (quest.rewardCash > 0)
-            {
-                PlayerInstance.Instance.GiveCash(quest.rewardCash);
             }
         }
     }

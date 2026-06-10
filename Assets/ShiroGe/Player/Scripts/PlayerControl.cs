@@ -374,17 +374,6 @@ namespace ShiroGe.CharacterController
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2e53e27b-a8b6-4d77-a040-b524b79c72b9"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""WalkToggle"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""fe50d8b4-962e-4e05-a580-09c60d1d79bd"",
                     ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
@@ -1038,6 +1027,15 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Help"",
+                    ""type"": ""Button"",
+                    ""id"": ""f004dcd5-e539-42ef-af7b-c34497ab320f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1049,6 +1047,17 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""BackToMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c149851a-648e-469f-97d9-4ea79c77799f"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Help"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1361,6 +1370,122 @@ namespace ShiroGe.CharacterController
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""PlacementMode"",
+            ""id"": ""5fec1ec3-479d-4309-9197-84e23ee31e40"",
+            ""actions"": [
+                {
+                    ""name"": ""Place"",
+                    ""type"": ""Button"",
+                    ""id"": ""b9f59669-0689-4a33-a860-eba2596b7d23"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""21319dfd-8793-4fe3-963a-74dad4598879"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Value"",
+                    ""id"": ""52b070f2-e2b0-4125-b931-dfdefceceb60"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""FastRotation"",
+                    ""type"": ""Button"",
+                    ""id"": ""c63b7a1d-e4b2-4c22-ac6d-1b574589d4fb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e4a4f13e-9d01-427d-a6e4-4f15776e9d4c"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Place"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a8d29d26-b386-41f0-bd9d-ccccf86ab4e5"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""RotateMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d16518eb-d014-4668-bf74-f481dab056c6"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""23a510c8-c0bf-4e0e-ad33-b94ac137aee0"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""FastRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""DebugFunctions"",
+            ""id"": ""144a1a5c-c55d-4b2f-a4cb-83922e8e118e"",
+            ""actions"": [
+                {
+                    ""name"": ""Teleport"",
+                    ""type"": ""Button"",
+                    ""id"": ""f201098d-e1c0-4b57-9cc6-b6e5aa5a727c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""fdb4f3d5-3ba4-44af-994e-d0182bd0de04"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Teleport"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1452,6 +1577,7 @@ namespace ShiroGe.CharacterController
             // IngameUI
             m_IngameUI = asset.FindActionMap("IngameUI", throwIfNotFound: true);
             m_IngameUI_BackToMenu = m_IngameUI.FindAction("BackToMenu", throwIfNotFound: true);
+            m_IngameUI_Help = m_IngameUI.FindAction("Help", throwIfNotFound: true);
             // Inventory
             m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
             m_Inventory_LeftClick = m_Inventory.FindAction("LeftClick", throwIfNotFound: true);
@@ -1469,6 +1595,15 @@ namespace ShiroGe.CharacterController
             m_Inventory_Hotbar8 = m_Inventory.FindAction("Hotbar8", throwIfNotFound: true);
             m_Inventory_Hotbar9 = m_Inventory.FindAction("Hotbar9", throwIfNotFound: true);
             m_Inventory_ItemsScroll = m_Inventory.FindAction("ItemsScroll", throwIfNotFound: true);
+            // PlacementMode
+            m_PlacementMode = asset.FindActionMap("PlacementMode", throwIfNotFound: true);
+            m_PlacementMode_Place = m_PlacementMode.FindAction("Place", throwIfNotFound: true);
+            m_PlacementMode_RotateMode = m_PlacementMode.FindAction("RotateMode", throwIfNotFound: true);
+            m_PlacementMode_Rotate = m_PlacementMode.FindAction("Rotate", throwIfNotFound: true);
+            m_PlacementMode_FastRotation = m_PlacementMode.FindAction("FastRotation", throwIfNotFound: true);
+            // DebugFunctions
+            m_DebugFunctions = asset.FindActionMap("DebugFunctions", throwIfNotFound: true);
+            m_DebugFunctions_Teleport = m_DebugFunctions.FindAction("Teleport", throwIfNotFound: true);
         }
 
         ~@PlayerControls()
@@ -1478,6 +1613,8 @@ namespace ShiroGe.CharacterController
             UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerActions.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_IngameUI.enabled, "This will cause a leak and performance issues, PlayerControls.IngameUI.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_Inventory.enabled, "This will cause a leak and performance issues, PlayerControls.Inventory.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_PlacementMode.enabled, "This will cause a leak and performance issues, PlayerControls.PlacementMode.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_DebugFunctions.enabled, "This will cause a leak and performance issues, PlayerControls.DebugFunctions.Disable() has not been called.");
         }
 
         /// <summary>
@@ -1996,6 +2133,7 @@ namespace ShiroGe.CharacterController
         private readonly InputActionMap m_IngameUI;
         private List<IIngameUIActions> m_IngameUIActionsCallbackInterfaces = new List<IIngameUIActions>();
         private readonly InputAction m_IngameUI_BackToMenu;
+        private readonly InputAction m_IngameUI_Help;
         /// <summary>
         /// Provides access to input actions defined in input action map "IngameUI".
         /// </summary>
@@ -2011,6 +2149,10 @@ namespace ShiroGe.CharacterController
             /// Provides access to the underlying input action "IngameUI/BackToMenu".
             /// </summary>
             public InputAction @BackToMenu => m_Wrapper.m_IngameUI_BackToMenu;
+            /// <summary>
+            /// Provides access to the underlying input action "IngameUI/Help".
+            /// </summary>
+            public InputAction @Help => m_Wrapper.m_IngameUI_Help;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -2040,6 +2182,9 @@ namespace ShiroGe.CharacterController
                 @BackToMenu.started += instance.OnBackToMenu;
                 @BackToMenu.performed += instance.OnBackToMenu;
                 @BackToMenu.canceled += instance.OnBackToMenu;
+                @Help.started += instance.OnHelp;
+                @Help.performed += instance.OnHelp;
+                @Help.canceled += instance.OnHelp;
             }
 
             /// <summary>
@@ -2054,6 +2199,9 @@ namespace ShiroGe.CharacterController
                 @BackToMenu.started -= instance.OnBackToMenu;
                 @BackToMenu.performed -= instance.OnBackToMenu;
                 @BackToMenu.canceled -= instance.OnBackToMenu;
+                @Help.started -= instance.OnHelp;
+                @Help.performed -= instance.OnHelp;
+                @Help.canceled -= instance.OnHelp;
             }
 
             /// <summary>
@@ -2337,6 +2485,231 @@ namespace ShiroGe.CharacterController
         /// Provides a new <see cref="InventoryActions" /> instance referencing this action map.
         /// </summary>
         public InventoryActions @Inventory => new InventoryActions(this);
+
+        // PlacementMode
+        private readonly InputActionMap m_PlacementMode;
+        private List<IPlacementModeActions> m_PlacementModeActionsCallbackInterfaces = new List<IPlacementModeActions>();
+        private readonly InputAction m_PlacementMode_Place;
+        private readonly InputAction m_PlacementMode_RotateMode;
+        private readonly InputAction m_PlacementMode_Rotate;
+        private readonly InputAction m_PlacementMode_FastRotation;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "PlacementMode".
+        /// </summary>
+        public struct PlacementModeActions
+        {
+            private @PlayerControls m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public PlacementModeActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "PlacementMode/Place".
+            /// </summary>
+            public InputAction @Place => m_Wrapper.m_PlacementMode_Place;
+            /// <summary>
+            /// Provides access to the underlying input action "PlacementMode/RotateMode".
+            /// </summary>
+            public InputAction @RotateMode => m_Wrapper.m_PlacementMode_RotateMode;
+            /// <summary>
+            /// Provides access to the underlying input action "PlacementMode/Rotate".
+            /// </summary>
+            public InputAction @Rotate => m_Wrapper.m_PlacementMode_Rotate;
+            /// <summary>
+            /// Provides access to the underlying input action "PlacementMode/FastRotation".
+            /// </summary>
+            public InputAction @FastRotation => m_Wrapper.m_PlacementMode_FastRotation;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_PlacementMode; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="PlacementModeActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(PlacementModeActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="PlacementModeActions" />
+            public void AddCallbacks(IPlacementModeActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlacementModeActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlacementModeActionsCallbackInterfaces.Add(instance);
+                @Place.started += instance.OnPlace;
+                @Place.performed += instance.OnPlace;
+                @Place.canceled += instance.OnPlace;
+                @RotateMode.started += instance.OnRotateMode;
+                @RotateMode.performed += instance.OnRotateMode;
+                @RotateMode.canceled += instance.OnRotateMode;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
+                @FastRotation.started += instance.OnFastRotation;
+                @FastRotation.performed += instance.OnFastRotation;
+                @FastRotation.canceled += instance.OnFastRotation;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="PlacementModeActions" />
+            private void UnregisterCallbacks(IPlacementModeActions instance)
+            {
+                @Place.started -= instance.OnPlace;
+                @Place.performed -= instance.OnPlace;
+                @Place.canceled -= instance.OnPlace;
+                @RotateMode.started -= instance.OnRotateMode;
+                @RotateMode.performed -= instance.OnRotateMode;
+                @RotateMode.canceled -= instance.OnRotateMode;
+                @Rotate.started -= instance.OnRotate;
+                @Rotate.performed -= instance.OnRotate;
+                @Rotate.canceled -= instance.OnRotate;
+                @FastRotation.started -= instance.OnFastRotation;
+                @FastRotation.performed -= instance.OnFastRotation;
+                @FastRotation.canceled -= instance.OnFastRotation;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="PlacementModeActions.UnregisterCallbacks(IPlacementModeActions)" />.
+            /// </summary>
+            /// <seealso cref="PlacementModeActions.UnregisterCallbacks(IPlacementModeActions)" />
+            public void RemoveCallbacks(IPlacementModeActions instance)
+            {
+                if (m_Wrapper.m_PlacementModeActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="PlacementModeActions.AddCallbacks(IPlacementModeActions)" />
+            /// <seealso cref="PlacementModeActions.RemoveCallbacks(IPlacementModeActions)" />
+            /// <seealso cref="PlacementModeActions.UnregisterCallbacks(IPlacementModeActions)" />
+            public void SetCallbacks(IPlacementModeActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlacementModeActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlacementModeActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="PlacementModeActions" /> instance referencing this action map.
+        /// </summary>
+        public PlacementModeActions @PlacementMode => new PlacementModeActions(this);
+
+        // DebugFunctions
+        private readonly InputActionMap m_DebugFunctions;
+        private List<IDebugFunctionsActions> m_DebugFunctionsActionsCallbackInterfaces = new List<IDebugFunctionsActions>();
+        private readonly InputAction m_DebugFunctions_Teleport;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "DebugFunctions".
+        /// </summary>
+        public struct DebugFunctionsActions
+        {
+            private @PlayerControls m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public DebugFunctionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "DebugFunctions/Teleport".
+            /// </summary>
+            public InputAction @Teleport => m_Wrapper.m_DebugFunctions_Teleport;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_DebugFunctions; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="DebugFunctionsActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(DebugFunctionsActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="DebugFunctionsActions" />
+            public void AddCallbacks(IDebugFunctionsActions instance)
+            {
+                if (instance == null || m_Wrapper.m_DebugFunctionsActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_DebugFunctionsActionsCallbackInterfaces.Add(instance);
+                @Teleport.started += instance.OnTeleport;
+                @Teleport.performed += instance.OnTeleport;
+                @Teleport.canceled += instance.OnTeleport;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="DebugFunctionsActions" />
+            private void UnregisterCallbacks(IDebugFunctionsActions instance)
+            {
+                @Teleport.started -= instance.OnTeleport;
+                @Teleport.performed -= instance.OnTeleport;
+                @Teleport.canceled -= instance.OnTeleport;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DebugFunctionsActions.UnregisterCallbacks(IDebugFunctionsActions)" />.
+            /// </summary>
+            /// <seealso cref="DebugFunctionsActions.UnregisterCallbacks(IDebugFunctionsActions)" />
+            public void RemoveCallbacks(IDebugFunctionsActions instance)
+            {
+                if (m_Wrapper.m_DebugFunctionsActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="DebugFunctionsActions.AddCallbacks(IDebugFunctionsActions)" />
+            /// <seealso cref="DebugFunctionsActions.RemoveCallbacks(IDebugFunctionsActions)" />
+            /// <seealso cref="DebugFunctionsActions.UnregisterCallbacks(IDebugFunctionsActions)" />
+            public void SetCallbacks(IDebugFunctionsActions instance)
+            {
+                foreach (var item in m_Wrapper.m_DebugFunctionsActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_DebugFunctionsActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="DebugFunctionsActions" /> instance referencing this action map.
+        /// </summary>
+        public DebugFunctionsActions @DebugFunctions => new DebugFunctionsActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         /// <summary>
         /// Provides access to the input control scheme.
@@ -2559,6 +2932,13 @@ namespace ShiroGe.CharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnBackToMenu(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Help" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnHelp(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Inventory" which allows adding and removing callbacks.
@@ -2672,6 +3052,57 @@ namespace ShiroGe.CharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnItemsScroll(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "PlacementMode" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="PlacementModeActions.AddCallbacks(IPlacementModeActions)" />
+        /// <seealso cref="PlacementModeActions.RemoveCallbacks(IPlacementModeActions)" />
+        public interface IPlacementModeActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Place" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnPlace(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "RotateMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnRotateMode(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Rotate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnRotate(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "FastRotation" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnFastRotation(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "DebugFunctions" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="DebugFunctionsActions.AddCallbacks(IDebugFunctionsActions)" />
+        /// <seealso cref="DebugFunctionsActions.RemoveCallbacks(IDebugFunctionsActions)" />
+        public interface IDebugFunctionsActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Teleport" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnTeleport(InputAction.CallbackContext context);
         }
     }
 }

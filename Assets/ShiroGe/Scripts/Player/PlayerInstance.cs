@@ -47,7 +47,7 @@ namespace ShiroGe.CharacterController
 
         public void GiveCash(int amount)
         {
-            _cashManager.addCash(amount);
+            _cashManager.AddCash(amount);
         }
     }
 }

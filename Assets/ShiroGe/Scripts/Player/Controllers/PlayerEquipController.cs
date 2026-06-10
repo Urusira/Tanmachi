@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace ShiroGe.CharacterController
 {
+    [DefaultExecutionOrder(1)]
     public class PlayerEquipController : MonoBehaviour
     {
         public static PlayerEquipController Instance  { get; private set; }
@@ -18,19 +19,27 @@ namespace ShiroGe.CharacterController
         [SerializeField] private GameObject standartPlayerAvatarUnderwear;
         [SerializeField] private GameObject playerAvatarHair;
         
+        [SerializeField] private ObjectPlacer objectPlacer;
+        
         //private readonly Dictionary<ItemTypeEnum, GameObject> _equppedEquipment = new Dictionary<ItemTypeEnum, GameObject>();
         
         private bool hasRHEqupped = false;
-        private GameObject RHEqupped;
+        private GameObject RHEquppedObj;
+        private ItemSO RHEqupped;
         
         private bool hasHeadEqupped = false;
-        private GameObject HeadEqupped;
+        private GameObject HeadEquppedObj;
+        private ItemSO HeadEqupped;
         
         private bool hasBodyEqupped = false;
-        private GameObject BodyEqupped;
+        private GameObject BodyEquppedObj;
+        private ItemSO BodyEqupped;
         
         private bool hasLegsEqupped = false;
-        private GameObject LegsEqupped;
+        private GameObject LegsEquppedObj;
+        private ItemSO LegsEqupped;
+        
+        private ItemTypeEnum handlingItemType;
         
         private void Start()
         {
@@ -53,7 +62,7 @@ namespace ShiroGe.CharacterController
             if(item != null)
             {
                 type = item.itemType;
-                itemEquppedPrefab = item.handItemPrefab;
+                itemEquppedPrefab = item.itemHandPrefab;
             }
             
             //TODO: Перейти на кешированный массив. Доработать логику так, чтобы источником истины был массив. Пока что заглушка.
@@ -64,43 +73,59 @@ namespace ShiroGe.CharacterController
                 case ItemTypeEnum.DEFAULT:
                 {
                     UnequipRightHand();
-                    if(item != null) EquipRightHand(item.handItemPrefab);
+                    handlingItemType = item.itemType;
+                    if(item != null) EquipRightHand(item);
                     break;
                 }
                 case ItemTypeEnum.HEADWEAR:
                 {
-                    UnequipHead(item.handItemPrefab);
-                    if(item != null) EquipHead(item.handItemPrefab);
+                    UnequipHead(item);
+                    if(item != null) EquipHead(item);
                     break;
                 }
                 case ItemTypeEnum.BODYWEAR:
                 {
-                    UnequipBody(item.handItemPrefab);
-                    if(item != null) EquipBody(item.handItemPrefab);
+                    UnequipBody(item);
+                    if(item != null) EquipBody(item);
                     break;
                 }
                 case ItemTypeEnum.LEGSWEAR:
                 {
-                    UnequipLegs(item.handItemPrefab);
-                    if(item != null) EquipLegs(item.handItemPrefab);
+                    UnequipLegs(item);
+                    if(item != null) EquipLegs(item);
                     break;
                 }
                 case ItemTypeEnum.WEAPON:
                 {
                     UnequipRightHand();
-                    if(item != null) EquipRightHand(item.handItemPrefab);
+                    handlingItemType = item.itemType;
+                    if(item != null) EquipRightHand(item);
                     break;
                 }
                 case ItemTypeEnum.TOOL:
                 {
                     UnequipRightHand();
-                    if(item != null) EquipRightHand(item.handItemPrefab);
+                    handlingItemType = item.itemType;
+                    if(item != null) EquipRightHand(item);
                     break;
                 }
                 case ItemTypeEnum.CONSUMABLE:
                 {
                     UnequipRightHand();
-                    if(item != null) EquipRightHand(item.handItemPrefab);
+                    handlingItemType = item.itemType;
+                    if(item != null) EquipRightHand(item);
+                    break;
+                }
+                case ItemTypeEnum.PLACEABLE:
+                {
+                    UnequipRightHand();
+                    handlingItemType = item.itemType;
+                    if(item != null)
+                    {
+                        EquipRightHand(item);
+                        objectPlacer.ObjectSet(item.itemWorldPrefab, item.itemPreviewPrefab, item);
+                        objectPlacer.EnterPlacementMode();
+                    }
                     break;
                 }
             }
@@ -124,17 +149,17 @@ namespace ShiroGe.CharacterController
                 }
                 case ItemTypeEnum.HEADWEAR:
                 {
-                    UnequipHead(item.handItemPrefab);
+                    UnequipHead(item);
                     break;
                 }
                 case ItemTypeEnum.BODYWEAR:
                 {
-                    UnequipBody(item.handItemPrefab);
+                    UnequipBody(item);
                     break;
                 }
                 case ItemTypeEnum.LEGSWEAR:
                 {
-                    UnequipLegs(item.handItemPrefab);
+                    UnequipLegs(item);
                     break;
                 }
                 case ItemTypeEnum.WEAPON:
@@ -152,85 +177,117 @@ namespace ShiroGe.CharacterController
                     UnequipRightHand();
                     break;
                 }
+                case ItemTypeEnum.PLACEABLE:
+                {
+                    UnequipRightHand();
+                    if(item != null)
+                    {
+                        objectPlacer.ExitPlacementMode();
+                    }
+                    break;
+                }
             }
         }
 
         public void TakeInHand(ItemSO item)
         {
             UnequipRightHand();
-            if(item != null) EquipRightHand(item.handItemPrefab);
+            
+            if(item != null)
+            {
+                handlingItemType = item.itemType;
+            
+                EquipRightHand(item);
+                
+                if (item.itemType == ItemTypeEnum.PLACEABLE)
+                {
+                    objectPlacer.ObjectSet(item.itemWorldPrefab, item.itemPreviewPrefab, item);
+                    objectPlacer.EnterPlacementMode();
+                }
+            }
         }
         
-        
-        private void EquipRightHand(GameObject item)
+        private void EquipRightHand(ItemSO item)
         {
             hasRHEqupped = true;
-            RHEqupped = Instantiate(item, rightHandJoint.transform);
+            RHEquppedObj = Instantiate(item.itemHandPrefab, rightHandJoint.transform);
+            RHEqupped = item;
         }
 
         private void UnequipRightHand()
         {
+            if (handlingItemType == ItemTypeEnum.PLACEABLE)
+            {
+                objectPlacer.ExitPlacementMode();
+            }
             if(hasRHEqupped)
             {
                 hasRHEqupped = false;
-                Destroy(RHEqupped);
+                Destroy(RHEquppedObj);
+                RHEqupped = null;
             }
         }
 
         
-        private void EquipHead(GameObject item)
+        private void EquipHead(ItemSO item)
         {
             playerHair.SetActive(false);
             playerAvatarHair.SetActive(false);
             playerAvatarHair.SetActive(false);
-            item.GetComponent<HeadWear>().Equip(gameObject);
-            item.GetComponent<HeadWear>().Equip(playerAvatar);
+            HeadEquppedObj = item.itemHandPrefab;
+            HeadEquppedObj.GetComponent<HeadWear>().Equip(gameObject);
+            HeadEquppedObj.GetComponent<HeadWear>().Equip(playerAvatar);
             HeadEqupped = item;
             hasHeadEqupped = true;
         }
         
-        private void UnequipHead(GameObject item)
+        private void UnequipHead(ItemSO item)
         {
             playerHair.SetActive(true);
             playerAvatarHair.SetActive(true);
-            item.GetComponent<HeadWear>().Unequip(gameObject);
-            item.GetComponent<HeadWear>().Unequip(playerAvatar);
+            item.itemHandPrefab.GetComponent<HeadWear>().Unequip(gameObject);
+            item.itemHandPrefab.GetComponent<HeadWear>().Unequip(playerAvatar);
+            HeadEquppedObj = null;
             HeadEqupped = null;
             hasHeadEqupped = false;
         }
 
-        private void EquipBody(GameObject item)
+        private void EquipBody(ItemSO item)
         {
-            item.GetComponent<BodyWear>().Equip(gameObject);
-            item.GetComponent<BodyWear>().Equip(playerAvatar);
+            BodyEquppedObj = item.itemHandPrefab;
+            BodyEquppedObj.GetComponent<BodyWear>().Equip(gameObject);
+            BodyEquppedObj.GetComponent<BodyWear>().Equip(playerAvatar);
             BodyEqupped = item;
             hasBodyEqupped = true;
         }
         
-        private void UnequipBody(GameObject item)
+        private void UnequipBody(ItemSO item)
         {
-            item.GetComponent<BodyWear>().Unequip(gameObject);
-            item.GetComponent<BodyWear>().Unequip(playerAvatar);
+            item.itemHandPrefab.GetComponent<BodyWear>().Unequip(gameObject);
+            item.itemHandPrefab.GetComponent<BodyWear>().Unequip(playerAvatar);
+            BodyEquppedObj = null;
             BodyEqupped = null;
             hasBodyEqupped = false;
         }
 
-        private void EquipLegs(GameObject item)
+        private void EquipLegs(ItemSO item)
         {
             standartPlayerUnderwear.SetActive(false);
             standartPlayerAvatarUnderwear.SetActive(false);
-            item.GetComponent<LegsWear>().Equip(gameObject);
-            item.GetComponent<LegsWear>().Equip(playerAvatar);
+            LegsEquppedObj = item.itemHandPrefab;
+            LegsEquppedObj.GetComponent<LegsWear>().Equip(gameObject);
+            LegsEquppedObj.GetComponent<LegsWear>().Equip(playerAvatar);
             LegsEqupped = item;
             hasLegsEqupped = true;
         }
         
-        private void UnequipLegs(GameObject item)
+        private void UnequipLegs(ItemSO item)
         {
             standartPlayerUnderwear.SetActive(true);
             standartPlayerAvatarUnderwear.SetActive(true);
-            item.GetComponent<LegsWear>().Unequip(gameObject);
-            item.GetComponent<LegsWear>().Unequip(playerAvatar);
+            item.itemHandPrefab.GetComponent<LegsWear>().Unequip(gameObject);
+            item.itemHandPrefab.GetComponent<LegsWear>().Unequip(playerAvatar);
+            LegsEquppedObj = null;
             LegsEqupped = null;
             hasLegsEqupped = false;
         }

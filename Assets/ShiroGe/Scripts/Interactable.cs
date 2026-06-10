@@ -11,6 +11,8 @@ namespace ShiroGe.Scripts
         [SerializeField] protected bool playerCanInteract = true;
         [SerializeField] protected bool npcCanInteract = false;
         
+        public string name;
+        
         protected Outline InteractableOutline; 
         
         private Color _outlineColor = Color.white;
@@ -68,7 +70,7 @@ namespace ShiroGe.Scripts
         {
             if (!playerCanInteract) return null;
             InteractableOutline.enabled = true;
-            return "Нажмите для взаимодействия";
+            return "Нажмите F для взаимодействия";
         }
 
         public void HideHint()

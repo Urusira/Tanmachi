@@ -1,5 +1,6 @@
 ﻿using System;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.Enums;
 using ShiroGe.Scripts.NPC;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace ShiroGe.Scripts.Objects
 {
     public class Furnace : Station
     {
+        [SerializeField] public CraftStations typeStation = CraftStations.Furnace;
         protected override PlayerActionsState PlayerOverridableInteract(GameObject player)
         {
             base.PlayerOverridableInteract(player);
@@ -22,7 +24,7 @@ namespace ShiroGe.Scripts.Objects
 
         protected override void Initiate()
         {
-            this.stationName = "Печка с плитой";
+            return;
         }
     }
 }

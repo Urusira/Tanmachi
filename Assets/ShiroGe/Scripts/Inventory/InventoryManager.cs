@@ -4,11 +4,15 @@ using JetBrains.Annotations;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts;
 using ShiroGe.Scripts.Items;
+using ShiroGe.Scripts.Quests;
 using ShiroGe.Scripts.UI;
+using ShiroGe.Scripts.Utils;
 using ShiroGe.Scripts.World;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+[DefaultExecutionOrder(2)]
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance  { get; private set; }
@@ -29,6 +33,8 @@ public class InventoryManager : MonoBehaviour
     public List<InventorySlot> _allSlots { get; private set; } = new List<InventorySlot>();
     
     public InventorySlot HoveredSlot { get; private set; }
+    
+    [SerializeField] private List<ItemWithAmount> _startingInventory;
 
     public int SelectedHotbarSlot { get; private set; } = 0;
 
@@ -50,6 +56,14 @@ public class InventoryManager : MonoBehaviour
 
         Instance = this;
 
+        if (_startingInventory.Count > 0)
+        {
+            foreach (ItemWithAmount item in _startingInventory)
+            {
+                AddItem(item.Item, item.Amount);
+            }
+        }
+        
         RebuildInventoryCache();
     }
 
@@ -407,7 +421,7 @@ public class InventoryManager : MonoBehaviour
         
         if(selectedSlot.HasItem())
         {
-            WorldSpawner.Instance.PlayerDrop(selectedSlot.GetItem().itemPrefab);
+            WorldSpawner.Instance.PlayerDrop(selectedSlot.GetItem().itemWorldPrefab);
         
             selectedSlot.RemoveAmount(1);
             

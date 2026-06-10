@@ -40,6 +40,8 @@ public class NPCNavigator : MonoBehaviour
     private NPCState _npcState;
 
     private Vector3 _destination;
+    private Vector3 _lastDestination;
+    private Vector3 _baseDestination;
     
     private bool _isRotatingClockwise = false;
     
@@ -61,6 +63,31 @@ public class NPCNavigator : MonoBehaviour
         UpdateMovementState();
         Wander();
         TargetReachedHandler();
+    }
+
+    public void SetBaseDestination(Vector3 baseDestination)
+    {
+        _baseDestination = baseDestination;
+    }
+
+    public bool GoToBaseDestination()
+    {
+        return MoveToTarget(_baseDestination);
+    }
+    
+    public bool GoToLastDestination()
+    {
+        return MoveToTarget(_lastDestination);
+    }
+
+    public void ResetCurrentDestination(bool withRemembering = false)
+    {
+        if (withRemembering)
+        {
+            _lastDestination = _destination;
+        }
+        _destination = Vector3.zero;
+
     }
 
     private void UpdateMovementState()
@@ -110,13 +137,61 @@ public class NPCNavigator : MonoBehaviour
     }
     
     /// <summary>
-    /// Задаёт в AI навигаторе цель следования, куда агент будет двигаться, пока не достигнет цели
+    /// Задаёт в AI навигаторе цель следования, куда агент будет двигаться, пока не достигнет цели.
+    /// При неудаче агент продолжает двигаться к прошлой точке. Если она не доступна - двигается к стандартной цели. При её отсутствии отправляется бродить.
     /// </summary>
     /// <param name="target">Координаты точки, куда агент будет двигаться по NAVMesh-сетке</param>
     public bool MoveToTarget(Vector3 target)
     {
-        _destination = target;
-        return _navAgent.SetDestination(target);
+        _lastDestination = _destination;
+        
+        bool successful = TrySetDestination(
+            newTarget: target, 
+            "Cannot move to target destination point, going to last destination point", 
+            "Cannot move to zero coordinates");
+        if (successful) return true;
+
+        bool lastSuccessful = TrySetDestination(
+            newTarget: _lastDestination, 
+            "Cannot move to last destination point, going to base destination point", 
+            "Last destination point is null");
+        
+        if (!lastSuccessful)
+        {
+            bool baseSuccessful = TrySetDestination(
+                newTarget: _baseDestination,
+                "Cannot move to base destination point, going to wandering", 
+                "Base destination point is null");
+            
+            if (!baseSuccessful)
+            {
+                _destination = Vector3.zero;
+                _lastDestination = Vector3.zero;
+                
+                isWandering = true;
+            }
+        }
+        
+        return false;
+    }
+
+    private bool TrySetDestination(Vector3 newTarget, string errorMessage, string nullErrorMessage)
+    {
+        bool successful = false;
+        
+        if(newTarget != Vector3.zero)
+        {
+            _destination = newTarget;
+            successful = _navAgent.SetDestination(_destination);
+        }
+        else
+        {
+            Debug.LogWarning(nullErrorMessage);
+        }
+        
+        if(!successful) Debug.LogWarning(errorMessage);
+
+        return successful;
     }
 
     /// <summary>
@@ -191,9 +266,6 @@ public class NPCNavigator : MonoBehaviour
     {
         _navAgent.enabled = true;
         _navAgent.isStopped = false;
-
-        //TODO: Заглушка чтоб дурачок не стоял
-        isWandering = true;
     }
 
     public void FixLookAt(Vector3 target)

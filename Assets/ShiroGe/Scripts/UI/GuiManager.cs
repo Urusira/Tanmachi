@@ -11,13 +11,14 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private GameObject guiCanvas;
     [SerializeField] private GameObject pointerObj;
     [SerializeField] private GameObject hintTextObj;
+    [SerializeField] private GameObject controlHint;
 
     [Header("Settings")]
     [SerializeField] private Vector2 stdPointerSize;
     [SerializeField] private Vector2 highlightPointerSize;
     [SerializeField] private Color stdPointerColor;
     [SerializeField] private Color highlightPointerColor = new Color(1f, 1f, 1f, 0.8f);
-    [SerializeField] private String standartHint = "F для телепортации";
+    [SerializeField] private String standartHint = "";
 
     private Image _pointer;
     private TextMeshProUGUI _hintTextMesh;
@@ -62,6 +63,12 @@ public class GuiManager : MonoBehaviour
         guiCanvas.SetActive(true);
     }
 
+    public void SwitchControlHint()
+    {
+        if(controlHint.activeInHierarchy) controlHint.SetActive(false);
+        else controlHint.SetActive(true);
+    }
+
     public void LockMouse()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -70,7 +77,7 @@ public class GuiManager : MonoBehaviour
 
     public void UnlockMouse()
     {
-        Cursor.lockState     = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 }

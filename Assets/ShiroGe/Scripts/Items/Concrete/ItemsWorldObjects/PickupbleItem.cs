@@ -16,7 +16,7 @@ namespace ShiroGe.Scripts.Items
             InventoryManager.Instance.AddItem(scriptableItem, amount);
             
             LODGroup lodGroup = GetComponentInParent<LODGroup>();
-            if (lodGroup != null)
+            if (lodGroup != null && lodGroup.gameObject.layer == LayerMask.NameToLayer("Interactable"))
             {
                 Destroy(lodGroup.gameObject);
             }
@@ -36,11 +36,12 @@ namespace ShiroGe.Scripts.Items
         public override string ShowHint()
         {
             base.ShowHint();
-            return $"{gameObject.name}\nF для подбора";
+            return $"{name}\nНажмите F для подбора";
         }
 
         protected override void Initiate()
         {
+            name = scriptableItem.itemName;
             return;
         }
     }

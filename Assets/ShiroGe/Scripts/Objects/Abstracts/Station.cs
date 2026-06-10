@@ -7,8 +7,6 @@ namespace ShiroGe.Scripts.Objects
 {
     public abstract class Station : Interactable
     {
-        public string stationName;
-        
         public List<RecipeSO> recipes = new List<RecipeSO>();
         
         protected override PlayerActionsState PlayerOverridableInteract(GameObject player)
@@ -21,7 +19,7 @@ namespace ShiroGe.Scripts.Objects
         public override string ShowHint()
         {
             base.ShowHint();
-            return $"{stationName}\nF для взаимодействия";
+            return $"{name}\nF для взаимодействия";
         }
     }
 }

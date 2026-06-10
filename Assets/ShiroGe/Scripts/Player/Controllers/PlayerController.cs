@@ -292,28 +292,6 @@ namespace ShiroGe.CharacterController
 
         #endregion
 
-        //TODO: Убрать для билда, админская функция для теста билдов
-        private void FixedUpdate()
-        {
-            if (_interactLastFrame && !_playerActionsContoller.InteractInput)
-            {
-                _interactLastFrame = false;
-            }
-            
-            
-            RaycastHit hit;
-            if (_target == null && !_interactLastFrame && _playerActionsContoller.InteractInput && 
-                Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward.normalized, 
-                    out hit, 1000f, LayerMask.GetMask("Default")))
-            {
-                
-                Debug.unityLogger.Log($"Teleport to {hit.point}, {_interactLastFrame}");
-                gameObject.transform.position = hit.point;
-                _interactLastFrame = true;
-                _playerActionsContoller.SetInteractPressedFalse();
-            }
-        }
-
         #region Lateupdate Logic
         private void LateUpdate()
         {
@@ -416,15 +394,23 @@ namespace ShiroGe.CharacterController
         
         public void LockControl(bool blockInventoryControl = false)
         {
-            _playerInputContoller.MovementDisable();
-            _playerActionsContoller.ActionsDisable();
-            if(blockInventoryControl) _playerInventoryContoller.InventoryActionsDisable();
+            PlayerInputControllersRegulator.Instance.DisableMovement();
+            PlayerInputControllersRegulator.Instance.DisablePlayerActions();
+            if(blockInventoryControl) PlayerInputControllersRegulator.Instance.DisableInventoryControls();
+            
+            Interactable targetInteractable;
+            if(_target != null)
+            {
+                _target.TryGetComponent(out targetInteractable);
+                targetInteractable.HideHint();
+                _target = null;
+            }
         }
         public void UnlockControl()
         {
-            _playerInputContoller.MovementEnable();
-            _playerActionsContoller.ActionsEnable();
-            _playerInventoryContoller.InventoryActionsEnable();
+            PlayerInputControllersRegulator.Instance.EnableMovement();
+            PlayerInputControllersRegulator.Instance.EnablePlayerActions();
+            PlayerInputControllersRegulator.Instance.EnableInventoryControls();
         }
     }
 }

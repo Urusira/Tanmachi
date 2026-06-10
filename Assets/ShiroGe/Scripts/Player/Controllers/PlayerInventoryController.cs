@@ -9,6 +9,8 @@ namespace ShiroGe.CharacterController
     {
         public PlayerControls PlayerControls { get; private set; }
 
+        public bool scrollLock;
+
         private void OnEnable()
         {
             PlayerControls = new PlayerControls();
@@ -137,7 +139,7 @@ namespace ShiroGe.CharacterController
 
         public void OnItemsScroll(InputAction.CallbackContext context)
         {
-            if(!context.performed) return;
+            if(!context.performed || scrollLock) return;
 
             float scroll = context.ReadValue<Vector2>().y;
             

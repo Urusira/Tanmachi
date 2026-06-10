@@ -16,6 +16,8 @@ namespace ShiroGe.Scripts.Quests
         [SerializeField] private GameObject questFailedObj;
         [SerializeField] private GameObject questCancelledObj;
         
+        [SerializeField] private bool dieAfterFinalize;
+        
         private TextMeshProUGUI _questTitleText;
         private TextMeshProUGUI _questDescriptionText;
         private TextMeshProUGUI _questTimerText;
@@ -26,51 +28,69 @@ namespace ShiroGe.Scripts.Quests
             _questDescriptionText =  questDescriptionObj.GetComponent<TextMeshProUGUI>();
             _questTimerText =   questTimerObj.GetComponent<TextMeshProUGUI>();
             
-            ResetQuest();
-            gameObject.SetActive(false);
+            if(!dieAfterFinalize)
+            {
+                _questTitleText.text = "";
+                _questDescriptionText.text = "";
+
+                gameObject.SetActive(false);
+            }
         }
 
         public void SetQuest(QuestOrderBase newQuest)
         {
             _questTitleText.text = newQuest.Title;
             _questDescriptionText.text = newQuest.Description;
+            
+            newQuest.OnCompleted += Completed;
+            newQuest.OnCancelled += Cancelled;
+            newQuest.OnFailed += Failed;
+            newQuest.OnRemainingTimeChanged += TimerUpdate;
+            
         }
 
-        public void ResetQuest()
+        public void ResetQuest(QuestOrderBase quest)
         {
             _questTitleText.text = "";
             _questDescriptionText.text = "";
+            
+            quest.OnCompleted -= Completed;
+            quest.OnCancelled -= Cancelled;
+            quest.OnFailed -= Failed;
+            quest.OnRemainingTimeChanged -= TimerUpdate;
         }
 
         public void TimerUpdate(float remainingTime)
         {
-            _questTimerText.text = remainingTime.ToString("F2");
+            _questTimerText.text = (remainingTime/60).ToString("F2");
         }
 
-        public void SuccessfulComplete(QuestOrderBase quest)
+        public void Completed(QuestOrderBase quest)
         {
             questSuccessfulCompleteObj.SetActive(true);
-            StartCoroutine(QuestFinalize(questSuccessfulCompleteObj));
+            StartCoroutine(QuestFinalize(questSuccessfulCompleteObj, quest));
         }
 
-        public void Failed(QuestOrderBase _)
+        public void Failed(QuestOrderBase quest)
         {
             questFailedObj.SetActive(true);
-            StartCoroutine(QuestFinalize(questFailedObj));
+            StartCoroutine(QuestFinalize(questFailedObj, quest));
         }
 
-        public void Cancelled(QuestOrderBase _)
+        public void Cancelled(QuestOrderBase quest)
         {
             questCancelledObj.SetActive(true);
-            StartCoroutine(QuestFinalize(questCancelledObj));
+            StartCoroutine(QuestFinalize(questCancelledObj, quest));
         }
 
-        private IEnumerator QuestFinalize(GameObject finalizePanel)
+        private IEnumerator QuestFinalize(GameObject finalizePanel, QuestOrderBase quest)
         {
-            ResetQuest();
+            ResetQuest(quest);
             yield return new WaitForSecondsRealtime(4f);
             finalizePanel.SetActive(false);
-            gameObject.SetActive(false);
+            
+            if(!dieAfterFinalize) gameObject.SetActive(false);
+            else Destroy(gameObject);
         }
     }
 }

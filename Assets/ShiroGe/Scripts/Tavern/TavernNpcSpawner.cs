@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ShiroGe.Scripts.NPC;
+using ShiroGe.Scripts.Utils;
 using ShiroGe.Scripts.World;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -33,43 +34,53 @@ namespace ShiroGe.Scripts.Tavern
         
         private NPCFabricator _npcFabricator;
 
-        private int _spawnTimerId = -1;
-        private int _lastSpawnTimerId = -1;
+        private RepeatedTimer _spawnTimer = null;
         
         private bool hasPlaceForCustomer = false;
         private bool hasFullFreePlace = false;
+
+        private bool _tavernOpened = true;
         
         private void Awake()
         {
             _npcFabricator = GetComponent<NPCFabricator>();
             SpawnerOn();
+            TavernController.Instance.OnTavernOpen += OnTavernOpenHandler;
+            TavernController.Instance.OnTavernClose += OnTavernCloseHandler;
+
+            bool successful = SpawnersManager.Instance.SpawnerRegister(this);
+            if(!successful) { print("Cannot register spawner in manager!" + gameObject + "\n" + gameObject.name); }
         }
 
         public void SpawnerOn()
         {
-            if (spawnOn || _spawnTimerId  != -1)
+            
+            if (spawnOn || _spawnTimer != null)
             {
-                Debug.Log($"You trying to start already active spawner, cancelling operation...\nspawnOn: {spawnOn}, _spawnTimerId: {_spawnTimerId}");
+                Debug.Log($"You trying to start already active spawner, cancelling operation...\nspawnOn: {spawnOn}, _spawnTimerId: {_spawnTimer}");
                 return;
             }
             
-            _spawnTimerId = TimerService.Instance.AddTimer(spawnIntervalSeconds, SpawnNpc, true, randomizedSpawn, randomIntervalMin, randomIntervalMax);
+            _spawnTimer = new RepeatedTimer(spawnIntervalSeconds, SpawnNpc, null);
+            _spawnTimer.Start();
             
             spawnOn = true;
+            Debug.Log($"SpawnerOn end\nspawnOn: {spawnOn}, _spawnTimerId: {_spawnTimer}");
         }
 
         public void SpawnerOff()
         {
-            if (!spawnOn || _spawnTimerId  == -1)
+            Debug.Log($"SpawnerOff start\nspawnOn: {spawnOn}, _spawnTimerId: {_spawnTimer}");
+            if (!spawnOn || _spawnTimer == null)
             {
-                Debug.Log($"You trying to stop already active spawner, cancelling operation...\nspawnOn: {spawnOn}, _spawnTimerId: {_spawnTimerId}");
+                Debug.Log($"You trying to stop already active spawner, cancelling operation...\nspawnOn: {spawnOn}, _spawnTimerId: {_spawnTimer}");
                 return;
             }
 
-            _lastSpawnTimerId = _spawnTimerId;
-            TimerService.Instance.RemoveTimer(_spawnTimerId);
-            _spawnTimerId = -1;
+            _spawnTimer.Stop();
+            _spawnTimer = null;
             spawnOn = false;
+            Debug.Log($"SpawnerOff end\nspawnOn: {spawnOn}, _spawnTimerId: {_spawnTimer}");
         }
 
         private void TavernTablesCheck()
@@ -94,11 +105,10 @@ namespace ShiroGe.Scripts.Tavern
         {
             if (!spawnOn)
             {
-                Debug.LogError($"Looped timer {_lastSpawnTimerId} dont destroyed!");
-                TimerService.Instance.RemoveTimer(_lastSpawnTimerId);
+                Debug.LogWarning($"Looped timer not deleted yet, if this once warning after spawner disabling - ingore it.");
                 return;
             }
-            if (spawnOn && _spawnedNPCs.Count-1 >= spawnMaxAmount)
+            if (spawnOn && _spawnedNPCs.Count >= spawnMaxAmount)
             {
                 SpawnerOff();
                 return;
@@ -119,6 +129,8 @@ namespace ShiroGe.Scripts.Tavern
                         Random.Range(18, 100), 
                         Random.value <= lonerSpawnChance)
                     );
+                
+                spawnedNpc.SetBaseGoingTarget(spawnedEntityTargetGoing.transform.position);
             }
             else
             {
@@ -136,7 +148,6 @@ namespace ShiroGe.Scripts.Tavern
 
             _spawnedNPCs.Add(spawnedNpc);
             spawnedNpc.OnNpcDestroyed += OnNpcDestroyedHandler;
-            
             SetNpcStrategy(spawnedNpc);
         }
 
@@ -165,6 +176,11 @@ namespace ShiroGe.Scripts.Tavern
 
         private void SetNpcStrategy(NPCController spawnedNpc)
         {
+            if (!_tavernOpened)
+            {
+                return;
+            }
+            
             TavernTablesCheck();
             
             if(Random.value <= baseEnterChance)
@@ -260,10 +276,25 @@ namespace ShiroGe.Scripts.Tavern
             _spawnedNPCs.Remove(npc);
             npc.OnNpcDestroyed -= OnNpcDestroyedHandler;
     
-            if (!spawnOn && _spawnedNPCs.Count-1 < spawnMaxAmount)
+            if (!spawnOn && _spawnedNPCs.Count < spawnMaxAmount)
             {
                 SpawnerOn();
             }
+        }
+
+        private void OnTavernOpenHandler()
+        {
+            _tavernOpened = true;
+        }
+        
+        private void OnTavernCloseHandler()
+        {
+            foreach (NPCController npc in _spawnedNPCs)
+            {
+                npc.CancelGoingToTavern();
+            }
+
+            _tavernOpened = false;
         }
     }
 }

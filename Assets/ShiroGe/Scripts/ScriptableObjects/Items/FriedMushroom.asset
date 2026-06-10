@@ -21,5 +21,7 @@ MonoBehaviour:
     \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043F\u0435\u0447\u043A\u0430."
   icon: {fileID: 21300000, guid: ebc0cf0bfe518a7499fd3bec300f4aa5, type: 3}
   maxStackSize: 64
-  itemPrefab: {fileID: 5984911598340929997, guid: 7a0db60aa224eeb48a65c9bfca3d1d22, type: 3}
-  handItemPrefab: {fileID: 5984911598340929997, guid: 2f18b6015b29e204e82b8ab47cbe8bba, type: 3}
+  itemWorldPrefab: {fileID: 5984911598340929997, guid: 7a0db60aa224eeb48a65c9bfca3d1d22, type: 3}
+  itemPreviewPrefab: {fileID: 0}
+  itemHandPrefab: {fileID: 5984911598340929997, guid: 2f18b6015b29e204e82b8ab47cbe8bba, type: 3}
+  repice: {fileID: 11400000, guid: b6873969143d01d44b4b3fcecd94f504, type: 2}
