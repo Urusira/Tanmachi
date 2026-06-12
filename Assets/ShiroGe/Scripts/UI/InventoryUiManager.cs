@@ -201,7 +201,7 @@ namespace ShiroGe.Scripts.UI
         {
             if(!IsOpen) return;
             
-            InventorySlot slot = InventoryManager.Instance.DragAndDrop(half: true);
+            InventorySlot slot = InventoryManager.Instance.DragAndDrop(alternateBehaviour: true);
             
             if (slot != null)
             {

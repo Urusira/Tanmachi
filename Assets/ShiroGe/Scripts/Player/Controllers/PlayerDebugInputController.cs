@@ -9,14 +9,7 @@ namespace ShiroGe.CharacterController
     public class PlayerDebugInputController : MonoBehaviour,  PlayerControls.IDebugFunctionsActions
     {
         [SerializeField] private float teleportMaxDistance;
-        [SerializeField] private LayerMask groundLayerMask;
-        private Camera playerCamera;
         public PlayerControls PlayerControls { get; private set; }
-
-        private void Start()
-        {
-            playerCamera = Camera.main;
-        }
 
         private void OnEnable()
         {
@@ -36,17 +29,11 @@ namespace ShiroGe.CharacterController
         public void OnTeleport(InputAction.CallbackContext context)
         {
             if(!context.performed) return;
+
+            Vector3 playerViewPoint = PlayerInstance.Instance.GetPlayerGroundedPointView();
             
-            if(playerCamera != null && playerCamera.isActiveAndEnabled)
-            {
-                RaycastHit hit;
-                if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward.normalized,
-                        out hit, teleportMaxDistance, groundLayerMask))
-                {
-                    Debug.unityLogger.Log($"Teleport to {hit.point}");
-                    gameObject.transform.position = hit.point;
-                }
-            }
+            Debug.unityLogger.Log($"Teleport to {playerViewPoint}");
+            PlayerInstance.Instance.TeleportPlayer(playerViewPoint);
         }
     }
 }

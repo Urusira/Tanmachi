@@ -24,7 +24,7 @@ namespace ShiroGe.Scripts.Quests
         public float TimeLimit { get; private set; } = 0f;
         
         
-        public float rewardReputation { get; private set; } = 0.01f;
+        public float rewardReputation { get; private set; } = 0.1f;
         public int rewardCash { get; private set; } = 0;
         public HashSet<ItemWithAmount> rewardItems { get; private set; } = new  HashSet<ItemWithAmount>();
         

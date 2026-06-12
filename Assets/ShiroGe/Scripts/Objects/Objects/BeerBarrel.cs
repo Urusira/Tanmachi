@@ -41,6 +41,6 @@ public class BeerBarrel : Station
         {
             return $"{name}\nF чтобы налить";
         }
-        return $"{name}\nДля использования вам нужна пустая кружка";
+        else return $"{name}\nДля использования вам нужна пустая кружка";
     }
 }

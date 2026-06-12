@@ -1,11 +1,8 @@
-﻿namespace ShiroGe.Scripts.Items
+﻿namespace ShiroGe.Scripts.Enums
 {
     public enum ItemTypeEnum
     {
         DEFAULT,
-        HEADWEAR,
-        BODYWEAR,
-        LEGSWEAR,
         WEAPON,
         TOOL,
         CONSUMABLE,

@@ -186,12 +186,12 @@ namespace ShiroGe.Scripts.NPC
             {
                 return HungryInTavernNeutral;
             }
-
+/*
             if (InTavern && InTavernStandingNeutral != null)
             {
                 return InTavernStandingNeutral;
             }
-
+*/
             return DefaultNeutralDialog;
         }
 
@@ -288,6 +288,24 @@ namespace ShiroGe.Scripts.NPC
             quest.OnFailed += OrderFail;
             quest.OnCancelled += OrderCancel;
             quest.OnCompleted += OrderComplete;
+        }
+
+        public void LockMovment(Vector3 lookingTarget)
+        {
+            if (Seating || Eating) return;
+            
+            if(lookingTarget != Vector3.zero)
+                _navigator.FixLookAt(lookingTarget);
+            
+            _navigator.LocomotionBlock();
+        }
+        public void UnockMovment()
+        {
+            if (Seating || Eating) return;
+            
+            _navigator.UnfixLook();
+            
+            _navigator.LocomotionUnblock();
         }
     }
 }

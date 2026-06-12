@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.Enums;
 using ShiroGe.Scripts.Inventory;
 using ShiroGe.Scripts.Items;
 using ShiroGe.Scripts.NPC;

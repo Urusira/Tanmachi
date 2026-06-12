@@ -191,8 +191,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Tavern.SitPlace
   playerCanInteract: 0
   npcCanInteract: 1
+  name: 
   <PlacedEntity>k__BackingField: {fileID: 0}
-  <SittingOffset>k__BackingField: {x: -0.1, y: -0.31, z: -0.09}
+  <SittingOffset>k__BackingField: {x: 0, y: -0.32, z: 0.05}
   leftLegAnchor: {fileID: 3331571394318058314}
   rightLegAnchor: {fileID: 1314335178099085823}
   foodAnchor: {fileID: 5303380682048037150}
@@ -418,8 +419,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Tavern.SitPlace
   playerCanInteract: 0
   npcCanInteract: 1
+  name: 
   <PlacedEntity>k__BackingField: {fileID: 0}
-  <SittingOffset>k__BackingField: {x: -0.1, y: -0.31, z: -0.09}
+  <SittingOffset>k__BackingField: {x: 0, y: -0.32, z: 0.05}
   leftLegAnchor: {fileID: 6744912549450342518}
   rightLegAnchor: {fileID: 7475470071545619645}
   foodAnchor: {fileID: 7153503347242698330}
@@ -614,8 +616,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Tavern.SitPlace
   playerCanInteract: 0
   npcCanInteract: 1
+  name: 
   <PlacedEntity>k__BackingField: {fileID: 0}
-  <SittingOffset>k__BackingField: {x: -0.1, y: -0.31, z: -0.09}
+  <SittingOffset>k__BackingField: {x: 0, y: -0.32, z: 0.05}
   leftLegAnchor: {fileID: 3936084774082443900}
   rightLegAnchor: {fileID: 8333469076996664299}
   foodAnchor: {fileID: 5366593772877151519}
@@ -1020,8 +1023,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Tavern.SitPlace
   playerCanInteract: 0
   npcCanInteract: 1
+  name: 
   <PlacedEntity>k__BackingField: {fileID: 0}
-  <SittingOffset>k__BackingField: {x: -0.1, y: -0.31, z: -0.09}
+  <SittingOffset>k__BackingField: {x: 0, y: -0.32, z: 0.05}
   leftLegAnchor: {fileID: 7636773777795887247}
   rightLegAnchor: {fileID: 1853165556546601264}
   foodAnchor: {fileID: 3845109290808460481}

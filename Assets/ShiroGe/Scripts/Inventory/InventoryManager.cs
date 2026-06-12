@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using JetBrains.Annotations;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts;
+using ShiroGe.Scripts.Enums;
 using ShiroGe.Scripts.Items;
 using ShiroGe.Scripts.Quests;
 using ShiroGe.Scripts.UI;
@@ -23,7 +25,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private GameObject inventorySlotParent;
     [SerializeField] private GameObject armorSlotsObj;
 
-    [SerializeField] private InventoryDragSlot dragSlot;
+    [SerializeField] private InventorySlot dragSlot;
 
     [SerializeField] private Vector2 dragSlotOffset = new Vector2(90, -90);
     
@@ -91,6 +93,7 @@ public class InventoryManager : MonoBehaviour
     
     private int AddItem(ItemSO itemToAdd, int amount, List<InventorySlot> targetInventoryZone)
     {
+        bool quickTransfer = _quickTransfer;
         int remaining = amount;
 
         foreach (InventorySlot slot in targetInventoryZone)
@@ -122,7 +125,7 @@ public class InventoryManager : MonoBehaviour
         }
 
         int actuallyAdded = amount - remaining;
-        if (actuallyAdded > 0 && !_quickTransfer)
+        if (actuallyAdded > 0 && !quickTransfer)
         {
             if (_inventoryAllItems.ContainsKey(itemToAdd)) _inventoryAllItems[itemToAdd] += actuallyAdded;
             else _inventoryAllItems.Add(itemToAdd, actuallyAdded);
@@ -172,21 +175,22 @@ public class InventoryManager : MonoBehaviour
         }
     
         _inventoryAllItems[item] -= totalRemoved;
+        if(_inventoryAllItems[item] <= 0) _inventoryAllItems.Remove(item);
         
         ItemRedraw();
     
         return totalRemoved;
     }
 
-    public InventorySlot DragAndDrop(bool half = false)
+    public InventorySlot DragAndDrop(bool alternateBehaviour = false)
     {
         if (!IsDragging)
         {
-            return StartDrag(half);
+            return StartDrag(alternateBehaviour);
         }
         else
         {
-            return EndDrag();
+            return EndDrag(alternateBehaviour);
         }
     }
     
@@ -205,32 +209,51 @@ public class InventoryManager : MonoBehaviour
         {
             if (HoveredSlot != null)
             {
-                ItemSO tempItem = HoveredSlot.GetItem();
-                int tempAmount = HoveredSlot.GetItemAmount();
-
-
+                
                 if (_armorSlots.Contains(HoveredSlot))
                 {
-                    AddItem(tempItem, tempAmount, _allSlots);
-                }
-                else if (_hotbarSlots.Contains(HoveredSlot))
-                {
-                    AddItem(tempItem, tempAmount, _inventorySlots);
-                }
-                else
-                {
-                    AddItem(tempItem, tempAmount, _hotbarSlots);
-                }
+                    AddItem(HoveredSlot.GetItem(), HoveredSlot.GetItemAmount(), _allSlots);
 
-                if(HoveredSlot.specialType != ItemTypeEnum.DEFAULT)
-                    PlayerEquipController.Instance.UnequipItem(HoveredSlot.GetItem());
+                    if(HoveredSlot.wearType != WearableType.NonWearable)
+                        PlayerEquipController.Instance.UnequipItem(HoveredSlot.GetItem());
+                    else
+                        throw new WarningException(
+                            "Inventory Controller: you try take off wearable item from non wearable slot, wtf are you doing!?");
+                
+                    HoveredSlot.ClearSlot();
+                
+                    OnInventoryChanged?.Invoke(this);
+                }
+                else if (_hotbarSlots.Contains(HoveredSlot) || _inventorySlots.Contains(HoveredSlot))
+                {
+                    WearableType type = HoveredSlot.GetItem().itemWearType;
+                    if (type != WearableType.NonWearable)
+                    {
+                        foreach (InventorySlot armorSlot in _armorSlots)
+                        {
+                            if(!armorSlot.HasItem() && armorSlot.wearType == type)
+                            {
+                                SlotSetter(HoveredSlot.GetItem(), armorSlot, 1);
+                                HoveredSlot.ClearSlot();
+                                return HoveredSlot;
+                            }
+                        }
+                    }
+                        
+                    if (_hotbarSlots.Contains(HoveredSlot))
+                    {
+                        AddItem(HoveredSlot.GetItem(), HoveredSlot.GetItemAmount(), _inventorySlots);
+                    }
+                    else
+                    {
+                        AddItem(HoveredSlot.GetItem(), HoveredSlot.GetItemAmount(), _hotbarSlots);
+                    }
+                }
                 
                 HoveredSlot.ClearSlot();
-                
-                OnInventoryChanged?.Invoke(this);
-                return HoveredSlot;
             }
-            else return null;
+            
+            return HoveredSlot;
         }
         
         if (HoveredSlot != null && HoveredSlot.HasItem())
@@ -263,7 +286,7 @@ public class InventoryManager : MonoBehaviour
             _inventoryAllItems[dragSlot.GetItem()] -= dragSlot.GetItemAmount();
             if(_inventoryAllItems[dragSlot.GetItem()] == 0) _inventoryAllItems.Remove(dragSlot.GetItem());
             
-            if(HoveredSlot.specialType != ItemTypeEnum.DEFAULT)
+            if(HoveredSlot.wearType != WearableType.NonWearable)
                 PlayerEquipController.Instance.UnequipItem(dragSlot.GetItem());
         }
         else
@@ -273,15 +296,14 @@ public class InventoryManager : MonoBehaviour
         
         OnInventoryChanged?.Invoke(this);
         ItemRedraw();
-
         
         return HoveredSlot;
     }
 
     [CanBeNull]
-    private InventorySlot EndDrag()
+    private InventorySlot EndDrag(bool alternateBehaviour)
     {
-        HandleDrop(from: dragSlot, to: HoveredSlot);
+        HandleDrop(from: dragSlot, to: HoveredSlot, alternateBehaviour);
 
         if(!dragSlot.HasItem())
         {
@@ -291,25 +313,34 @@ public class InventoryManager : MonoBehaviour
         }
         
         OnInventoryChanged?.Invoke(this);
-
-        
-        if (HoveredSlot != null && HoveredSlot.HasItem())
-        {
-            ItemTypeEnum type = HoveredSlot.GetItem().itemType;
-            if (type != ItemTypeEnum.DEFAULT && type == HoveredSlot.specialType)
-            {
-                PlayerEquipController.Instance.EquipItem(HoveredSlot.GetItem());
-            }
-            
-            return HoveredSlot;
-        }
         
         return null;
     }
 
-    private void HandleDrop(InventoryDragSlot from, InventorySlot to)
+    private bool SlotSetter(ItemSO item, InventorySlot to, int amount)
     {
-        if (to == null) return;
+        to.SetItem(item, amount);
+        
+        if(to.GetItemAmount() <= 0) to.ClearSlot();
+        
+        if (to != null && to.HasItem())
+        {
+            WearableType typeWear = to.GetItem().itemWearType;
+            if (typeWear != WearableType.NonWearable && typeWear == to.wearType)
+            {
+                PlayerEquipController.Instance.EquipItem(to.GetItem());
+            }
+        }
+        
+        return true;
+    }
+
+    private void HandleDrop(InventorySlot from, InventorySlot to, bool alternateBehaviour = false)
+    {
+        if (to == null) {
+            InnerDropItem(from, !alternateBehaviour ? from.GetItemAmount() : 1);
+            return;
+        }
 
         if (to.specialType != ItemTypeEnum.DEFAULT && from.GetItem().itemType != to.specialType) return;
 
@@ -320,11 +351,12 @@ public class InventoryManager : MonoBehaviour
 
             if (space > 0)
             {
-                int move = Mathf.Min(space, from.GetItemAmount());
-                
-                to.SetItem(to.GetItem(), to.GetItemAmount() + move);
-                from.SetItem(from.GetItem(), from.GetItemAmount() - move);
+                int move = 1;
+                if(!alternateBehaviour) move = Mathf.Min(space, from.GetItemAmount());
 
+                SlotSetter(to.GetItem(), to, to.GetItemAmount() + move);
+                SlotSetter(from.GetItem(), from, from.GetItemAmount() - move);
+                
                 if (from.GetItemAmount() <= 0)
                 {
                     from.ClearSlot();
@@ -342,11 +374,10 @@ public class InventoryManager : MonoBehaviour
 
         if (to.HasItem())
         {
-            ItemSO tempItem = to.GetItem();
-            int tempAmount = to.GetItemAmount();
+            ItemWithAmount tempItem = new ItemWithAmount(to.GetItem(), to.GetItemAmount());
             
-            to.SetItem(from.GetItem(), from.GetItemAmount());
-            from.SetItem(tempItem, tempAmount);
+            SlotSetter(from.GetItem(), to, from.GetItemAmount());
+            SlotSetter(tempItem.Item, from, tempItem.Amount);
 
             if (_allSlots.Contains(to))
             {
@@ -359,9 +390,17 @@ public class InventoryManager : MonoBehaviour
 
             return;
         }
-        
-        to.SetItem(from.GetItem(), from.GetItemAmount());
-        from.ClearSlot();
+
+        if(alternateBehaviour)
+        {
+            SlotSetter(from.GetItem(), to, 1);
+            SlotSetter(from.GetItem(), from, from.GetItemAmount()-1);
+        }
+        else
+        {
+            SlotSetter(from.GetItem(), to, from.GetItemAmount());
+            from.ClearSlot();
+        }
 
         if ( _allSlots.Contains(to))
         {
@@ -415,20 +454,50 @@ public class InventoryManager : MonoBehaviour
         _quickTransfer = false;
     }
 
-    public void DropItem()
+    public void InnerDropItem(InventorySlot fromDrop, int amount)
     {
-        InventorySlot selectedSlot = _hotbarSlots[SelectedHotbarSlot];
-        
-        if(selectedSlot.HasItem())
-        {
-            WorldSpawner.Instance.PlayerDrop(selectedSlot.GetItem().itemWorldPrefab);
-        
-            selectedSlot.RemoveAmount(1);
-            
-            ItemRedraw();
-            
-            OnInventoryChanged?.Invoke(this);
+        ItemSO droppedItem = fromDrop.GetItem();
+                
+        fromDrop.RemoveAmount(amount);
+
+        WorldSpawner.Instance.PlayerDrop(droppedItem.itemWorldPrefab, PlayerStats.Instance.DropForce, false, amount);
+    }
+
+    public GameObject DropItem(bool dropFromInventory)
+    {
+        if(!dropFromInventory){
+            InventorySlot selectedSlot = _hotbarSlots[SelectedHotbarSlot];
+
+            if (selectedSlot.HasItem())
+            {
+                ItemSO droppedItem = selectedSlot.GetItem();
+                
+                selectedSlot.RemoveAmount(1);
+
+                ItemRedraw();
+
+                OnInventoryChanged?.Invoke(this);
+
+                return droppedItem.itemWorldPrefab;
+            }
         }
+        else
+        {
+            if (HasHoveredSlot() && HoveredSlot.HasItem())
+            {
+                ItemSO droppedItem = HoveredSlot.GetItem();
+                
+                HoveredSlot.RemoveAmount(1);
+                
+                ItemRedraw();
+
+                OnInventoryChanged?.Invoke(this);
+                
+                return droppedItem.itemWorldPrefab;
+            }
+        }
+
+        return null;
     }
 
     public void SetQuickTransfer()

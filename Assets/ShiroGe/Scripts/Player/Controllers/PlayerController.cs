@@ -2,6 +2,7 @@
 using ShiroGe.Scripts;
 using ShiroGe.Scripts.Inventory;
 using ShiroGe.Scripts.Objects;
+using ShiroGe.Scripts.World;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
@@ -47,21 +48,11 @@ namespace ShiroGe.CharacterController
         [Header("World")]
         public float gravity = 25f;
         
-        [Header("Environment")]
-        [SerializeField] private LayerMask groundLayers;
-        [SerializeField] private LayerMask interactiveLayerMask;
-        
         [Header("Rofl")]
         public bool slowedStrafe = false;
         public bool superJumps = false;
         
-        [Header("Interactions")]
-        public float interactionDistance = 3f;
-        
         private PlayerInputController _playerInputContoller;
-        private PlayerActionsController _playerActionsContoller;
-        private PlayerIngameUiController _playerIngameUiController;
-        private PlayerInventoryController _playerInventoryContoller;
         private PlayerState _playerState;
         
         private Vector2 _cameraRotation = Vector2.zero;
@@ -69,7 +60,6 @@ namespace ShiroGe.CharacterController
 
         private bool _isRotatingClockwise = false;
         private bool _jumpedLastFrame = false;
-        private bool _interactLastFrame = false;
         
         private float _rotatingToTargetTimer = 0f;
         private float _verticalVelocity = 0f;
@@ -77,12 +67,6 @@ namespace ShiroGe.CharacterController
         private float _antiBumpSpeed;
         
         private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
-        
-        private GameObject _target;
-        
-        public Vector3 GlobalRaycastHit { get; private set; }
-        public Vector3 RawView { get; private set; }
-        
         #endregion
 
         
@@ -90,9 +74,6 @@ namespace ShiroGe.CharacterController
         private void Awake()
         {
             _playerInputContoller = GetComponent<PlayerInputController>();
-            _playerActionsContoller = GetComponent<PlayerActionsController>();
-            _playerIngameUiController = GetComponent<PlayerIngameUiController>();
-            _playerInventoryContoller = GetComponent<PlayerInventoryController>();
             _playerState = GetComponent<PlayerState>();
             
 
@@ -103,8 +84,7 @@ namespace ShiroGe.CharacterController
         
         private void Start()
         {
-           
-            PlayerInstance.Instance.PlayerRegister(this, gameObject.GetComponent<CashManager>());
+            PlayerInstance.Instance.PlayerRegister(this);
             
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -124,7 +104,6 @@ namespace ShiroGe.CharacterController
             UpdateMovementState();
             HandleVerticalMovement();
             HandleLateralMovement();
-            PointerScan();
         }
 
         private void UpdateMovementState()
@@ -223,7 +202,7 @@ namespace ShiroGe.CharacterController
 
         private Vector3 HandleSteepWalls(Vector3 velocity)
         {
-            Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, groundLayers);
+            Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, LayerManager.Instance.CollisiveLayers);
             float angle = Vector3.Angle(normal, Vector3.up);
             bool validAngle = angle <= _characterController.slopeLimit;
 
@@ -234,62 +213,6 @@ namespace ShiroGe.CharacterController
             
             return velocity;
         }
-        
-        private void PointerScan()
-        {
-            if (_interactLastFrame && !_playerActionsContoller.InteractInput)
-            {
-                _interactLastFrame = false;
-            }
-            
-            RawView = playerCamera.transform.position + playerCamera.transform.forward * interactionDistance;
-            
-            RaycastHit hit;
-            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward.normalized, out hit,
-                    interactionDistance, interactiveLayerMask))
-            {
-                //TODO: Нет проверки на наличие компонента и существование таргета, создаёт нулреференсные ошибки
-                if (_target != null && !_target.Equals(hit.collider.gameObject))
-                    _target.GetComponent<Interactable>().HideHint();
-
-                _target = hit.collider.gameObject;
-                String hintText = _target?.GetComponent<Interactable>().ShowHint();
-                GuiManager.Instance.HighlightPointer(hintText);
-            }
-            else if (_target != null)
-            {
-                _target?.GetComponent<Interactable>().HideHint();
-                _target = null;
-                GuiManager.Instance.ResetPointer();
-            }
-            
-            if (_target != null && !_interactLastFrame && _playerActionsContoller.InteractInput)
-            {
-                _interactLastFrame = true;
-                PlayerActionsState typeAction = _target.GetComponent<Interactable>().PlayerInteract(gameObject);
-                _playerState.SetPlayerActionsState(typeAction);
-                switch (typeAction)
-                {
-                    case PlayerActionsState.Default:
-                    {
-                        _playerActionsContoller.SetInteractPressedFalse();
-                        break;
-                    }
-                }
-            }
-            
-            RaycastHit hit2;
-            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward.normalized, out hit2,
-                    interactionDistance, groundLayers))
-            {
-                GlobalRaycastHit = hit2.point;
-            }
-            else
-            {
-                GlobalRaycastHit = Vector3.zero;
-            }
-        }
-
         #endregion
 
         #region Lateupdate Logic
@@ -368,14 +291,14 @@ namespace ShiroGe.CharacterController
             
             Vector3 spherePosition = new Vector3(transform.position.x,
                 transform.position.y - _characterController.radius, transform.position.z);
-            bool grounded = Physics.CheckSphere(spherePosition, _characterController.radius, groundLayers, QueryTriggerInteraction.Ignore);
+            bool grounded = Physics.CheckSphere(spherePosition, _characterController.radius, LayerManager.Instance.CollisiveLayers, QueryTriggerInteraction.Ignore);
 
             return grounded /*& validAngle*/; // TODO: Закоменченно для демки. Скатывание при заходе шагом на наклонку, ломает подъём по лестнице
         }
 
         private bool IsGroundedWhileAirborne()
         {
-            Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, groundLayers);
+            Vector3 normal = PlayerControllerUtils.GetNormalWithSphereCast(_characterController, LayerManager.Instance.CollisiveLayers);
             float angle = Vector3.Angle(normal, Vector3.up);
             bool validAngle = angle <= _characterController.slopeLimit;
             
@@ -397,14 +320,6 @@ namespace ShiroGe.CharacterController
             PlayerInputControllersRegulator.Instance.DisableMovement();
             PlayerInputControllersRegulator.Instance.DisablePlayerActions();
             if(blockInventoryControl) PlayerInputControllersRegulator.Instance.DisableInventoryControls();
-            
-            Interactable targetInteractable;
-            if(_target != null)
-            {
-                _target.TryGetComponent(out targetInteractable);
-                targetInteractable.HideHint();
-                _target = null;
-            }
         }
         public void UnlockControl()
         {

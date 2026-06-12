@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ShiroGe.Scripts.Enums;
 using ShiroGe.Scripts.Items;
 using UnityEngine;
 
@@ -20,8 +21,6 @@ namespace ShiroGe.CharacterController
         [SerializeField] private GameObject playerAvatarHair;
         
         [SerializeField] private ObjectPlacer objectPlacer;
-        
-        //private readonly Dictionary<ItemTypeEnum, GameObject> _equppedEquipment = new Dictionary<ItemTypeEnum, GameObject>();
         
         private bool hasRHEqupped = false;
         private GameObject RHEquppedObj;
@@ -48,145 +47,164 @@ namespace ShiroGe.CharacterController
                 Destroy(gameObject);
                 return;
             }
-        
-            //DontDestroyOnLoad(gameObject);
 
             Instance = this;
         }
 
         public void EquipItem(ItemSO item)
         {
-            ItemTypeEnum type = ItemTypeEnum.DEFAULT;
-            GameObject itemEquppedPrefab;
+            //ItemTypeEnum type = ItemTypeEnum.DEFAULT;
+            WearableType wearingType = WearableType.NonWearable;
             
             if(item != null)
             {
-                type = item.itemType;
-                itemEquppedPrefab = item.itemHandPrefab;
+                //type = item.itemType;
+                wearingType = item.itemWearType;
             }
             
             //TODO: Перейти на кешированный массив. Доработать логику так, чтобы источником истины был массив. Пока что заглушка.
-            //_equppedEquipment[type] = itemEquppedPrefab;
-            
-            switch (type)
+
+            if (wearingType != WearableType.NonWearable)
             {
-                case ItemTypeEnum.DEFAULT:
+                switch (wearingType)
                 {
-                    UnequipRightHand();
-                    handlingItemType = item.itemType;
-                    if(item != null) EquipRightHand(item);
-                    break;
-                }
-                case ItemTypeEnum.HEADWEAR:
-                {
-                    UnequipHead(item);
-                    if(item != null) EquipHead(item);
-                    break;
-                }
-                case ItemTypeEnum.BODYWEAR:
-                {
-                    UnequipBody(item);
-                    if(item != null) EquipBody(item);
-                    break;
-                }
-                case ItemTypeEnum.LEGSWEAR:
-                {
-                    UnequipLegs(item);
-                    if(item != null) EquipLegs(item);
-                    break;
-                }
-                case ItemTypeEnum.WEAPON:
-                {
-                    UnequipRightHand();
-                    handlingItemType = item.itemType;
-                    if(item != null) EquipRightHand(item);
-                    break;
-                }
-                case ItemTypeEnum.TOOL:
-                {
-                    UnequipRightHand();
-                    handlingItemType = item.itemType;
-                    if(item != null) EquipRightHand(item);
-                    break;
-                }
-                case ItemTypeEnum.CONSUMABLE:
-                {
-                    UnequipRightHand();
-                    handlingItemType = item.itemType;
-                    if(item != null) EquipRightHand(item);
-                    break;
-                }
-                case ItemTypeEnum.PLACEABLE:
-                {
-                    UnequipRightHand();
-                    handlingItemType = item.itemType;
-                    if(item != null)
+                    case WearableType.Headwear:
                     {
-                        EquipRightHand(item);
-                        objectPlacer.ObjectSet(item.itemWorldPrefab, item.itemPreviewPrefab, item);
-                        objectPlacer.EnterPlacementMode();
+                        UnequipHead(item);
+                        if(item != null) EquipHead(item);
+                        break;
                     }
-                    break;
+                    case WearableType.Bodywear:
+                    {
+                        UnequipBody(item);
+                        if(item != null) EquipBody(item);
+                        break;
+                    }
+                    case WearableType.Legswear:
+                    {
+                        UnequipLegs(item);
+                        if(item != null) EquipLegs(item);
+                        break;
+                    }
                 }
             }
+            /*else
+            {
+                switch (type)
+                {
+                    case ItemTypeEnum.DEFAULT:
+                    {
+                        UnequipRightHand();
+                        handlingItemType = item.itemType;
+                        if (item != null) EquipRightHand(item);
+                        break;
+                    }
+                    case ItemTypeEnum.WEAPON:
+                    {
+                        UnequipRightHand();
+                        handlingItemType = item.itemType;
+                        if (item != null) EquipRightHand(item);
+                        break;
+                    }
+                    case ItemTypeEnum.TOOL:
+                    {
+                        UnequipRightHand();
+                        handlingItemType = item.itemType;
+                        if (item != null) EquipRightHand(item);
+                        break;
+                    }
+                    case ItemTypeEnum.CONSUMABLE:
+                    {
+                        UnequipRightHand();
+                        handlingItemType = item.itemType;
+                        if (item != null) EquipRightHand(item);
+                        break;
+                    }
+                    case ItemTypeEnum.PLACEABLE:
+                    {
+                        UnequipRightHand();
+                        handlingItemType = item.itemType;
+                        if (item != null)
+                        {
+                            EquipRightHand(item);
+                            objectPlacer.ObjectSet(item.placeableBuildPrefab, item.itemPreviewPrefab, item);
+                            objectPlacer.EnterPlacementMode();
+                        }
+
+                        break;
+                    }
+                }
+            }*/
         }
         
         public void UnequipItem(ItemSO item)
         {
-            ItemTypeEnum type = ItemTypeEnum.DEFAULT;
+            //ItemTypeEnum type = ItemTypeEnum.DEFAULT;
+            WearableType wearingType = WearableType.NonWearable;
             
             if(item != null)
             {
-                type = item.itemType;
+                //type = item.itemType;
+                wearingType = item.itemWearType;
             }
-            
-            switch (type)
+
+            if(wearingType != WearableType.NonWearable)
             {
-                case ItemTypeEnum.DEFAULT:
+                switch (wearingType)
                 {
-                    UnequipRightHand();
-                    break;
-                }
-                case ItemTypeEnum.HEADWEAR:
-                {
-                    UnequipHead(item);
-                    break;
-                }
-                case ItemTypeEnum.BODYWEAR:
-                {
-                    UnequipBody(item);
-                    break;
-                }
-                case ItemTypeEnum.LEGSWEAR:
-                {
-                    UnequipLegs(item);
-                    break;
-                }
-                case ItemTypeEnum.WEAPON:
-                {
-                    UnequipRightHand();
-                    break;
-                }
-                case ItemTypeEnum.TOOL:
-                {
-                    UnequipRightHand();
-                    break;
-                }
-                case ItemTypeEnum.CONSUMABLE:
-                {
-                    UnequipRightHand();
-                    break;
-                }
-                case ItemTypeEnum.PLACEABLE:
-                {
-                    UnequipRightHand();
-                    if(item != null)
+                    case WearableType.Headwear:
                     {
-                        objectPlacer.ExitPlacementMode();
+                        UnequipHead(item);
+                        break;
                     }
-                    break;
+                    case WearableType.Bodywear:
+                    {
+                        UnequipBody(item);
+                        break;
+                    }
+                    case WearableType.Legswear:
+                    {
+                        UnequipLegs(item);
+                        break;
+                    }
                 }
             }
+            /*else
+            {
+                switch (type)
+                {
+                    case ItemTypeEnum.DEFAULT:
+                    {
+                        UnequipRightHand();
+                        break;
+                    }
+                    case ItemTypeEnum.WEAPON:
+                    {
+                        UnequipRightHand();
+                        break;
+                    }
+                    case ItemTypeEnum.TOOL:
+                    {
+                        UnequipRightHand();
+                        break;
+                    }
+                    case ItemTypeEnum.CONSUMABLE:
+                    {
+                        UnequipRightHand();
+                        break;
+                    }
+                    case ItemTypeEnum.PLACEABLE:
+                    {
+                        UnequipRightHand();
+                        if (item != null)
+                        {
+                            objectPlacer.ExitPlacementMode();
+                        }
+
+                        break;
+                    }
+                }
+            }*/
         }
 
         public void TakeInHand(ItemSO item)
@@ -201,7 +219,7 @@ namespace ShiroGe.CharacterController
                 
                 if (item.itemType == ItemTypeEnum.PLACEABLE)
                 {
-                    objectPlacer.ObjectSet(item.itemWorldPrefab, item.itemPreviewPrefab, item);
+                    objectPlacer.ObjectSet(item.placeableBuildPrefab, item.itemPreviewPrefab, item);
                     objectPlacer.EnterPlacementMode();
                 }
             }

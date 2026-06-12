@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ShiroGe.Scripts.Enums;
+using UnityEngine;
 
 namespace ShiroGe.Scripts.Items
 {

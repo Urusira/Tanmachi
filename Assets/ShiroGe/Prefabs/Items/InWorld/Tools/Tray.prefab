@@ -280,8 +280,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7294052036775237728}
   - component: {fileID: 3961271556815140963}
-  - component: {fileID: 7651538023260130487}
   - component: {fileID: 4698670565310235758}
+  - component: {fileID: 7294301753982903889}
   m_Layer: 7
   m_Name: Tray
   m_TagString: Untagged
@@ -328,7 +328,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.55, y: 0.06, z: 0.54}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &7651538023260130487
+--- !u!114 &4698670565310235758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6615651912010513265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cecd930192b44a9a4cba3451dff4a32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.PickupbleItem
+  playerCanInteract: 1
+  npcCanInteract: 0
+  name: 
+  amount: 1
+  scriptableItem: {fileID: 11400000, guid: d12dae9f1de26f343af9df79b3e8c4ac, type: 2}
+--- !u!54 &7294301753982903889
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -350,22 +367,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &4698670565310235758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6615651912010513265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cecd930192b44a9a4cba3451dff4a32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.PickupbleItem
-  amount: 1
-  scriptableItem: {fileID: 11400000, guid: d12dae9f1de26f343af9df79b3e8c4ac, type: 2}
+  m_CollisionDetection: 3

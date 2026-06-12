@@ -96,7 +96,9 @@ public class DialogManager : MonoBehaviour
         
         CurrTalkativeNpc = npc;
         
+        CurrTalkativeNpc.LockMovment(PlayerInstance.Instance.GetPlayerRawStartPoint());
         PlayerDialogBlock();
+        
         dialogCanvas.SetActive(true);
         
         if(onlineStrategy)
@@ -121,6 +123,8 @@ public class DialogManager : MonoBehaviour
 
     public void CloseDialog()
     {
+        CurrTalkativeNpc.UnockMovment();
+        
         responseField.text = "";
         thinksField.text = "";
         

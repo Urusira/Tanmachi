@@ -15,6 +15,7 @@ Material:
   - _CUSTOMWIND_ON
   m_InvalidKeywords:
   - _ALPHAPREMULTIPLY_ON
+  - _CUSTOMCOLORSTINTING_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -26,9 +27,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _CUSTOMCOLORSTINTING: 1
+    - _Gradient: 0.107
+    - _SNOWONOFF: 0
+    - _Smoothness: 0.08
+    - _SnowAmount: 1
     m_Colors:
-    - _GroundColor: {r: 0.02122642, g: 0.013085512, b: 0.01211508, a: 1}
-    - _TopColor: {r: 0.12028302, g: 0.10090065, b: 0.05957415, a: 1}
+    - _GroundColor: {r: 0.1981132, g: 0.06535976, b: 0.047659304, a: 1}
+    - _TopColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

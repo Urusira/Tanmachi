@@ -1,5 +1,6 @@
 using System;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.World;
 using UnityEngine;
 
 
@@ -8,7 +9,6 @@ public class ObjectPlacer : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Camera playerCamera;
-    [SerializeField] private LayerMask placementSurfaceLayerMask;
     
     [Header("Placement Parameters")]
     [SerializeField] private float fastObjectRotationMultiplier = 15f;
@@ -84,7 +84,7 @@ public class ObjectPlacer : MonoBehaviour
         startPos.y += raycastStartVerticalOffset;
         
         RaycastHit hitInfo;
-        if (Physics.Raycast(startPos, Vector3.down, out hitInfo, raycastDistance, placementSurfaceLayerMask))
+        if (Physics.Raycast(startPos, Vector3.down, out hitInfo, raycastDistance, LayerManager.Instance.BuildLayers))
         {
             _currentPlacementPosition = hitInfo.point;
         }

@@ -13,10 +13,14 @@ MonoBehaviour:
   m_Name: NoviceArmorHead
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemName: "\u0428\u043B\u0435\u043C \u043D\u043E\u0432\u0438\u0447\u043A\u0430"
-  itemType: 1
+  itemType: 0
+  itemWearType: 1
   itemDescription: "\u041E\u0441\u0442\u043E\u0440\u043E\u0436\u043D\u043E, \u0437\u043B\u0430\u044F
     \u0441\u043E\u0431\u0430\u043A\u0430"
   icon: {fileID: 21300000, guid: b0122e2a10a97904ab329f16329397ee, type: 3}
   maxStackSize: 1
-  itemPrefab: {fileID: 841722138980329908, guid: 80acbe53415b19747bedbd11efeb0ec0, type: 3}
-  handItemPrefab: {fileID: 841722138980329908, guid: 7cdd537e54edb1549ae1bfdc2c143817, type: 3}
+  itemWorldPrefab: {fileID: 841722138980329908, guid: 80acbe53415b19747bedbd11efeb0ec0, type: 3}
+  itemPreviewPrefab: {fileID: 0}
+  itemHandPrefab: {fileID: 841722138980329908, guid: 7cdd537e54edb1549ae1bfdc2c143817, type: 3}
+  placeableBuildPrefab: {fileID: 0}
+  repice: {fileID: 0}

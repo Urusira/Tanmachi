@@ -60,12 +60,12 @@ namespace ShiroGe.Scripts.World
         }
 
         public float DayPhaseSkipTime { get; private set; } = 10f;
-        
-        [SerializeField] private float dayLength = 36000f;
-        [SerializeField] private float dayTiming = 0f;
-        [SerializeField] private float nightTiming = 19000f;
-        [SerializeField] private float midnightTiming = 25500f;
-        [SerializeField] private float initialTime = 0f;
+
+        [field: SerializeField] public float dayLength { get; private set; } = 36000f;
+        [field: SerializeField] public float dayTiming { get; private set; } = 0f;
+        [field: SerializeField] public float nightTiming { get; private set; } = 19000f;
+        [field: SerializeField] public float midnightTiming { get; private set; } = 25500f;
+        private float initialTime = 0f;
         
         private DayNightCycleManager _dayNightCycle;
         
@@ -173,6 +173,18 @@ namespace ShiroGe.Scripts.World
             }
             
             OnDayPhaseChanged?.Invoke(CurrentDayPhase);
+        }
+
+        public void TimeStop()
+        {
+            CurrentTimeFactor = 0;
+            Time.timeScale = 0f;
+        }
+
+        public void TimeResume()
+        {
+            CurrentTimeFactor = NormalTimeFactor;
+            Time.timeScale = 1f;
         }
     }
 }

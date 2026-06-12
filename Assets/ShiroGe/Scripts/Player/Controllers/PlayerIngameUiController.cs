@@ -46,8 +46,8 @@ namespace ShiroGe.CharacterController
                 return;
             }
             
-            SceneManager.UnloadSceneAsync("GameMainScene");
-            SceneManager.LoadScene("MainMenuScene");
+            if(PauseMenu.Instance.Paused)PauseMenu.Instance.HideMenu();
+            else PauseMenu.Instance.ShowMenu();
         }
 
         public void OnHelp(InputAction.CallbackContext context)

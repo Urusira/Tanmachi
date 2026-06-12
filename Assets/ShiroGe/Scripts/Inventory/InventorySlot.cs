@@ -1,4 +1,5 @@
 using System;
+using ShiroGe.Scripts.Enums;
 using ShiroGe.Scripts.Items;
 using UnityEngine;
 using TMPro;
@@ -12,6 +13,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public event System.Action<InventorySlot> OnHoverEnd;
 
     public ItemTypeEnum specialType =  ItemTypeEnum.DEFAULT;
+    public WearableType wearType =  WearableType.NonWearable;
     
     private ItemSO _heldItem;
     private int _itemAmount;

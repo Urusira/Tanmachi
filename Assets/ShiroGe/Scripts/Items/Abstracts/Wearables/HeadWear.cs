@@ -1,7 +1,9 @@
-﻿namespace ShiroGe.Scripts.Items
+﻿using ShiroGe.Scripts.Enums;
+
+namespace ShiroGe.Scripts.Items
 {
     public class HeadWear : Wearable
     {
-        public readonly ItemTypeEnum Type = ItemTypeEnum.HEADWEAR;
+        public readonly WearableType Type = WearableType.Headwear;
     }
 }

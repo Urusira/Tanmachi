@@ -151,6 +151,7 @@ GameObject:
   - component: {fileID: 7490626845618886658}
   - component: {fileID: 6670775888198282763}
   - component: {fileID: 9157017654122175138}
+  - component: {fileID: 7182605177533839566}
   m_Layer: 7
   m_Name: NoviceArmorBody
   m_TagString: Untagged
@@ -264,8 +265,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cecd930192b44a9a4cba3451dff4a32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.PickupbleItem
+  playerCanInteract: 1
+  npcCanInteract: 0
+  name: 
   amount: 1
   scriptableItem: {fileID: 11400000, guid: 86befebbc74bd814c9e697d45984411a, type: 2}
+--- !u!54 &7182605177533839566
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841722138980329908}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 3
 --- !u!1 &4097762420552179681
 GameObject:
   m_ObjectHideFlags: 0

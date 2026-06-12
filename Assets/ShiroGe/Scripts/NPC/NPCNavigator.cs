@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using JetBrains.Annotations;
 using ShiroGe.Scripts.NPC;
 using ShiroGe.Scripts.World;
@@ -39,7 +40,9 @@ public class NPCNavigator : MonoBehaviour
     private NavMeshAgent _navAgent;
     private NPCState _npcState;
 
+    private Vector3 _lookTarget = Vector3.zero;
     private Vector3 _destination;
+    private Vector3 _prePausedDestination;
     private Vector3 _lastDestination;
     private Vector3 _baseDestination;
     
@@ -63,6 +66,14 @@ public class NPCNavigator : MonoBehaviour
         UpdateMovementState();
         Wander();
         TargetReachedHandler();
+
+        if (_lookTarget != Vector3.zero)
+        {
+            Vector3 rawDir = (_lookTarget - transform.position).normalized;
+            Vector3 direction = new Vector3(rawDir.x, 0, rawDir.z);
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            gameObject.transform.DORotateQuaternion(targetRotation, 0.5f).SetEase(Ease.InOutSine);
+        }
     }
 
     public void SetBaseDestination(Vector3 baseDestination)
@@ -258,6 +269,7 @@ public class NPCNavigator : MonoBehaviour
 
     public void LocomotionBlock()
     {
+        _prePausedDestination = _destination;
         _navAgent.isStopped = true;
         _navAgent.enabled = false;
     }
@@ -266,16 +278,17 @@ public class NPCNavigator : MonoBehaviour
     {
         _navAgent.enabled = true;
         _navAgent.isStopped = false;
+        MoveToTarget(_prePausedDestination);
     }
 
     public void FixLookAt(Vector3 target)
     {
-        
+        _lookTarget = target;
     }
 
     public void UnfixLook()
     {
-        
+        _lookTarget = Vector3.zero;
     }
 
     public Vector2 GetNPCPseudoInput()

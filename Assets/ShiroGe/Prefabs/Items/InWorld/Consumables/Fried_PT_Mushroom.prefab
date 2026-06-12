@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 6360628377774826359}
   - component: {fileID: 8064440990309985490}
   - component: {fileID: 5192176564893538328}
-  - component: {fileID: 3197070828673411284}
   - component: {fileID: 2164740180249092281}
+  - component: {fileID: 645816642572670621}
+  - component: {fileID: 7833993440383188569}
+  - component: {fileID: 3185150923720529821}
   m_Layer: 7
   m_Name: Fried_PT_Mushroom
   m_TagString: Untagged
@@ -92,8 +94,25 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3197070828673411284
-MeshCollider:
+--- !u!114 &2164740180249092281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5984911598340929997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cecd930192b44a9a4cba3451dff4a32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.PickupbleItem
+  playerCanInteract: 1
+  npcCanInteract: 0
+  name: 
+  amount: 1
+  scriptableItem: {fileID: 11400000, guid: 72650eaec981d1b46a853ab2df3839b1, type: 2}
+--- !u!65 &645816642572670621
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -110,21 +129,54 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1826515769343568023, guid: 2ec966d90911a454c9760fa28789a4f8, type: 3}
---- !u!114 &2164740180249092281
-MonoBehaviour:
+  serializedVersion: 3
+  m_Size: {x: 0.33420056, y: 0.01, z: 0.35413405}
+  m_Center: {x: -0.002418138, y: 0, z: 0.0038491488}
+--- !u!135 &7833993440383188569
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5984911598340929997}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cecd930192b44a9a4cba3451dff4a32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.PickupbleItem
-  amount: 1
-  scriptableItem: {fileID: 11400000, guid: 72650eaec981d1b46a853ab2df3839b1, type: 2}
+  serializedVersion: 3
+  m_Radius: 0.13
+  m_Center: {x: -0.002418138, y: 0.15, z: 0.0038491488}
+--- !u!54 &3185150923720529821
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5984911598340929997}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 3

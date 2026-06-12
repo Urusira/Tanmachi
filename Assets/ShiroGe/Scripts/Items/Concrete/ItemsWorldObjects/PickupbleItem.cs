@@ -1,6 +1,8 @@
 ﻿using System;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts.NPC;
+using ShiroGe.Scripts.Utils;
+using ShiroGe.Scripts.World;
 using UnityEngine;
 
 namespace ShiroGe.Scripts.Items
@@ -16,7 +18,7 @@ namespace ShiroGe.Scripts.Items
             InventoryManager.Instance.AddItem(scriptableItem, amount);
             
             LODGroup lodGroup = GetComponentInParent<LODGroup>();
-            if (lodGroup != null && lodGroup.gameObject.layer == LayerMask.NameToLayer("Interactable"))
+            if (lodGroup != null && LayerManager.Instance.InteractiveLayerMask.Contains(lodGroup.gameObject.layer))
             {
                 Destroy(lodGroup.gameObject);
             }

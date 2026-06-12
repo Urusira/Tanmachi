@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-
+/*
 public class InventoryDragSlot : MonoBehaviour
 {
     private ItemSO _heldItem;
@@ -89,3 +89,4 @@ public class InventoryDragSlot : MonoBehaviour
         return _heldItem != null;
     }
 }
+*/

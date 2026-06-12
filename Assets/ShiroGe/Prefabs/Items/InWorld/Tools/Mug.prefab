@@ -99,10 +99,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5466852376404049712}
-  - component: {fileID: 2605858316695136015}
   - component: {fileID: 2248130709322834833}
   - component: {fileID: 8927274140642486500}
   - component: {fileID: 5474239621735917175}
+  - component: {fileID: 6209394115493472602}
   m_Layer: 7
   m_Name: Mug
   m_TagString: Untagged
@@ -129,33 +129,6 @@ Transform:
   - {fileID: 5278967879793627516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 25.482, z: 0}
---- !u!54 &2605858316695136015
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2684649389984491846}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!136 &2248130709322834833
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -212,8 +185,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cecd930192b44a9a4cba3451dff4a32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.Items.PickupbleItem
+  playerCanInteract: 1
+  npcCanInteract: 0
+  name: 
   amount: 1
   scriptableItem: {fileID: 11400000, guid: 7a07599ccbb364f4c99e666b9f971c35, type: 2}
+--- !u!54 &6209394115493472602
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2684649389984491846}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 3
 --- !u!1 &3858208953691203729
 GameObject:
   m_ObjectHideFlags: 0

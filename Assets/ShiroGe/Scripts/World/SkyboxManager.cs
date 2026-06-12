@@ -6,7 +6,6 @@ namespace ShiroGe.Scripts.World
 {
     public class SkyboxManager : MonoBehaviour
     {
-        
         [SerializeField] private Material skyboxMaterial;
         
         [SerializeField] private bool auroraEnabled;
@@ -85,7 +84,7 @@ namespace ShiroGe.Scripts.World
                 skyboxMaterial.SetFloat(StarsIntensityShaderId, _currentStarsIntensity);
             }
         }
-
+        
         private void OnDestroy()
         {
             skyboxMaterial.SetFloat(AuroraIntensityShaderId, initialAuroraIntensity);

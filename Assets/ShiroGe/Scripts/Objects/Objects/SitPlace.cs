@@ -99,7 +99,7 @@ namespace ShiroGe.Scripts.Tavern
 
         public void EntityPositionCorrect()
         {
-            PlacedEntity.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z)+SittingOffset;
+            PlacedEntity.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z)+transform.rotation*SittingOffset;
             PlacedEntity.transform.rotation = transform.rotation;
         }
 

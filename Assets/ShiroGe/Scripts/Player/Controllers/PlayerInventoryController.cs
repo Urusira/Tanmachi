@@ -1,4 +1,5 @@
 ﻿using ShiroGe.Scripts.UI;
+using ShiroGe.Scripts.World;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,7 @@ namespace ShiroGe.CharacterController
         public PlayerControls PlayerControls { get; private set; }
 
         public bool scrollLock;
+        public bool forcedDrop;
 
         private void OnEnable()
         {
@@ -24,16 +26,6 @@ namespace ShiroGe.CharacterController
         {
             PlayerControls.Inventory.Disable();
             PlayerControls.Inventory.RemoveCallbacks(this);
-        }
-        
-        public void InventoryActionsDisable()
-        {
-            PlayerControls.Inventory.Disable();
-        }
-        
-        public void InventoryActionsEnable()
-        {
-            PlayerControls.Inventory.Enable();
         }
         
         public void OnLeftClick(InputAction.CallbackContext context)
@@ -55,15 +47,43 @@ namespace ShiroGe.CharacterController
 
         public void OnDropItem(InputAction.CallbackContext context)
         {
-            if(!context.performed || InventoryUiManager.Instance.IsOpen) return;
+            if(!context.performed) return;
             
-            InventoryManager.Instance.DropItem();
+            if(!InventoryUiManager.Instance.IsOpen)
+            {
+                GameObject droppedItem = InventoryManager.Instance.DropItem(false);
+
+                if (droppedItem == null) return;
+
+                if (forcedDrop)
+                    WorldSpawner.Instance.PlayerDrop(droppedItem, PlayerStats.Instance.ThrowForce, true);
+                else
+                    WorldSpawner.Instance.PlayerDrop(droppedItem, PlayerStats.Instance.DropForce);
+            }
+            else
+            {
+                GameObject droppedItem = InventoryManager.Instance.DropItem(true);
+                
+                if (droppedItem == null) return;
+                
+                WorldSpawner.Instance.PlayerDrop(droppedItem, 0f);
+            }
         }
 
         public void OnQuickTransferItem(InputAction.CallbackContext context)
         {
-            if(InventoryUiManager.Instance.IsOpen && (context.started || context.canceled))
-                InventoryUiManager.Instance.SetQuickTransfer();
+            if(InventoryUiManager.Instance.IsOpen)
+            {
+                if (context.started || context.canceled)
+                    InventoryUiManager.Instance.SetQuickTransfer();
+            }
+            else 
+            {
+                if(context.started)
+                    forcedDrop = true;
+                if(context.canceled)
+                    forcedDrop = false;
+            }
         }
 
         public void OnRightClick(InputAction.CallbackContext context)

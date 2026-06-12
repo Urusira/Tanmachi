@@ -1,3 +1,4 @@
+using ShiroGe.Scripts.Enums;
 using ShiroGe.Scripts.Items;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -7,11 +8,13 @@ public class ItemSO : ScriptableObject
 {
     public string itemName;
     public ItemTypeEnum itemType;
+    public WearableType itemWearType;
     public string itemDescription;
     public Sprite icon;
     public int maxStackSize;
-    [FormerlySerializedAs("itemPrefab")] public GameObject itemWorldPrefab;
+    public GameObject itemWorldPrefab;
     public GameObject itemPreviewPrefab;
-    [FormerlySerializedAs("handItemPrefab")] public GameObject itemHandPrefab;
+    public GameObject itemHandPrefab;
+    public GameObject placeableBuildPrefab;
     public RecipeSO repice;
 }
