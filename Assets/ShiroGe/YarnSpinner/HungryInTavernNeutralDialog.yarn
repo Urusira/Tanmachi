@@ -2,25 +2,22 @@
 ---
 <<if HasQuest("TestQuest")>>
     <<if QuestStatusCheck("TestQuest") == "FAILED">>
-        NPC: Эй, мне тут до вечера своей еды ждать!?
-        -> Ну и вали, больно ты мне нужен.
-            <<return>>
-        -> Да. <color=\#FF5733> \[НАЧАТЬ КВЕСТ ЗАНОВО\] </color>
-            <<call GiveQuest("TestQuest")>>
+        {GetName()}: Разочаровываешь, дружище.
+        -> ...
             <<return>>
         <<elseif QuestStatusCheck("TestQuest") == "ACTIVE">>
-            NPC: Уже готово?
+            {GetName()}: Уже готово?
             <<if QuestCompleteConditionCheck("TestQuest")>>
                 -> Да, пожалуйста.
                     <<call CompleteQuest("TestQuest")>>
-                    NPC: Благодарю.
+                    {GetName()}: Благодарю.
                     <<return>>
             <<endif>>
             -> Ещё нет.
                 <<return>>
             -> Я не могу приготовить ваш заказ. 
                 <<call CancelQuest("TestQuest")>>
-                NPC: Да уж, дыра есть дыра, я даже не удивлён.
+                {GetName()}: Да уж, дыра есть дыра, я даже не удивлён.
                 <<return>>
         <<else>>
             //Невозможная ветка диалога
@@ -29,13 +26,14 @@
     <<endif>>
 
     <<else>>
-        NPC: Доброго дня.
+        {GetName()}: Доброго дня.
         -> Здравствуйте, что закажете?
-            NPC: Хм... Вот это буду.
+            {GetName()}: Подайте-ка {GetQuest("TestQuest")}.
             -> Сию минуту. <color=\#FF5733> \[ПРИНЯТЬ СЛУЧАЙНЫЙ ЗАКАЗ\] </color>
-                <<call GiveQuest("TestQuest")>>
+                <<call StartQuest("TestQuest")>>
                 <<return>>
             -> Изивините, не могу это сделать.
+                <<call NotAccepted("TestQuest")>>
                 <<return>>
         -> До свидания.
             <<return>>

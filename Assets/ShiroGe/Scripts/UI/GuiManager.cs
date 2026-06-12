@@ -64,6 +64,15 @@ public class GuiManager : MonoBehaviour
         guiCanvas.SetActive(true);
     }
 
+    public void SetHint(string hintText)
+    {
+        _hintTextMesh.text = hintText;
+    }
+    public void HideHint()
+    {
+        _hintTextMesh.text = "";
+    }
+
     public void SwitchControlHint()
     {
         if(controlHint.activeInHierarchy) controlHint.SetActive(false);

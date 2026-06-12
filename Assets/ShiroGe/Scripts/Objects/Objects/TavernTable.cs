@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using ShiroGe.Scripts;
+using ShiroGe.Scripts.Items;
 using ShiroGe.Scripts.NPC;
 using ShiroGe.Scripts.Tavern;
 using UnityEngine;
@@ -34,6 +36,14 @@ public class TavernTable : MonoBehaviour
 
     private void OnPlaceTakenHandler(SitPlace place)
     {
+        Interactable interactComponent;
+        TryGetComponent(out interactComponent);
+
+        if (interactComponent != null)
+        {
+            interactComponent.BlockPlayerInteractable();
+        }
+
         RecountAvailablePlaces();
     }
     
@@ -70,6 +80,15 @@ public class TavernTable : MonoBehaviour
         if (AmountOccupedPlaces <= 0)
         {
             TableFullReserved = false;
+            
+            Interactable interactComponent;
+            TryGetComponent(out interactComponent);
+
+            if (interactComponent != null)
+            {
+                interactComponent.UnblockPlayerInteractable();
+            }
+            
             OnTableReleased?.Invoke(this);
         }
     }

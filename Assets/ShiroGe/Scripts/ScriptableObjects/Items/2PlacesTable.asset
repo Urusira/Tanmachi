@@ -21,6 +21,6 @@ MonoBehaviour:
   maxStackSize: 1
   itemWorldPrefab: {fileID: 4352815050312292885, guid: e997c986809137242a37b7f2cc7ba4b7, type: 3}
   itemPreviewPrefab: {fileID: 6579272329349643907, guid: 2eec5024b701c5a4d8d1dd22d99a056f, type: 3}
-  itemHandPrefab: {fileID: 5895336606059681910, guid: 457a8cc350479df4793703a8e17bb0f0, type: 3}
+  itemHandPrefab: {fileID: 5895336606059681910, guid: 95e796682a670274397d89ab574d0ef6, type: 3}
   placeableBuildPrefab: {fileID: 9041475644705189129, guid: 3a484e9e8b8d9cb49a9a32c1c62d641c, type: 3}
   repice: {fileID: 0}

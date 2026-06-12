@@ -80,5 +80,15 @@ namespace ShiroGe.Scripts
         }
         
         protected abstract void Initiate();
+
+        public void BlockPlayerInteractable()
+        {
+            playerCanInteract = false;
+        }
+        
+        public void UnblockPlayerInteractable()
+        {
+            playerCanInteract = true;
+        }
     }
 }

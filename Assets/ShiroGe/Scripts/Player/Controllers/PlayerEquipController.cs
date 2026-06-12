@@ -20,8 +20,6 @@ namespace ShiroGe.CharacterController
         [SerializeField] private GameObject standartPlayerAvatarUnderwear;
         [SerializeField] private GameObject playerAvatarHair;
         
-        [SerializeField] private ObjectPlacer objectPlacer;
-        
         private bool hasRHEqupped = false;
         private GameObject RHEquppedObj;
         private ItemSO RHEqupped;
@@ -216,12 +214,6 @@ namespace ShiroGe.CharacterController
                 handlingItemType = item.itemType;
             
                 EquipRightHand(item);
-                
-                if (item.itemType == ItemTypeEnum.PLACEABLE)
-                {
-                    objectPlacer.ObjectSet(item.placeableBuildPrefab, item.itemPreviewPrefab, item);
-                    objectPlacer.EnterPlacementMode();
-                }
             }
         }
         
@@ -234,10 +226,6 @@ namespace ShiroGe.CharacterController
 
         private void UnequipRightHand()
         {
-            if (handlingItemType == ItemTypeEnum.PLACEABLE)
-            {
-                objectPlacer.ExitPlacementMode();
-            }
             if(hasRHEqupped)
             {
                 hasRHEqupped = false;

@@ -8,10 +8,16 @@ namespace ShiroGe.CharacterController
     public class PlayerInstance : MonoBehaviour
     {
         public static PlayerInstance Instance { get; private set; }
+
+        public Vector3 PlayerSpawnPosition { get; private set; }
+        
+        private Camera _playerCamera;
+        
         private PlayerController _playerController;
         private PlayerInteractionController _playerInteraction;
         private CashManager _cashManager;
-        private Camera _playerCamera;
+        
+        private UnityEngine.CharacterController _characterController;
 
         private void Start()
         {
@@ -31,6 +37,9 @@ namespace ShiroGe.CharacterController
             _playerController = playerController;
             _playerInteraction = playerController.GetComponent<PlayerInteractionController>();
             _cashManager = playerController.GetComponent<CashManager>();
+            _characterController = playerController.GetComponent<UnityEngine.CharacterController>();
+            
+            PlayerSpawnPosition = _characterController.transform.position;
         }
 
         public Vector3 GetPlayerWorldPosition()
@@ -82,8 +91,20 @@ namespace ShiroGe.CharacterController
         
         public void TeleportPlayer(Vector3 position)
         {
-            Debug.unityLogger.Log($"Teleporting player to {position}");
-            _playerController.gameObject.transform.position = position;
+            Debug.Log($"Teleporting player to {position}");
+    
+            if (_characterController != null)
+            {
+                _characterController.enabled = false;
+                _playerController.transform.position = position;
+                
+                Physics.SyncTransforms();
+                _characterController.enabled = true;
+            }
+            else
+            {
+                _playerController.transform.position = position;
+            }
         }
 
         public Vector3 GetPlayerRawStartPoint()

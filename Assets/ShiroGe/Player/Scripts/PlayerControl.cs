@@ -1410,6 +1410,15 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EnterBuildMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""66f7fffd-ea82-4d79-9792-05155b41fc1c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1454,6 +1463,17 @@ namespace ShiroGe.CharacterController
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""FastRotation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""af9ebf86-2d3b-4bbc-a95e-f6b91d7f8ff0"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""EnterBuildMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1601,6 +1621,7 @@ namespace ShiroGe.CharacterController
             m_PlacementMode_RotateMode = m_PlacementMode.FindAction("RotateMode", throwIfNotFound: true);
             m_PlacementMode_Rotate = m_PlacementMode.FindAction("Rotate", throwIfNotFound: true);
             m_PlacementMode_FastRotation = m_PlacementMode.FindAction("FastRotation", throwIfNotFound: true);
+            m_PlacementMode_EnterBuildMode = m_PlacementMode.FindAction("EnterBuildMode", throwIfNotFound: true);
             // DebugFunctions
             m_DebugFunctions = asset.FindActionMap("DebugFunctions", throwIfNotFound: true);
             m_DebugFunctions_Teleport = m_DebugFunctions.FindAction("Teleport", throwIfNotFound: true);
@@ -2493,6 +2514,7 @@ namespace ShiroGe.CharacterController
         private readonly InputAction m_PlacementMode_RotateMode;
         private readonly InputAction m_PlacementMode_Rotate;
         private readonly InputAction m_PlacementMode_FastRotation;
+        private readonly InputAction m_PlacementMode_EnterBuildMode;
         /// <summary>
         /// Provides access to input actions defined in input action map "PlacementMode".
         /// </summary>
@@ -2520,6 +2542,10 @@ namespace ShiroGe.CharacterController
             /// Provides access to the underlying input action "PlacementMode/FastRotation".
             /// </summary>
             public InputAction @FastRotation => m_Wrapper.m_PlacementMode_FastRotation;
+            /// <summary>
+            /// Provides access to the underlying input action "PlacementMode/EnterBuildMode".
+            /// </summary>
+            public InputAction @EnterBuildMode => m_Wrapper.m_PlacementMode_EnterBuildMode;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -2558,6 +2584,9 @@ namespace ShiroGe.CharacterController
                 @FastRotation.started += instance.OnFastRotation;
                 @FastRotation.performed += instance.OnFastRotation;
                 @FastRotation.canceled += instance.OnFastRotation;
+                @EnterBuildMode.started += instance.OnEnterBuildMode;
+                @EnterBuildMode.performed += instance.OnEnterBuildMode;
+                @EnterBuildMode.canceled += instance.OnEnterBuildMode;
             }
 
             /// <summary>
@@ -2581,6 +2610,9 @@ namespace ShiroGe.CharacterController
                 @FastRotation.started -= instance.OnFastRotation;
                 @FastRotation.performed -= instance.OnFastRotation;
                 @FastRotation.canceled -= instance.OnFastRotation;
+                @EnterBuildMode.started -= instance.OnEnterBuildMode;
+                @EnterBuildMode.performed -= instance.OnEnterBuildMode;
+                @EnterBuildMode.canceled -= instance.OnEnterBuildMode;
             }
 
             /// <summary>
@@ -3088,6 +3120,13 @@ namespace ShiroGe.CharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnFastRotation(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "EnterBuildMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnEnterBuildMode(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "DebugFunctions" which allows adding and removing callbacks.

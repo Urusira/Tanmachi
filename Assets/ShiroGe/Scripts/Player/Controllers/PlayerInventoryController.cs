@@ -66,7 +66,7 @@ namespace ShiroGe.CharacterController
                 
                 if (droppedItem == null) return;
                 
-                WorldSpawner.Instance.PlayerDrop(droppedItem, 0f);
+                WorldSpawner.Instance.PlayerDrop(droppedItem, PlayerStats.Instance.DropForce);
             }
         }
 

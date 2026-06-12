@@ -10,6 +10,7 @@ namespace ShiroGe.Scripts.Quests
     public class CurrentQuestPanel : MonoBehaviour
     {
         [SerializeField] private GameObject questTitleObj;
+        [SerializeField] private GameObject questAuthorNameObj;
         [SerializeField] private GameObject questDescriptionObj;
         [SerializeField] private GameObject questTimerObj;
         [SerializeField] private GameObject questSuccessfulCompleteObj;
@@ -19,12 +20,14 @@ namespace ShiroGe.Scripts.Quests
         [SerializeField] private bool dieAfterFinalize;
         
         private TextMeshProUGUI _questTitleText;
+        private TextMeshProUGUI _questAuthorName;
         private TextMeshProUGUI _questDescriptionText;
         private TextMeshProUGUI _questTimerText;
 
         private void Awake()
         {
             _questTitleText =  questTitleObj.GetComponent<TextMeshProUGUI>();
+            _questAuthorName =  questAuthorNameObj.GetComponent<TextMeshProUGUI>();
             _questDescriptionText =  questDescriptionObj.GetComponent<TextMeshProUGUI>();
             _questTimerText =   questTimerObj.GetComponent<TextMeshProUGUI>();
             
@@ -40,6 +43,7 @@ namespace ShiroGe.Scripts.Quests
         public void SetQuest(QuestOrderBase newQuest)
         {
             _questTitleText.text = newQuest.Title;
+            _questAuthorName.text = "Заказ для: "+newQuest.AuthorName;
             _questDescriptionText.text = newQuest.Description;
             
             newQuest.OnCompleted += Completed;
@@ -62,7 +66,9 @@ namespace ShiroGe.Scripts.Quests
 
         public void TimerUpdate(float remainingTime)
         {
-            _questTimerText.text = (remainingTime/60).ToString("F2");
+            int minutes = Mathf.Max(0, Mathf.FloorToInt(remainingTime / 60));
+            int seconds = Mathf.Max(0, Mathf.FloorToInt(remainingTime%60));
+            _questTimerText.text = $"Оставшееся время: {minutes}:{(seconds < 10 ? "0" + seconds : seconds)}";
         }
 
         public void Completed(QuestOrderBase quest)

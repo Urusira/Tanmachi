@@ -7,6 +7,8 @@ using UnityEngine;
 [DefaultExecutionOrder(0)]
 public class ObjectPlacer : MonoBehaviour
 {
+    public event System.Action<ItemSO> OnPlaceableObjectHasPlaced;
+    
     [Header("References")]
     [SerializeField] private Camera playerCamera;
     
@@ -24,8 +26,8 @@ public class ObjectPlacer : MonoBehaviour
     [SerializeField] private Color validColor;
     [SerializeField] private Color invalidColor;
     
-    private GameObject _placeableObjectPrefab;
     private ItemSO _placeableObjectItemSO;
+    private GameObject _placeableObjectPrefab;
     private GameObject _previewObjectPrefab;
     
     private GameObject _previewObject;
@@ -38,19 +40,21 @@ public class ObjectPlacer : MonoBehaviour
 
     private float _rotateOffset = 0f;
     
-    
     private void Update()
     {
         if (_inPlacementMode)
         {
+            print("В режиме размещения");
             UpdateCurrentPlacementPosition();
 
             if (CanPlaceObject())
             {
+                print("Можем разместить");
                 SetValidPreviewState();
             }
             else
             {
+                print("Не можем разместить");
                 SetInvalidPreviewState();
             }
         }
@@ -58,18 +62,21 @@ public class ObjectPlacer : MonoBehaviour
 
     private void SetValidPreviewState()
     {
+        GuiManager.Instance.SetHint("Нажмите F чтобы разместить");
         previewMaterial.color = validColor;
         _validPreviewState = true;
     }
     
     private void SetInvalidPreviewState()
     {
+        GuiManager.Instance.SetHint("Нельзя разместить");
         previewMaterial.color = invalidColor;
         _validPreviewState = false;
     }
     
     private bool CanPlaceObject()
     {
+        print("Проверяем, можем ли разместить");
         if (_previewObject == null) return false;
 
         return _previewObjectValidChecker.IsValid;
@@ -100,9 +107,8 @@ public class ObjectPlacer : MonoBehaviour
         {
             Quaternion rotation = Quaternion.Euler(0, (playerCamera.transform.eulerAngles.y + _rotateOffset) % 360, 0);
             Instantiate(_placeableObjectPrefab, _currentPlacementPosition, rotation, transform);
-            InventoryManager.Instance.RemoveItem(_placeableObjectItemSO, 1);
             
-            ExitPlacementMode();
+            OnPlaceableObjectHasPlaced?.Invoke(_placeableObjectItemSO);
         }
     }
 
@@ -130,8 +136,7 @@ public class ObjectPlacer : MonoBehaviour
 
     public void EnterPlacementMode()
     {
-        print("Entering placement mode");
-        PlayerInputControllersRegulator.Instance.EnterPlacementMode();
+        //PlayerInputControllersRegulator.Instance.EnterPlacementMode();
         Quaternion rotation = Quaternion.Euler(0, playerCamera.transform.eulerAngles.y, 0);
         _previewObject = Instantiate(_previewObjectPrefab, _currentPlacementPosition, rotation, transform);
 
@@ -142,13 +147,14 @@ public class ObjectPlacer : MonoBehaviour
 
     public void ExitPlacementMode()
     {
-        print("Exitting placement mode");
-        PlayerInputControllersRegulator.Instance.ExitPlacementMode();
+        //PlayerInputControllersRegulator.Instance.ExitPlacementMode();
         _placeableObjectPrefab = null;
         _previewObjectPrefab = null;
         _placeableObjectItemSO = null;
         
         _inPlacementMode = false;
+        
+        GuiManager.Instance.HideHint();
         
         Destroy(_previewObject);
     }

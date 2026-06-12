@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.NPC.NPCFabricator
   npcPrefab: {fileID: 5254952935348250096, guid: d6556b69171d97f43b31c25cc0475021, type: 3}
+  nameDatabase: {fileID: 11400000, guid: 45ad688e9df77b740981f02a03bb01e4, type: 2}
 --- !u!114 &3132880208714235808
 MonoBehaviour:
   m_ObjectHideFlags: 0

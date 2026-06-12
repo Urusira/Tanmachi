@@ -3,6 +3,7 @@ using System.Collections;
 using DG.Tweening;
 using JetBrains.Annotations;
 using ShiroGe.Scripts.NPC;
+using ShiroGe.Scripts.Utils;
 using ShiroGe.Scripts.World;
 using UnityEngine;
 using UnityEngine.AI;
@@ -43,14 +44,18 @@ public class NPCNavigator : MonoBehaviour
     private Vector3 _lookTarget = Vector3.zero;
     private Vector3 _destination;
     private Vector3 _prePausedDestination;
-    private Vector3 _lastDestination;
-    private Vector3 _baseDestination;
+    public Vector3 _lastDestination  { get; private set; }
+    public Vector3 _baseDestination { get; private set; }
     
     private bool _isRotatingClockwise = false;
     
     private float _rotatingToTargetTimer = 0f;
 
     private float currentWanderIdleTimer;
+
+    private float repeatedPathUpdateTimerTime = 10f;
+    
+    RepeatedTimer repeatedPathUpdateTimer;
     
     private NPCMovementState _lastMovementState = NPCMovementState.Idling;
 
@@ -58,6 +63,11 @@ public class NPCNavigator : MonoBehaviour
     {
         _navAgent = GetComponent<NavMeshAgent>();
         _npcState = GetComponent<NPCState>();
+    }
+
+    private void Start()
+    {
+        repeatedPathUpdateTimer = new RepeatedTimer(repeatedPathUpdateTimerTime, PathUpdatingTimerOut);
     }
 
     private void Update()
@@ -74,6 +84,12 @@ public class NPCNavigator : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             gameObject.transform.DORotateQuaternion(targetRotation, 0.5f).SetEase(Ease.InOutSine);
         }
+    }
+    
+    private void PathUpdatingTimerOut()
+    {
+        _navAgent.ResetPath();
+        _navAgent.SetDestination(_destination);
     }
 
     public void SetBaseDestination(Vector3 baseDestination)
@@ -101,6 +117,11 @@ public class NPCNavigator : MonoBehaviour
 
     }
 
+    public void SetRandomAvoidancyPrio()
+    {
+        _navAgent.avoidancePriority = Random.Range(0, 99);
+    }
+    
     private void UpdateMovementState()
     {
         _lastMovementState = _npcState.CurrentNPCMovementState;
@@ -154,7 +175,8 @@ public class NPCNavigator : MonoBehaviour
     /// <param name="target">Координаты точки, куда агент будет двигаться по NAVMesh-сетке</param>
     public bool MoveToTarget(Vector3 target)
     {
-        _lastDestination = _destination;
+        if(_destination != Vector3.zero && _destination != _prePausedDestination) _lastDestination = _destination;
+        
         
         bool successful = TrySetDestination(
             newTarget: target, 
@@ -274,11 +296,11 @@ public class NPCNavigator : MonoBehaviour
         _navAgent.enabled = false;
     }
 
-    public void LocomotionUnblock()
+    public void LocomotionUnblock(bool goToPrepausedPosition)
     {
         _navAgent.enabled = true;
         _navAgent.isStopped = false;
-        MoveToTarget(_prePausedDestination);
+        if(goToPrepausedPosition) MoveToTarget(_prePausedDestination);
     }
 
     public void FixLookAt(Vector3 target)
@@ -303,5 +325,10 @@ public class NPCNavigator : MonoBehaviour
     private bool CanRun()
     {
         return true;
+    }
+
+    public void SetLastDestinationPoint(Vector3 newLastDestination)
+    {
+        _lastDestination = newLastDestination;
     }
 }

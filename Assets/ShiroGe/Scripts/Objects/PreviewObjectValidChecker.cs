@@ -21,7 +21,7 @@ public class PreviewObjectValidChecker : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!LayerManager.Instance.NonBuildLayers.Contains(other.gameObject.layer))
+        if (LayerManager.Instance.NonBuildLayers.Contains(other.gameObject.layer))
         {
             collidingObjects.Remove(other.gameObject);
             IsValid = collidingObjects.Count <= 0;

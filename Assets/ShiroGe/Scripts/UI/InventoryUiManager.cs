@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ShiroGe.CharacterController;
+using ShiroGe.Scripts.Enums;
 using ShiroGe.Scripts.Inventory;
 using ShiroGe.Scripts.Tavern;
 using ShiroGe.Scripts.World;
@@ -24,6 +25,7 @@ namespace ShiroGe.Scripts.UI
         [SerializeField] private GameObject timeObj;
         [SerializeField] private GameObject hotbarSlotsObj;
         [SerializeField] private GameObject playerObj;
+        [SerializeField] private GameObject buildingModeIndicatorObj;
 
         [SerializeField] private GameObject craftingMenuObj;
 
@@ -41,6 +43,7 @@ namespace ShiroGe.Scripts.UI
         private TextMeshProUGUI _cashText;
         private Slider _ratingSlider;
         private TextMeshProUGUI _timeText;
+        private TextMeshProUGUI _buildingModeIndicatorText;
 
         private CraftingPanelController _craftingPanel;
         
@@ -51,6 +54,14 @@ namespace ShiroGe.Scripts.UI
         
         public bool IsOpen { get; private set; } = false;
         public bool IsCrafting { get; private set; } = false;
+
+        public bool InBuildingMode
+        {
+            get
+            {
+                return InventoryManager.Instance.InBuildingMode;
+            }
+        }
 
         private bool _needDescription = false;
         
@@ -87,6 +98,8 @@ namespace ShiroGe.Scripts.UI
             _inventoryCraftRectTransform = craftingMenuObj.GetComponent<RectTransform>();
             
             _craftingPanel = craftingMenuObj.GetComponent<CraftingPanelController>();
+            
+            _buildingModeIndicatorText = buildingModeIndicatorObj.GetComponent<TextMeshProUGUI>();
             
             _cashText = cashObj.GetComponent<TextMeshProUGUI>();
             _timeText = timeObj.GetComponent<TextMeshProUGUI>();
@@ -219,11 +232,25 @@ namespace ShiroGe.Scripts.UI
         public void HotbarSelect(int value)
         {
             InventoryManager.Instance.HotbarSelectorUpdate(value);
+            InventorySlot currentHotbarSlot = InventoryManager.Instance._hotbarSlots[InventoryManager.Instance.SelectedHotbarSlot];
             selectorBorderObj.transform.position = new Vector3(
-                InventoryManager.Instance._hotbarSlots[InventoryManager.Instance.SelectedHotbarSlot].transform.position.x, 
+                currentHotbarSlot.transform.position.x, 
                 selectorBorderObj.transform.position.y, 
                 selectorBorderObj.transform.position.z
                 );
+
+            if (InBuildingMode)
+            {
+                _buildingModeIndicatorText.text = "В режиме строительства";
+            }
+            else if (currentHotbarSlot.HasItem() && currentHotbarSlot.GetItem().itemType == ItemTypeEnum.PLACEABLE && !InBuildingMode)
+            {
+                _buildingModeIndicatorText.text = "Для установки войдите в режим строительства (клавиша [B])";
+            }
+            else 
+            {
+                _buildingModeIndicatorText.text = "";
+            }
         }
 
         public void HotbarHide()
@@ -338,6 +365,20 @@ namespace ShiroGe.Scripts.UI
             {
                 InventoryManager.Instance.RemoveItem(ingredient.item, ingredient.amount);
             }
+        }
+
+        public void EnterBuildingMode()
+        {
+            TutorialsManager.Instance.ShowTutorial("BuildingMode");
+            _buildingModeIndicatorText.text = "В режиме строительства";
+            InventoryManager.Instance.EnterBuildingMode();
+        }
+
+        public void ExitBuildingMode()
+        {
+            _buildingModeIndicatorText.text = "";
+            InventoryManager.Instance.ExitBuildingMode();
+            
         }
     }
 }

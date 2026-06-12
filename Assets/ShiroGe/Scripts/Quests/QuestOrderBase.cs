@@ -12,6 +12,7 @@ namespace ShiroGe.Scripts.Quests
     public abstract class QuestOrderBase
     {
         public event System.Action<QuestOrderBase> OnStarted;
+        public event System.Action<QuestOrderBase> OnDestroyed;
         public event System.Action<QuestOrderBase> OnFailed;
         public event System.Action<QuestOrderBase> OnCompleted;
         public event System.Action<QuestOrderBase> OnCancelled;
@@ -19,6 +20,7 @@ namespace ShiroGe.Scripts.Quests
 
         public readonly string ID;
         public readonly string Title;
+        public readonly string AuthorName;
         public readonly string Description;
         
         public float TimeLimit { get; private set; } = 0f;
@@ -38,10 +40,11 @@ namespace ShiroGe.Scripts.Quests
         /// <param name="id">Уникальный строковый идентификатор квеста.</param>
         /// <param name="title">Публичное строковое имя квеста</param>
         /// <param name="description">Публичное строковое описание квеста</param>
-        public QuestOrderBase(string id, string title, string description)
+        public QuestOrderBase(string id, string title, string authorName, string description)
         {
             this.ID = id;
             this.Title = title;
+            this.AuthorName = authorName;
             this.Description = description;
         }
         
@@ -172,5 +175,10 @@ namespace ShiroGe.Scripts.Quests
         }
 
         //protected abstract void InvokeCompleted();
+
+        public void Destroy()
+        {
+            OnDestroyed?.Invoke(this);
+        }
     }
 }

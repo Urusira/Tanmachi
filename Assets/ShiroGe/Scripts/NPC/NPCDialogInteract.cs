@@ -24,7 +24,7 @@ namespace ShiroGe.Scripts.NPC
         public override String ShowHint()
         {
             base.ShowHint();
-            return $"{gameObject.name}\nF для разговора";
+            return $"{npc.NpcData.Name}\nНажмите F чтобы начать разговор";
         }
 
         protected override void Initiate() { return; }

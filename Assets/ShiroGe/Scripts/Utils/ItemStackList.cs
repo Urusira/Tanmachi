@@ -80,5 +80,24 @@ namespace ShiroGe.Scripts.Utils
         {
             return GetEnumerator();
         }
+
+        public override string ToString()
+        {
+            string result = "";
+
+            foreach (ItemWithAmount item in this)
+            {
+                if (item == this[Count - 1])
+                {
+                    result += $"{item.Amount} {item.Item.itemName}.";
+                }
+                else
+                {
+                    result += $"{item.Amount} {item.Item.itemName}, ";
+                }
+            }
+            
+            return result;
+        }
     }
 }

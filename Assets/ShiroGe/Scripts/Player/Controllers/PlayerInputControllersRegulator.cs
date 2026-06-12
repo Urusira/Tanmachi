@@ -42,7 +42,7 @@ namespace ShiroGe.CharacterController
             
         }
 
-        public void EnterPlacementMode()
+        /*public void EnterPlacementMode()
         {
             _playerPlacementModeInput.PlayerControls.PlacementMode.Enable();
             _playerActionsController.PlayerControls.PlayerActions.Disable();
@@ -51,7 +51,7 @@ namespace ShiroGe.CharacterController
         {
             _playerPlacementModeInput.PlayerControls.PlacementMode.Disable();
             _playerActionsController.PlayerControls.PlayerActions.Enable();
-        }
+        }*/
 
         public void DisableMovement()
         {

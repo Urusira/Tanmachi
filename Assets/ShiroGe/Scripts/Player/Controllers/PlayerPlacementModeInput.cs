@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ShiroGe.Scripts.UI;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ShiroGe.CharacterController
@@ -8,7 +9,7 @@ namespace ShiroGe.CharacterController
     public class PlayerPlacementModeInput : MonoBehaviour, PlayerControls.IPlacementModeActions
     {
         [SerializeField] private ObjectPlacer _objectPlacer;
-
+        
         private bool _hasRotationMode;
         private bool _fastRotation;
         
@@ -30,13 +31,15 @@ namespace ShiroGe.CharacterController
         
         public void OnPlace(InputAction.CallbackContext context)
         {
-            if(!context.performed) return;
+            if(!InventoryUiManager.Instance.InBuildingMode || !context.performed || InventoryUiManager.Instance.IsOpen) return;
             
             _objectPlacer.PlaceObject();
         }
 
         public void OnRotateMode(InputAction.CallbackContext context)
         {
+            if (!InventoryUiManager.Instance.InBuildingMode || InventoryUiManager.Instance.IsOpen) return;
+            
             if(context.started)
             {
                 PlayerInputControllersRegulator.Instance.PlacementScrollLock();
@@ -52,7 +55,7 @@ namespace ShiroGe.CharacterController
 
         public void OnRotate(InputAction.CallbackContext context)
         {
-            if(!context.performed || !_hasRotationMode) return;
+            if(!InventoryUiManager.Instance.InBuildingMode || !context.performed || !_hasRotationMode || InventoryUiManager.Instance.IsOpen) return;
 
             float scroll = context.ReadValue<Vector2>().y;
             
@@ -61,6 +64,8 @@ namespace ShiroGe.CharacterController
 
         public void OnFastRotation(InputAction.CallbackContext context)
         {
+            if (!InventoryUiManager.Instance.InBuildingMode || InventoryUiManager.Instance.IsOpen) return;
+            
             if (context.started)
             {
                 _fastRotation = true;
@@ -69,6 +74,20 @@ namespace ShiroGe.CharacterController
             if (context.canceled)
             {
                 _fastRotation = false;
+            }
+        }
+
+        public void OnEnterBuildMode(InputAction.CallbackContext context)
+        {
+            if(!context.performed) return;
+            
+            if(!InventoryUiManager.Instance.InBuildingMode)
+            {
+                InventoryUiManager.Instance.EnterBuildingMode();
+            }
+            else
+            {
+                InventoryUiManager.Instance.ExitBuildingMode();
             }
         }
     }

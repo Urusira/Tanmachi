@@ -14,7 +14,7 @@ namespace ShiroGe.Scripts.Quests.Orders
         
         public readonly ItemStackList RequiredItems = new ItemStackList();
 
-        public OrderQuest(string id, string title, string description, ItemSO[] requiredItems) : base(id, title, description)
+        public OrderQuest(string id, string title, string authorName, string description, ItemSO[] requiredItems) : base(id, title, authorName, description)
         {
             RequiredItems.AddRange(requiredItems);
         }

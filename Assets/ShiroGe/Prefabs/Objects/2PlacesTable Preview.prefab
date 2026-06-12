@@ -20,7 +20,15 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 23cceb60a2608684da5b5b0f3959a98b, type: 2}
+    - target: {fileID: 3845109290808460481, guid: 3a484e9e8b8d9cb49a9a32c1c62d641c, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3936084774082443900, guid: 3a484e9e8b8d9cb49a9a32c1c62d641c, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5366593772877151519, guid: 3a484e9e8b8d9cb49a9a32c1c62d641c, type: 3}
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
@@ -104,6 +112,7 @@ PrefabInstance:
     - {fileID: 910901924952480813, guid: 3a484e9e8b8d9cb49a9a32c1c62d641c, type: 3}
     - {fileID: 8904518469008342086, guid: 3a484e9e8b8d9cb49a9a32c1c62d641c, type: 3}
     - {fileID: 8163717971371885513, guid: 3a484e9e8b8d9cb49a9a32c1c62d641c, type: 3}
+    - {fileID: -4938265363361048290, guid: 3a484e9e8b8d9cb49a9a32c1c62d641c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -155,9 +164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08ff39310a6a3ea468d54a3a64d77a8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  invalidLayers:
-    serializedVersion: 2
-    m_Bits: 6352
   collidingObjects: []
 --- !u!54 &3367210375283898726
 Rigidbody:

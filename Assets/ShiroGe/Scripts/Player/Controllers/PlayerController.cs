@@ -47,6 +47,7 @@ namespace ShiroGe.CharacterController
         
         [Header("World")]
         public float gravity = 25f;
+        public float undermapSavingAltitude = -500f;
         
         [Header("Rofl")]
         public bool slowedStrafe = false;
@@ -68,7 +69,6 @@ namespace ShiroGe.CharacterController
         
         private PlayerMovementState _lastMovementState = PlayerMovementState.Falling;
         #endregion
-
         
         #region Startup
         private void Awake()
@@ -104,6 +104,8 @@ namespace ShiroGe.CharacterController
             UpdateMovementState();
             HandleVerticalMovement();
             HandleLateralMovement();
+
+            UndermapFallingSafe();
         }
 
         private void UpdateMovementState()
@@ -212,6 +214,11 @@ namespace ShiroGe.CharacterController
             }
             
             return velocity;
+        }
+
+        private void UndermapFallingSafe()
+        {
+            if(transform.position.y < undermapSavingAltitude) PlayerInstance.Instance.TeleportPlayer(PlayerInstance.Instance.PlayerSpawnPosition);
         }
         #endregion
 

@@ -238,6 +238,8 @@ GameObject:
   - component: {fileID: 8981272310147308042}
   - component: {fileID: 7358208705734041625}
   - component: {fileID: 8874940926126471973}
+  - component: {fileID: 2085488496644006435}
+  - component: {fileID: 2572841793896265540}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -342,15 +344,8 @@ MonoBehaviour:
   playerModelRotationSpeed: 10
   rotateToTargetTime: 0.67
   gravity: 25
-  groundLayers:
-    serializedVersion: 2
-    m_Bits: 2177
-  interactiveLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
   slowedStrafe: 0
   superJumps: 0
-  interactionDistance: 2
 --- !u!114 &6717011670845543448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,6 +424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.CharacterController.PlayerInventoryController
   scrollLock: 0
+  forcedDrop: 0
 --- !u!114 &642236101999707386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,7 +455,6 @@ MonoBehaviour:
   playerHair: {fileID: 3888740397029291940}
   standartPlayerAvatarUnderwear: {fileID: 0}
   playerAvatarHair: {fileID: 0}
-  objectPlacer: {fileID: 0}
 --- !u!114 &6263694300612836084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -529,9 +524,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.CharacterController.PlayerDebugInputController
   teleportMaxDistance: 1000
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 2177
 --- !u!114 &8874940926126471973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -544,6 +536,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfa8b1182ed04d5b891f2297ae7a2bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.CharacterController.PlayerInputControllersRegulator
+--- !u!114 &2085488496644006435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101849162038876906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 650b75c76ba9476d853de4cfb2146ab3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.CharacterController.PlayerStats
+  <ThrowForce>k__BackingField: 12
+  <DropForce>k__BackingField: 5
+--- !u!114 &2572841793896265540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101849162038876906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08a5fd4fc1c146d98670f4bc71c73e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.CharacterController.PlayerInteractionController
+  interactionDistance: 3
 --- !u!1 &119201910999865418
 GameObject:
   m_ObjectHideFlags: 0

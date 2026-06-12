@@ -36,7 +36,12 @@ public class InventoryManager : MonoBehaviour
     
     public InventorySlot HoveredSlot { get; private set; }
     
+    [SerializeField] private ObjectPlacer objectPlacer;
+    [SerializeField] private ItemSO builderInstrumentItem;
+    
     [SerializeField] private List<ItemWithAmount> _startingInventory;
+    
+    public bool InBuildingMode { get; private set; } = false;
 
     public int SelectedHotbarSlot { get; private set; } = 0;
 
@@ -519,7 +524,35 @@ public class InventoryManager : MonoBehaviour
     {
         InventorySlot currentSlot = _hotbarSlots[SelectedHotbarSlot];
 
+        if (currentSlot.HasItem())
+        {
+            ItemSO item = currentSlot.GetItem();
+            if (item.itemType == ItemTypeEnum.PLACEABLE && InBuildingMode)
+            {
+                objectPlacer.ExitPlacementMode();
+                objectPlacer.ObjectSet(item.placeableBuildPrefab, item.itemPreviewPrefab, item);
+                objectPlacer.EnterPlacementMode();
+                PlayerEquipController.Instance.TakeInHand(builderInstrumentItem);
+                objectPlacer.OnPlaceableObjectHasPlaced += OnPlaceableObjectHasPlacedHandler;
+                return;
+            }
+        }
+
+        objectPlacer.ExitPlacementMode();
+        
         PlayerEquipController.Instance.TakeInHand(currentSlot.HasItem() ? currentSlot.GetItem() : null);
+    }
+
+    private void OnPlaceableObjectHasPlacedHandler(ItemSO placedItem)
+    {
+        objectPlacer.OnPlaceableObjectHasPlaced -= OnPlaceableObjectHasPlacedHandler;
+        
+        InventorySlot currentSlot = _hotbarSlots[SelectedHotbarSlot];
+        currentSlot.RemoveAmount(1);
+        _inventoryAllItems[placedItem] -= 1;
+        if(_inventoryAllItems[placedItem] <= 0) objectPlacer.ExitPlacementMode();
+        
+        ItemRedraw();
     }
     
     public void HoverSlot(InventorySlot slot)
@@ -535,5 +568,17 @@ public class InventoryManager : MonoBehaviour
     public bool HasHoveredSlot()
     {
         return HoveredSlot != null;
+    }
+
+    public void EnterBuildingMode()
+    {
+        InBuildingMode = true;
+        ItemRedraw();
+    }
+
+    public void ExitBuildingMode()
+    {
+        InBuildingMode = false;
+        ItemRedraw();
     }
 }

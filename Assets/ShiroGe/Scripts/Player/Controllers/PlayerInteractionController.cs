@@ -65,6 +65,7 @@ namespace ShiroGe.CharacterController
                 if(_targetInteractComponent != null)
                 {
                     String hintText = _targetInteractComponent.ShowHint();
+                    if(hintText == null) hintText = "";
                     GuiManager.Instance.HighlightPointer(hintText);
                 }
             }
@@ -74,7 +75,7 @@ namespace ShiroGe.CharacterController
                 {
                     _targetInteractComponent.HideHint();
                 }
-                _playerActionsContoller.SetInteractPressedFalse(); //TODO: Заглушка-фикс, надо убрать
+                _playerActionsContoller.SetInteractPressedFalse(); //TODO: Заглушка-фикс, надо будет убрать
                 _target = null;
                 GuiManager.Instance.ResetPointer();
             }
@@ -102,16 +103,20 @@ namespace ShiroGe.CharacterController
             if (_target != null && _canInteract)
             {
                 _interactLastFrame = true;
-                PlayerActionsState typeAction = _target.GetComponent<Interactable>().PlayerInteract(gameObject);
-                _playerState.SetPlayerActionsState(typeAction);
-                switch (typeAction)
-                {
-                    case PlayerActionsState.Default:
+                Interactable interactComponent = _target.GetComponent<Interactable>();
+                if(interactComponent != null) {
+                    PlayerActionsState typeAction = interactComponent.PlayerInteract(gameObject);
+                    _playerState.SetPlayerActionsState(typeAction);
+                    switch (typeAction)
                     {
-                        _playerActionsContoller.SetInteractPressedFalse();
-                        break;
+                        case PlayerActionsState.Default:
+                        {
+                            _playerActionsContoller.SetInteractPressedFalse();
+                            break;
+                        }
                     }
                 }
+                else Debug.LogWarning("Interactable object have not interactable component, canceling operation.");
             }
         }
 

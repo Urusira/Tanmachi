@@ -19,6 +19,8 @@ namespace ShiroGe.Scripts.Tavern
         [Min(0f)] public float randomIntervalMax = 3f;
         public bool randomizedSpawn = true;
         
+        [SerializeField] private float spawnRadius = 2f;
+        
         [Range(0f, 1f)][SerializeField] private float lonerSpawnChance = 0.5f;      // 50%
         [Range(0f, 1f)][SerializeField] private float baseEnterChance = 0.5f;      // 50%
         [Range(0f, 1f)][SerializeField] private float lonerChance = 0.3f;          // 30%
@@ -116,61 +118,86 @@ namespace ShiroGe.Scripts.Tavern
 
             NPCController spawnedNpc;
             
+            Vector3 randomSpawnOffset = Random.insideUnitSphere * spawnRadius;
+            randomSpawnOffset.y = 0;
+            Vector3 spawnPos = transform.position + randomSpawnOffset;
+            
             if (spawnedEntityTargetGoing != null)
             {
                 int seq = TavernNPCSequence.Get;
-                spawnedNpc = _npcFabricator.NpcSpawnWithTarget(
-                    transform.position,
-                    spawnedEntityTargetGoing.transform.position,
+                spawnedNpc = _npcFabricator.NpcSpawn(
+                    spawnPos,
                     new NPCData(
-                        $"TavernNpc{seq}", 
-                        $"Посетитель{seq}",
-                        "Обычный доходяга.",
-                        Random.Range(18, 100), 
-                        Random.value <= lonerSpawnChance)
+                        id: $"TavernNpc{seq}",
+                        name: $"Посетитель{seq}",
+                        personality: "Обычный доходяга.",
+                        age: Random.Range(18, 100), 
+                        introvert: Random.value <= lonerSpawnChance),
+                        targetPos: spawnedEntityTargetGoing.transform.position
                     );
                 
                 spawnedNpc.SetBaseGoingTarget(spawnedEntityTargetGoing.transform.position);
+                
             }
             else
             {
                 int seq = TavernNPCSequence.Get;
                 spawnedNpc = _npcFabricator.NpcSpawn(
-                    transform.position,
+                    spawnPos,
                     new NPCData(
-                        $"TavernNpc{seq}", 
-                        $"Посетитель{seq}",
-                        "Обычный доходяга.", 
-                        Random.Range(18, 100), 
-                        Random.value <= lonerSpawnChance)
+                        id: $"TavernNpc{seq}", 
+                        name: $"Посетитель{seq}",
+                        personality: "Обычный доходяга.", 
+                        age: Random.Range(18, 100), 
+                        introvert: Random.value <= lonerSpawnChance)
                     );
             }
 
+            spawnedNpc.SetRandomAvoidancyPriority();
             _spawnedNPCs.Add(spawnedNpc);
             spawnedNpc.OnNpcDestroyed += OnNpcDestroyedHandler;
             SetNpcStrategy(spawnedNpc);
         }
 
-        private void SpawnGroupNpc(int amount, TavernTable table = null)
+        private void SpawnGroupNpc(NPCController leader, int amount, TavernTable table = null)
         {
+            List<NPCController> spawnedNpcs = new List<NPCController> { leader };
+            
+            Vector3 randomSpawnOffset = Random.insideUnitSphere * spawnRadius;
+            randomSpawnOffset.y = 0;
+            Vector3 spawnPos = leader.transform.position + randomSpawnOffset;
+            
             for (int i = 0; i < amount; i++)
             {
                 int seq = TavernNPCSequence.Get;
                 NPCController spawnedNpc;
                 spawnedNpc = _npcFabricator.NpcSpawn(
-                    transform.position,
+                    spawnPos,
                     new NPCData(
-                        $"TavernNpc{seq}", 
-                        $"Посетитель{seq}",
-                        "Обычный доходяга.", 
-                        Random.Range(18, 100), 
-                        Random.value <= lonerSpawnChance)
+                        id: $"TavernNpc{seq}", 
+                        name: $"Посетитель{seq}",
+                        personality: "Обычный доходяга.", 
+                        age: Random.Range(18, 100), 
+                        introvert: Random.value <= lonerSpawnChance)
                 );
 
                 if (table != null)
                 {
                     spawnedNpc.GoToTavernWithGroup(table);
                 }
+                
+                spawnedNpc.SetBaseGoingTarget(spawnedEntityTargetGoing.transform.position);
+                
+                spawnedNpc.SetRandomAvoidancyPriority();
+                
+                spawnedNpcs.Add(spawnedNpc);
+                
+                spawnedNpc.OnNpcDestroyed += OnNpcDestroyedHandler;
+            }
+            
+            foreach (NPCController npc in spawnedNpcs)
+            {
+                npc.SetGroup(spawnedNpcs);
             }
         }
 
@@ -192,12 +219,12 @@ namespace ShiroGe.Scripts.Tavern
                     if (hasFullFreePlace)
                     {
                         //Если нпс интроверт
-                        if (spawnedNpc.NpcData.Loner)
+                        if (spawnedNpc.NpcData.Introvert)
                         {
                             if (Random.value <= lonerChance)
                             {
                                 //Интроверт садится за полностью пустой стол
-                                CyclicNpcTableSendler(spawnedNpc, 1, true, false);
+                                CyclicNpcTableSendler(spawnedNpc, 1, true, false, false);
                             }
                         }
                         else //Если нпс не интроверт
@@ -205,21 +232,21 @@ namespace ShiroGe.Scripts.Tavern
                             if (Random.value <= groupChance)
                             {
                                 //Нпс спавнит группу и они идут за пустой стол
-                                CyclicNpcTableSendler(spawnedNpc, 1, true, true);
+                                CyclicNpcTableSendler(spawnedNpc, 1, true, true, true);
                             }
                             else
                             {
                                 //Группа не прокнула. Тогда чел просто пойдёт один и к кому-нибудь подсядет
-                                CyclicNpcTableSendler(spawnedNpc, 1, false, false);
+                                CyclicNpcTableSendler(spawnedNpc, 1, false, false, false);
                             }
                         }
                     }
                     else //Полностью свободных мест нет, но в принципе свободные места есть
                     {
                         // Если чел не одиночка
-                        if (spawnedNpc.NpcData.Loner == false)
+                        if (spawnedNpc.NpcData.Introvert == false)
                         {
-                            CyclicNpcTableSendler(spawnedNpc, 1, false, false);
+                            CyclicNpcTableSendler(spawnedNpc, 1, false, false, false);
                         }
                     }
                 }
@@ -230,20 +257,20 @@ namespace ShiroGe.Scripts.Tavern
             }
         }
 
-        private bool CyclicNpcTableSendler(NPCController spawnedNpc, int reqPlacesAmount, bool needCompletlyFreePlace, bool groupped)
+        private bool CyclicNpcTableSendler(NPCController spawnedNpc, int reqPlacesAmount, bool needCompletlyFreePlace, bool groupped, bool groupLeader)
         {
             TavernTable table = TavernTablesManager.Instance.GetAvailableTable(reqPlacesAmount, needCompletlyFreePlace);
             
             if (table != null)
             {
-                bool successful = spawnedNpc.GoToTavern(table);
+                bool successful = spawnedNpc.GoToTavern(table, groupLeader);
                                     
                 while(!successful)
                 {
                     table = TavernTablesManager.Instance.GetAvailableTable(reqPlacesAmount, needCompletlyFreePlace);
                     if(table != null)
                     {
-                        successful = spawnedNpc.GoToTavern(table);
+                        successful = spawnedNpc.GoToTavern(table, groupLeader);
                     }
                     else
                     {
@@ -261,7 +288,7 @@ namespace ShiroGe.Scripts.Tavern
                 {
                     if(groupped)
                     {
-                        SpawnGroupNpc(table.AmountAvailablePlaces, table);
+                        SpawnGroupNpc(spawnedNpc, table.AmountAvailablePlaces, table);
                     }
 
                     return true;

@@ -4127,6 +4127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Player.NPC.Dialog
   playerCanInteract: 1
   npcCanInteract: 0
+  name: 
 --- !u!114 &5811202192932201901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4217,8 +4218,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShiroGe.Scripts.NPC.NPCController
   <HungryInTavernNeutral>k__BackingField: HungryInTavernNeutralDialog
+  <HungryInTavernImNotALider>k__BackingField: HungryInTavernImNotALider
   <InTavernStandingNeutral>k__BackingField: 
   <DefaultNeutralDialog>k__BackingField: DefaultNeutralDialog
+  startCapital: 50
+  failedLeavingAwaitTime: 30
+  preTableLeavingAwaitTime: 5
+  eatingTime: 10
 --- !u!54 &5016004698409936539
 Rigidbody:
   m_ObjectHideFlags: 0

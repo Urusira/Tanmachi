@@ -35,8 +35,25 @@ public class DialogManager : MonoBehaviour
 
     private void Awake()
     {
-        dialogueRunner.AddFunction("GiveQuest", (string questId) => {
-            QuestOrderManager.Instance.GenerateOrder(CurrTalkativeNpc, questId);
+        dialogueRunner.AddFunction("GetName", () => {
+            return CurrTalkativeNpc.NpcData.Name;
+        });
+        
+        dialogueRunner.AddFunction("GetLeaderName", () => {
+            return CurrTalkativeNpc.GetGroupLeaderName();
+        });
+        
+        dialogueRunner.AddFunction("GetQuest", (string questId) => {
+            return CurrTalkativeNpc.GenerateQuest(questId);
+        });
+        
+        dialogueRunner.AddFunction("StartQuest", (string questId) => {
+            QuestOrderManager.Instance.StartQuest(CurrTalkativeNpc, questId);
+            return 0;
+        });
+        
+        dialogueRunner.AddFunction("NotAccepted", (string questId) => {
+            CurrTalkativeNpc.QuestNotAccepted(questId);
             return 0;
         });
         
@@ -96,7 +113,7 @@ public class DialogManager : MonoBehaviour
         
         CurrTalkativeNpc = npc;
         
-        CurrTalkativeNpc.LockMovment(PlayerInstance.Instance.GetPlayerRawStartPoint());
+        CurrTalkativeNpc.LockMovement(PlayerInstance.Instance.GetPlayerRawStartPoint());
         PlayerDialogBlock();
         
         dialogCanvas.SetActive(true);
@@ -123,7 +140,7 @@ public class DialogManager : MonoBehaviour
 
     public void CloseDialog()
     {
-        CurrTalkativeNpc.UnockMovment();
+        CurrTalkativeNpc.UnlockMovement();
         
         responseField.text = "";
         thinksField.text = "";

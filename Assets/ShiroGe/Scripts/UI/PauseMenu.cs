@@ -52,7 +52,7 @@ namespace ShiroGe.Scripts.UI
 
         public void OnStack()
         {
-            PlayerInstance.Instance.TeleportPlayer(new Vector3(0, 100, 0));
+            PlayerInstance.Instance.TeleportPlayer(PlayerInstance.Instance.PlayerSpawnPosition);
             HideMenu();
         }
 

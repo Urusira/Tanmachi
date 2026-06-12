@@ -9,6 +9,7 @@ namespace ShiroGe.CharacterController
         [field: SerializeField]
         public PlayerActionsState CurrentPlayerActionsState { get; private set; } = PlayerActionsState.Default;
         
+        
         public void SetPlayerMovementState(PlayerMovementState newState)
         {
             CurrentPlayerMovementState = newState;
@@ -37,5 +38,6 @@ namespace ShiroGe.CharacterController
                    movementState == PlayerMovementState.Sprinting ||
                    movementState == PlayerMovementState.Strafing;
         }
+
     }
 }

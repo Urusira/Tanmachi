@@ -28,6 +28,10 @@ namespace ShiroGe.Scripts.NPC
             {
                 if (_navigator != null)
                 {
+                    if (_navigator._lastDestination == Vector3.zero)
+                    {
+                        _navigator.SetLastDestinationPoint(_navigator._baseDestination);
+                    }
                     _navigator.isWandering = false;
                     _navigator.MoveToTarget(InteractTarget.transform.position);
                     _navigator.OnDestinationReached += InteractWithTarget;
@@ -46,8 +50,8 @@ namespace ShiroGe.Scripts.NPC
         private void InteractWithTarget()
         {
             _navigator.OnDestinationReached -= InteractWithTarget;
-            _navigator.LocomotionBlock();
             _navigator.ResetCurrentDestination();
+            _navigator.LocomotionBlock();
             
             InteractTarget.NpcInteract(gameObject);
         }

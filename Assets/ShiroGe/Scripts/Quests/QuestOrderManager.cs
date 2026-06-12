@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using JetBrains.Annotations;
 using ShiroGe.CharacterController;
 using ShiroGe.Scripts.Enums;
 using ShiroGe.Scripts.Inventory;
@@ -9,6 +10,8 @@ using ShiroGe.Scripts.Items;
 using ShiroGe.Scripts.NPC;
 using ShiroGe.Scripts.Quests.Orders;
 using ShiroGe.Scripts.Tavern;
+using ShiroGe.Scripts.UI;
+using ShiroGe.Scripts.Utils;
 using ShiroGe.Scripts.World;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -20,7 +23,8 @@ namespace ShiroGe.Scripts.Quests
     {
         public static QuestOrderManager Instance { get; private set; }
         
-        [SerializeField] private GameObject currentQuestObj;
+        //[SerializeField] private GameObject currentQuestObj;
+        [SerializeField] private GameObject tutorPanelObj;
         
         [SerializeField] public  OrdersBoard ordersBoard;
         
@@ -29,8 +33,7 @@ namespace ShiroGe.Scripts.Quests
         
         [SerializeField] public float standartOrderTimeLimitSeconds = 120f;
         
-        private CurrentQuestPanel _currentQuestPanel;
-        
+        //private CurrentQuestPanel _currentQuestPanel;
         
         private List<QuestOrderBase> _currentOrdersList = new List<QuestOrderBase>();
         
@@ -50,12 +53,20 @@ namespace ShiroGe.Scripts.Quests
             
             Instance = this;
             
-            _currentQuestPanel = currentQuestObj.GetComponent<CurrentQuestPanel>();
+            //_currentQuestPanel = currentQuestObj.GetComponent<CurrentQuestPanel>();
         }
 
-        public void GenerateOrder(NPCController npc, string questId)
+        public QuestOrderBase GenerateOrder(NPCController npc, string questId, int amountModifier)
         {
-            int orderLen = Mathf.Max(1, Random.Range(minDishInOrder, maxDishInOrder+1));
+            int orderLen = 0;
+            
+            for (int i = 0; i < amountModifier; i++)
+            {
+                orderLen += Mathf.Max(1, Random.Range(minDishInOrder, maxDishInOrder+1));
+            }
+
+            if (orderLen <= 0) orderLen = Mathf.Max(1, Random.Range(minDishInOrder, maxDishInOrder+1));
+            
             int maximumOrderPrice = npc.GetComponent<CashManager>().CashAmount;
             int currentOrderPrice = 0;
             
@@ -109,33 +120,24 @@ namespace ShiroGe.Scripts.Quests
                 }
             }
             
-            string itemsNames = "";
-
-            for (int i = 0; i < items.Length; i++)
-            {
-                itemsNames += items[i].itemName;
-                if (i < items.Length-1)
-                {
-                    itemsNames += ", ";
-                }
-            }
+            ItemStackList itemsStack = new ItemStackList();
+            itemsStack.AddRange(items);
             
             OrderQuest newOrderQuest = new OrderQuest(
                 questId,
                 "Заказ",
-                $"Приготовьте и отдайте NPC {itemsNames}",
+                npc.NpcData.Name,
+                $"{itemsStack}",
                 items);
 
             newOrderQuest.SetReward(currentOrderPrice, reDishesForBack.ToHashSet(), newOrderQuest.rewardReputation*items.Length);
-            CreateNewOrder(npc, newOrderQuest);
+            return CreateNewOrder(npc, newOrderQuest);
         }
 
         public void CancelQuest(NPCController npc, string questId)
         {
             _npcQuestOrdersList[npc][questId].CancelQuest();
-            _npcQuestOrdersList[npc].Remove(questId);
-            if (_npcQuestOrdersList[npc].Count == 0)
-                _npcQuestOrdersList.Remove(npc);
+            RemoveOrder(npc, questId);
         }
 
         public QuestStatus QuestStatusCheck(NPCController npc, string questId)
@@ -146,11 +148,11 @@ namespace ShiroGe.Scripts.Quests
         
         public void QuestComplete(NPCController npc, string questId)
         {
+            TutorialsManager.Instance.ShowTutorial("Orders3");
+            
             _npcQuestOrdersList[npc][questId].CompleteQuest();
             
-            _npcQuestOrdersList[npc].Remove(questId);
-            if (_npcQuestOrdersList[npc].Count == 0)
-                _npcQuestOrdersList.Remove(npc);
+            RemoveOrder(npc, questId);
         }
 
         public QuestOrderBase GetQuest(NPCController npc, string questId)
@@ -168,11 +170,12 @@ namespace ShiroGe.Scripts.Quests
             return _npcQuestOrdersList[npc][questId].ConditionCheck();
         }
         
-        public void CreateNewOrder(NPCController npc, QuestOrderBase newOrderQuest)
+        public QuestOrderBase CreateNewOrder(NPCController npc, QuestOrderBase newOrderQuest)
         {
-            currentQuestObj.SetActive(true);
+            //currentQuestObj.SetActive(true);
             
-            _currentQuestPanel.SetQuest(newOrderQuest);
+            //_currentQuestPanel.SetQuest(newOrderQuest);
+            
             _currentOrdersList.Add(newOrderQuest);
             CurrentQuest = newOrderQuest;
             
@@ -180,15 +183,33 @@ namespace ShiroGe.Scripts.Quests
                 _npcQuestOrdersList[npc] = new Dictionary<string, QuestOrderBase>();
             
             _npcQuestOrdersList[npc][newOrderQuest.ID] = newOrderQuest;
-            
-            newOrderQuest.StartQuest(standartOrderTimeLimitSeconds);
 
             newOrderQuest.OnFailed += FinalizeOrder;
             newOrderQuest.OnCompleted += FinalizeOrder;
             newOrderQuest.OnCancelled += FinalizeOrder;
             
-            npc.QuestOrderSubscribe(newOrderQuest);
             ordersBoard.AddOrder(newOrderQuest);
+
+            return newOrderQuest;
+        }
+        
+        [CanBeNull]
+        public QuestOrderBase RemoveOrder(NPCController npc, string questId)
+        {
+            if (_npcQuestOrdersList[npc].ContainsKey(questId))
+            {
+                QuestOrderBase removedQuest = _npcQuestOrdersList[npc][questId];
+                
+                _npcQuestOrdersList[npc].Remove(questId);
+                if (_npcQuestOrdersList[npc].Count == 0)
+                    _npcQuestOrdersList.Remove(npc);
+                
+                UnsubscribeFromAllEvents(removedQuest);
+
+                return removedQuest;
+            }
+
+            return null;
         }
 
         private void OrderListCleaner()
@@ -230,6 +251,17 @@ namespace ShiroGe.Scripts.Quests
             {
                 Debug.LogException(e);
             }
+        }
+
+        public void StartQuest(NPCController npc, string questId)
+        {
+            if (_npcQuestOrdersList[npc].ContainsKey(questId))
+            {
+                _npcQuestOrdersList[npc][questId].StartQuest(standartOrderTimeLimitSeconds);
+                TutorialsManager.Instance.ShowTutorial("Orders");
+                TutorialsManager.Instance.ShowTutorial("Orders2");
+            }
+            else Debug.LogWarning("You tried to staring not exist quest");
         }
     }
 }

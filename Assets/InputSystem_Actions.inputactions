@@ -1322,6 +1322,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "EnterBuildMode",
+                    "type": "Button",
+                    "id": "66f7fffd-ea82-4d79-9792-05155b41fc1c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1366,6 +1375,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "FastRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af9ebf86-2d3b-4bbc-a95e-f6b91d7f8ff0",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "EnterBuildMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
