@@ -148,7 +148,7 @@ namespace ShiroGe.Scripts.Quests
         
         public void QuestComplete(NPCController npc, string questId)
         {
-            TutorialsManager.Instance.ShowTutorial("Orders3");
+            TutorialsManager.Instance.ShowTutorial("Orders4");
             
             _npcQuestOrdersList[npc][questId].CompleteQuest();
             
@@ -258,8 +258,9 @@ namespace ShiroGe.Scripts.Quests
             if (_npcQuestOrdersList[npc].ContainsKey(questId))
             {
                 _npcQuestOrdersList[npc][questId].StartQuest(standartOrderTimeLimitSeconds);
-                TutorialsManager.Instance.ShowTutorial("Orders");
+                TutorialsManager.Instance.ShowTutorial("Orders1");
                 TutorialsManager.Instance.ShowTutorial("Orders2");
+                TutorialsManager.Instance.ShowTutorial("Orders3");
             }
             else Debug.LogWarning("You tried to staring not exist quest");
         }

@@ -33,7 +33,7 @@ public class NPCAnimation : MonoBehaviour
 
     private void Update()
     {
-        UpdateAnimState();
+        if(_npcNavigator.CanWalk) UpdateAnimState();
     }
 
     private void UpdateAnimState()

@@ -1,12 +1,17 @@
-﻿namespace ShiroGe.Scripts.NPC
+﻿using System;
+using UnityEngine;
+
+namespace ShiroGe.Scripts.NPC
 {
+    [Serializable]
+
     public class NPCData
     {
-        public string ID { get; private set; }
-        public string Name { get; private set; }
-        public readonly string Personality;
-        public readonly int Age;
-        public readonly bool Introvert;
+        [field: SerializeField] public string ID { get; private set; }
+        [field: SerializeField] public string Name { get; private set; }
+        public string Personality;
+        public int Age;
+        public bool Introvert;
 
         public NPCData(string id, string name, string personality, int age, bool introvert)
         {

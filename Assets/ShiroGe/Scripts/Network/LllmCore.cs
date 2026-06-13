@@ -15,7 +15,7 @@ public class LlmCore : MonoBehaviour
     
     [SerializeField] private string model = "google/gemma-3-21b";
 
-    [SerializeField, TextArea] private string systemPrompt =
+    [SerializeField, TextArea] private string _systemPrompt =
         "Ты — случайный посетитель таверны в мрачном фэнтезийном мире. Ты не главный герой, не герой вообще.\n" +
         "Ты простой путник, торговец, наёмник или бродяга, зашедший перекусить и отдохнуть.\n\n" +
         "Ты говоришь на русском языке, как простой человек — без сложных конструкций, без пафоса." +
@@ -36,8 +36,13 @@ public class LlmCore : MonoBehaviour
         "- «Эх, грибная похлёбка — это всё, что у тебя есть? Ладно, давай, холодрыга снаружи любая жратва в радость.»\n" +
         "- «Дороги? Волки задрали обоз третьего дня. Если собрался куда — бери с собой меч покрепче.»\n" +
         "- «Я не из болтливых. Налил бы лучше чего покрепче, да расскажу, как мы через перевал пробивались.»\n" +
-        "- «Слухи? Говорят, в подземельях под старым фортом что-то шевелится. Но я туда не суюсь — мне ещё жить хочется.»\n\n" +
-        "Сейчас ты сидишь в таверне. Твой собеседник — игрок, он же хозяин таверны и может тебя накормить и напоить. Отвечай ему.";
+        "- «Слухи? Говорят, в подземельях под старым фортом что-то шевелится. Но я туда не суюсь — мне ещё жить хочется.»\n\n";
+    [SerializeField, TextArea] private string modularPostfixInTavern = "Сейчас ты сидишь в таверне. Твой собеседник — игрок, он же хозяин таверны и может тебя накормить и напоить. Отвечай ему.";
+    [SerializeField, TextArea] private string modularPostfixInTavernFunny = "Сейчас ты в таверне и только что поел. Твой собеседник — игрок, он же хозяин таверны и ранее тебя накормил и напоил. Отвечай ему.";
+    [SerializeField, TextArea] private string modularPostfixInTavernEating = "Сейчас ты сидишь в таверне и ешь. Твой собеседник — игрок, он же хозяин таверны и ранее принёс твой заказ. Отвечай ему.";
+    [SerializeField, TextArea] private string modularPostfixInTavernAwaiting = "Сейчас ты сидишь в таверне и ждёшь, пока тебе принесут твой заказ. Твой собеседник — игрок, он же хозяин таверны и должен тебя накормить и напоить. Отвечай ему.";
+    [SerializeField, TextArea] private string modularPostfixInTavernFailed = "Сейчас ты сидишь в таверне и негодуешь, так как тебе не принесли твой заказ. Твой собеседник — игрок, он же хозяин таверны и он не смог тебя накормить и напоить. Отвечай ему.";
+    [SerializeField, TextArea] private string modularPostfixNotInTavern = "Сейчас ты стоишь на тракте за городом перед таверной. Твой собеседник — игрок, он же хозяин таверны, мимо которой ты идёшь. Отвечай ему.";
     
     void Start()
     {
@@ -77,9 +82,18 @@ public class LlmCore : MonoBehaviour
             {
                 throw new WarningException("Empty message");
             }
+            NPCController npc = DialogManager.Instance.CurrTalkativeNpc;
+            NPCData npcData = npc.NpcData;
 
-            NPCData npcData = DialogManager.Instance.CurrTalkativeNpc.NpcData;
-            NpcDialogRepository.Instance.AddOrUpdateSystemMessage(npcData.ID, systemPrompt);
+            string modularSystemPromt = _systemPrompt + (
+                npc.InTavern && npc.Seating && npc.Eating ? modularPostfixInTavernEating :
+                npc.InTavern && npc.Angry ? modularPostfixInTavernFailed :
+                npc.InTavern && npc.Seating && npc.WaitingOrder ? modularPostfixInTavernAwaiting :
+                npc.InTavern && npc.Funny ? modularPostfixInTavernFunny :
+                npc.InTavern && !npc.Seating ? modularPostfixInTavern :
+                modularPostfixNotInTavern);
+
+            NpcDialogRepository.Instance.AddOrUpdateSystemMessage(npcData.ID, modularSystemPromt);
             NpcDialogRepository.Instance.AddMessage(npcData.ID, "Вы", "user", message);
             
             var fullHistory = NpcDialogRepository.Instance.GetNpcHistoryLLM(npcData.ID);

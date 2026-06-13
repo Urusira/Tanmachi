@@ -18,8 +18,6 @@ namespace ShiroGe.Scripts.UI
         
         [SerializeField] private bool resetTutorialsOnRestart = true;
         
-        [SerializeField] private float showingDuration = 10f;
-        
         private TextMeshProUGUI _tutorialTitleText;
         private TextMeshProUGUI _tutorialDescText;
         
@@ -67,7 +65,7 @@ namespace ShiroGe.Scripts.UI
             _tutorialTitleText.text = tutor.title;
             _tutorialDescText.text = tutor.value;
             _tutorialPanelRect.DOLocalMoveX(-_tutorialPanelRect.rect.width*2, 0.5f).SetEase(Ease.InBounce);
-            TimerService.Instance.AddTimer(showingDuration, HideTutorialPanel);
+            TimerService.Instance.AddTimer(tutor.showingTime, HideTutorialPanel);
             tutor.isShowed = true;
         }
 

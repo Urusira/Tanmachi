@@ -28,7 +28,7 @@ namespace ShiroGe.Scripts.NPC
         public event Action<NPCController> OnLeaderSayLeave;
         public event Action<NPCController> OnNpcDestroyed;
         
-        public NPCData NpcData { get; private set; }
+        [field: SerializeField] public NPCData NpcData { get; private set; }
         
         [Header("Названия диалоговых Yarn-нод")]
         [field: SerializeField] public string HungryInTavernNeutral { get; private set; }
@@ -36,6 +36,12 @@ namespace ShiroGe.Scripts.NPC
 
         [field: SerializeField] public string InTavernStandingNeutral { get; private set; } = null;
         [field: SerializeField] public string DefaultNeutralDialog { get; private set; }
+        
+        [field: SerializeField] public bool CanNeuralTalk { get; private set; }  = true;
+
+        public bool CanWalk => _navigator.CanWalk;
+        
+        [SerializeField] public bool haveHint = true;
 
         public int startCapital = 50;
         
@@ -43,10 +49,14 @@ namespace ShiroGe.Scripts.NPC
         public float preTableLeavingAwaitTime = 5f;
         public float eatingTime = 10f;
         
+        
+        
         public bool InTavern { get; private set; }  = false;
         public bool WaitingOrder { get; private set; }  = false;
         public bool Seating { get; private set; }  = false;
         public bool Eating { get; private set; }  = false;
+        public bool Angry { get; private set; }  = false;
+        public bool Funny { get; private set; }  = false;
         
         public bool WithGroup { get; private set; }  = false;
         public bool GroupLeader { get; private set; }  = false;
@@ -83,7 +93,7 @@ namespace ShiroGe.Scripts.NPC
             _seating = GetComponent<SeatingRig>();
             _cash = GetComponent<CashManager>();
             
-            //_dialog.NPCRegister(this);
+            _dialog.NPCRegister(this);
             _interactor.NavigatorInject(_navigator);
             
             _cash.AddCash(startCapital);
@@ -207,6 +217,8 @@ namespace ShiroGe.Scripts.NPC
     
         private void OnDestroy()
         {
+            _seating.OnSeat -= Seated;
+            _seating.OnStand -= StandUp;
             OnNpcDestroyed?.Invoke(this);
         }
 
@@ -255,6 +267,7 @@ namespace ShiroGe.Scripts.NPC
         }
         public void OrderFail(QuestOrderBase failedQuest)
         {
+            Angry = true;
             WaitingOrder = false;
             
             failedQuest.OnFailed -= OrderFail;
@@ -336,6 +349,7 @@ namespace ShiroGe.Scripts.NPC
             }
 
             Eating = false;
+            Funny = true;
             
             yield return new WaitForSeconds(preTableLeavingAwaitTime);
             
@@ -524,6 +538,11 @@ namespace ShiroGe.Scripts.NPC
         public void SetRandomAvoidancyPriority()
         {
             _navigator.SetRandomAvoidancyPrio();
+        }
+
+        public void Die()
+        {
+            Destroy(gameObject);
         }
     }
 }

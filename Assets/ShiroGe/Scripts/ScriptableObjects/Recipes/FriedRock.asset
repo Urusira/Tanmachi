@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b05d49bdf0d43958347bf25c5e7bcac, type: 3}
+  m_Name: FriedRock
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeSO
+  result: {fileID: 11400000, guid: e600ef14e78c2f543909616f2258b444, type: 2}
+  ingredients:
+  - item: {fileID: 11400000, guid: 0d2d00b8324ec9b4baa2d49f3c83d7e4, type: 2}
+    amount: 1
+  resultAmount: 1
+  craftStation: 2
+  thatDish: 1

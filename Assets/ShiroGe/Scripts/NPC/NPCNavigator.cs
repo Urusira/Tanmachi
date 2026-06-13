@@ -19,13 +19,14 @@ public class NPCNavigator : MonoBehaviour
     public bool IsRotatingToTarget { get; private set; } = false;
     
     [Header("Движение")]
+    [field: SerializeField] public bool CanWalk { get; private set; }  = true;
     public float walkAccel = 25f;
     public float walkMaxSpeed = 2f;
     public float runAccel = 35f;
     public float runMaxSpeed = 4f;
     public float sprintAccel = 50f;
     public float sprintMaxSpeed = 7f;
-    
+
     public bool sprintToggledOn = false;
     public bool walkToggledOn = true;
     
@@ -58,10 +59,12 @@ public class NPCNavigator : MonoBehaviour
     RepeatedTimer repeatedPathUpdateTimer;
     
     private NPCMovementState _lastMovementState = NPCMovementState.Idling;
+    
+    
 
     void Awake()
     {
-        _navAgent = GetComponent<NavMeshAgent>();
+        if(CanWalk) _navAgent = GetComponent<NavMeshAgent>();
         _npcState = GetComponent<NPCState>();
     }
 
@@ -72,10 +75,13 @@ public class NPCNavigator : MonoBehaviour
 
     private void Update()
     {
-        HandleLateralMovement();
-        UpdateMovementState();
-        Wander();
-        TargetReachedHandler();
+        if(CanWalk)
+        {
+            HandleLateralMovement();
+            UpdateMovementState();
+            Wander();
+            TargetReachedHandler();
+        }
 
         if (_lookTarget != Vector3.zero)
         {

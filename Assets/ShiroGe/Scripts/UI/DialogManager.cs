@@ -4,6 +4,7 @@ using ShiroGe.Scripts.LLM.Data.Repository;
 using ShiroGe.Scripts.NPC;
 using ShiroGe.Scripts.Quests;
 using ShiroGe.Scripts.UI;
+using ShiroGe.Scripts.World;
 using TMPro;
 using UnityEngine;
 using Yarn.Unity;
@@ -16,7 +17,9 @@ public class DialogManager : MonoBehaviour
     [SerializeField] private GameObject responseFieldObj;
     [SerializeField] private GameObject thinksFieldObj;
     [SerializeField] private GameObject playerObj;
+    [SerializeField] private GameObject ToOnlineDialogButton;
     [SerializeField] private GameObject OfflineDialogUi;
+    [SerializeField] private GameObject ToOfflineDialogButton;
     [SerializeField] private GameObject OnlineDialogUi;
     
     [SerializeField] private DialogueRunner dialogueRunner;
@@ -78,6 +81,10 @@ public class DialogManager : MonoBehaviour
             QuestOrderManager.Instance.CancelQuest(CurrTalkativeNpc, questId);
             return 0;
         });
+        dialogueRunner.AddFunction("Die", () => { 
+            CurrTalkativeNpc.Die();
+            return 0;
+        });
     }
 
     private void Start()
@@ -105,6 +112,12 @@ public class DialogManager : MonoBehaviour
 
     public void StartDialog(NPCController npc)
     {
+        if (!npc.CanNeuralTalk) ToOnlineDialogButton.SetActive(false);
+        
+        TutorialsManager.Instance.ShowTutorial("DialogTutorial1");
+        TutorialsManager.Instance.ShowTutorial("DialogTutorial2");
+        TutorialsManager.Instance.ShowTutorial("DialogTutorial3");
+        
         if (npc == null)
         {
             Debug.LogError("Npc is null, dialog cannot be started");
@@ -113,12 +126,12 @@ public class DialogManager : MonoBehaviour
         
         CurrTalkativeNpc = npc;
         
-        CurrTalkativeNpc.LockMovement(PlayerInstance.Instance.GetPlayerRawStartPoint());
+        if(CurrTalkativeNpc.CanWalk) CurrTalkativeNpc.LockMovement(PlayerInstance.Instance.GetPlayerRawStartPoint());
         PlayerDialogBlock();
         
         dialogCanvas.SetActive(true);
         
-        if(onlineStrategy)
+        if(onlineStrategy && npc.CanNeuralTalk)
         {
             responseField.text = $"{npc.NpcData.Name}\n\n" +
                                  string.Join("\n", NpcDialogRepository.Instance.GetNpcHistoryUI(npc.NpcData.ID));
@@ -140,7 +153,9 @@ public class DialogManager : MonoBehaviour
 
     public void CloseDialog()
     {
-        CurrTalkativeNpc.UnlockMovement();
+        if (!CurrTalkativeNpc.CanNeuralTalk) ToOnlineDialogButton.SetActive(false);
+        
+        if(CurrTalkativeNpc.CanWalk) CurrTalkativeNpc.UnlockMovement();
         
         responseField.text = "";
         thinksField.text = "";

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace ShiroGe.Scripts.World
 {
+    [DefaultExecutionOrder(-1)]
     public class TimerService : MonoBehaviour
     {
         public static TimerService Instance { get; private set; }

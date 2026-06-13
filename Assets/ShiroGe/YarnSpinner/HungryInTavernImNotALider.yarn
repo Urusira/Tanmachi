@@ -2,11 +2,11 @@ title: HungryInTavernImNotALider
 ---
 <<if HasQuest("TestQuest")>>
     <<if QuestStatusCheck("TestQuest") == "FAILED">>
-        NPC: Эй, может пойдём отсюда? А то нашу еду всё не несут и не несут...
+        {GetName()}: Эй, может пойдём отсюда? А то нашу еду всё не несут и не несут...
     <<endif>>
 
     <<else>>
-        NPC: Доброго дня. Мой заказ {GetLeaderName()} озвучит, чтобы всем сразу всё заказать.
+        {GetName()}: Доброго дня. Мой заказ {GetLeaderName()} озвучит, чтобы всем сразу всё заказать.
         <<return>>
 <<endif>>
 ===

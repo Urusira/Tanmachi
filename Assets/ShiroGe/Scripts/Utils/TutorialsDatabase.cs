@@ -10,6 +10,7 @@ public class TutorialDatabaseRow
     public string title;
     public string value;
     public bool isShowed = false;
+    public float showingTime = 7f;
 }
 
 [CreateAssetMenu(fileName = "TutorialBase", menuName = "ShiroGe/TutorialBase")]

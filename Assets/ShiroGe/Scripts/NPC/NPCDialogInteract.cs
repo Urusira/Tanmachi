@@ -23,8 +23,13 @@ namespace ShiroGe.Scripts.NPC
 
         public override String ShowHint()
         {
-            base.ShowHint();
-            return $"{npc.NpcData.Name}\nНажмите F чтобы начать разговор";
+            if(npc.haveHint)
+            {
+                base.ShowHint();
+                return $"{npc.NpcData.Name}\nНажмите F чтобы начать разговор";
+            }
+
+            return "???";
         }
 
         protected override void Initiate() { return; }

@@ -43,9 +43,11 @@ namespace ShiroGe.CharacterController
             {
                 playerViewPoint = hit.point;
             }
-            
-            Debug.unityLogger.Log($"Teleport to {playerViewPoint}");
-            PlayerInstance.Instance.TeleportPlayer(playerViewPoint);
+            if(playerViewPoint != Vector3.zero)
+            {
+                Debug.unityLogger.Log($"Teleport to {playerViewPoint}");
+                PlayerInstance.Instance.TeleportPlayer(playerViewPoint);
+            }
         }
     }
 }
